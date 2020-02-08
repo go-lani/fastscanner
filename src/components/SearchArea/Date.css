@@ -1,0 +1,20 @@
+.DateInput {
+  width: 200px;
+}
+
+.DateInput_input {
+  height: 50px;
+  padding: 0 10px;
+  border: none;
+  font-size: 1.6rem;
+  line-height: 48px;
+  cursor: pointer;
+}
+
+.DateRangePickerInput__disabled {
+  background: #fff;
+}
+
+.DateInput_input__disabled {
+  cursor: not-allowed;
+}
