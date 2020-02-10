@@ -1,8 +1,18 @@
-import styled, { css, keyframes } from 'styled-components';
+import styled, { css, keyframes, createGlobalStyle } from 'styled-components';
 
 // button style
 
 // header
+export const GlobalStyle = createGlobalStyle`
+  header {
+    background: #ffffff;
+
+    * {
+      background: #ffffff;
+    }
+  }
+`;
+
 export const Header = styled.header`
   position: fixed;
   top: 0;
@@ -35,7 +45,6 @@ export const NavButton = styled.button`
   font-weight: 600;
   border-style: none;
   border-bottom: 2px solid transparent;
-
   &:hover {
     border-bottom: 2px solid rgb(2, 136, 209);
   }
@@ -78,6 +87,7 @@ export const Modal = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #ffffff;
 
   ${props =>
     props.status &&

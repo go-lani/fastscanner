@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import * as S from './headerStyled';
 import CloseIcon from '@material-ui/icons/Close';
 import CurrencyModalContents from './CurrencyModalContents';
@@ -9,14 +9,18 @@ const CurrencyModal = ({
   selectCurrnecy,
   setSelectCurrency,
 }) => {
+  const modalContainer = createRef();
+
   const click = e => {
-    if (e.target.className === 'sc-AxheI dhCDjk') return closeClick();
+    if (status && !modalContainer.current.contains(e.target)) {
+      closeClick();
+    }
   };
 
   return (
     <div>
       <S.Modal status={status} onClick={click}>
-        <S.ModalContents>
+        <S.ModalContents ref={modalContainer}>
           <S.ModalButton onClick={closeClick}>
             <CloseIcon style={{ width: '2.0em', height: '2.0em' }} />
           </S.ModalButton>
