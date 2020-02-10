@@ -3,7 +3,7 @@ import * as S from './headerStyled';
 
 const Info = props => {
   return (
-    <li style={{ padding: '0 8px' }}>
+    <li>
       <S.NavButton>
         <S.NavDiv>
           <a

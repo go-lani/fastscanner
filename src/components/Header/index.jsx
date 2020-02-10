@@ -51,13 +51,12 @@ const Header = props => {
 
   return (
     <>
-      <S.GlobalStyle />
       <S.Header>
         <S.Logo>
           <Link to="/">
             <img
-              src="/images/logo_blue.png"
-              alt="logo"
+              src="/images/logo_white.png"
+              alt="fastscanner"
               style={{ width: '100%' }}
             />
           </Link>
