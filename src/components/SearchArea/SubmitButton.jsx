@@ -18,6 +18,8 @@ const StyledSearchButton = styled.button`
   border: 0;
   border-radius: 5px;
   background-color: #0288d1;
+  font-size: 1.8rem;
+  font-weight: 700;
   &:hover {
     animation-name: ${colorChange};
     animation-duration: 0.3s;
@@ -25,12 +27,16 @@ const StyledSearchButton = styled.button`
   }
 `;
 
+const StyledButtonText = styled.span`
+  vertical-align: middle;
+`;
+
 const SubmitButton = props => {
   return (
     <>
       <StyledSearchButton>
-        <span>{props.btxt}</span>
-        <ArrowForwardRoundedIcon />
+        <StyledButtonText>{props.btxt}</StyledButtonText>
+        <ArrowForwardRoundedIcon fontSize="large" />
       </StyledSearchButton>
     </>
   );
