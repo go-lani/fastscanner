@@ -5,6 +5,7 @@ import SelectDate from './SelectDate';
 import SelectOption from './SelectOption';
 import SubmitButton from './SubmitButton';
 import A11yTitle from '../common/A11yTitle';
+import CheckBox from '../common/CheckBox';
 import * as S from './SearchAreaStyled';
 
 const SearchArea = () => {
@@ -20,10 +21,7 @@ const SearchArea = () => {
           <SelectOption />
         </S.SearchTop>
         <S.SearchBottom>
-          <span>
-            <S.NonstopsCheck type="checkbox" id="nonstops" />
-            <label htmlFor="nonstops">직항</label>
-          </span>
+          <CheckBox label="직항" id="nonstop" isDisable={true} />
           <SubmitButton btxt="항공권 검색" />
         </S.SearchBottom>
       </S.SearchForm>
