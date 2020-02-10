@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import RemoveRoundedIcon from '@material-ui/icons/RemoveRounded';
-import { S } from './SearchAreaStyled';
+import * as S from './SearchAreaStyled';
 
 const OptionPopup = ({ isOpen, hidePopup }) => {
   const [countAdults, setCountAdults] = useState(1);
