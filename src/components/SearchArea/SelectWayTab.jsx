@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -32,7 +33,7 @@ const SelectWayTap = ({ way, setWay }) => {
   return (
     <div>
       <FormControl component="fieldset">
-        <FormLabel component="legend">구간 설정</FormLabel>
+        <FormLabel component="legend">구간 설정(a11yText)</FormLabel>
         <RadioGroup
           aria-label="왕복 편도 설정"
           name="왕복 편도 설정"

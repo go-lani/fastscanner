@@ -34,9 +34,10 @@ const StyledNonstopsCheck = styled.input`
 `;
 
 const SearchArea = () => {
-  const [way, setWay] = useState('왕복');
+  const [way, setWay] = React.useState('왕복');
   return (
     <StyledSearchWrapper>
+      <h2>SearchArea(a11yText)</h2>
       <SelectWayTap way={way} setWay={setWay} />
       <StyledInputBox>
         <SelectAirport />
