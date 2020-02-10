@@ -1,12 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import { lightBlue } from '@material-ui/core/colors';
-import FormLabel from '@material-ui/core/FormLabel';
 import { withStyles } from '@material-ui/core/styles';
+import A11yTitle from '../common/A11yTitle';
 
 const LightBlueRadio = withStyles({
   root: {
@@ -25,38 +24,36 @@ const StyledLabel = withStyles({
   },
 })(FormControlLabel);
 
-const SelectWayTap = ({ way, setWay }) => {
+const SelectWayTab = ({ way, setWay }) => {
   const handleChange = event => {
     setWay(event.target.value);
     console.log(event.target.value);
   };
   return (
-    <div>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">구간 설정(a11yText)</FormLabel>
-        <RadioGroup
-          aria-label="왕복 편도 설정"
-          name="왕복 편도 설정"
-          value={way}
-          onChange={handleChange}
-          row
-        >
-          <StyledLabel
-            value="왕복"
-            control={<LightBlueRadio color="primary" />}
-            label="왕복"
-            labelPlacement="end"
-          />
-          <StyledLabel
-            value="편도"
-            control={<LightBlueRadio color="primary" />}
-            label="편도"
-            labelPlacement="end"
-          />
-        </RadioGroup>
-      </FormControl>
-    </div>
+    <FormControl component="fieldset">
+      <A11yTitle as="legend">구간 설정</A11yTitle>
+      <RadioGroup
+        aria-label="왕복 편도 설정"
+        name="왕복 편도 설정"
+        value={way}
+        onChange={handleChange}
+        row
+      >
+        <StyledLabel
+          value="왕복"
+          control={<LightBlueRadio color="primary" />}
+          label="왕복"
+          labelPlacement="end"
+        />
+        <StyledLabel
+          value="편도"
+          control={<LightBlueRadio color="primary" />}
+          label="편도"
+          labelPlacement="end"
+        />
+      </RadioGroup>
+    </FormControl>
   );
 };
 
-export default SelectWayTap;
+export default SelectWayTab;
