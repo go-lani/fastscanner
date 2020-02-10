@@ -1,34 +1,30 @@
-import styled, { css, keyframes, createGlobalStyle } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
+import media from '../../libs/MediaQuery';
 
 // button style
 
-// header
-export const GlobalStyle = createGlobalStyle`
-  header {
-    background: #ffffff;
-
-    * {
-      background: #ffffff;
-    }
-  }
-`;
-
 export const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
-  display: flex;
-  justify-content: space-between;
-  min-width: 600px;
+  right: 0;
+  min-width: 320px;
   padding: 0 20px;
-  margin-bottom: 10px;
+
+  ${media.mobile`
+    /*  */
+  `}
 `;
 
 // logo
 export const Logo = styled.h1`
   width: 180px;
-  height: 76px;
-  padding: 20px 0;
+  a {
+    display: block;
+  }
 `;
 
 // navigation
@@ -36,33 +32,64 @@ export const Nav = styled.nav``;
 
 export const NavUl = styled.ul`
   display: flex;
+
+  li {
+    position: relative;
+    margin: 0 0 0 10px;
+
+    &:first-child {
+      margin: 0;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #fff;
+      opacity: 0;
+      transform: scaleX(0);
+      transition: all 0.3s;
+    }
+    &:hover {
+      &:after {
+        transform: scaleX(1);
+        opacity: 1;
+      }
+    }
+  }
 `;
 
 export const NavButton = styled.button`
   width: 100%;
-  height: 76px;
   font-size: 1.4rem;
+  line-height: 25px;
+  padding: 15px 10px;
   font-weight: 600;
-  border-style: none;
-  border-bottom: 2px solid transparent;
-  &:hover {
-    border-bottom: 2px solid rgb(2, 136, 209);
-  }
+  background: transparent;
+  border: none;
+  color: #fff;
 `;
 
 export const NavDiv = styled.div`
   display: inline-block;
   width: 100%;
   vertical-align: middle;
-  padding: 0 8px;
 
   svg {
     vertical-align: sub;
     font-size: 1.8rem;
   }
 
+  span {
+    display: inline-block;
+  }
+
   span + span {
-    margin: 0 2.5px;
+    margin: 0 0 0 2.5px;
   }
 `;
 

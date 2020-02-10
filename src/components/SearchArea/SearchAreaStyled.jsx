@@ -1,10 +1,8 @@
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { lightBlue } from '@material-ui/core/colors';
 
-export const S = {};
-
 // SearchArea 공통
-S.FieldTitle = styled.legend`
+export const FieldTitle = styled.legend`
   position: absolute;
   top: -30px;
   left: 0;
@@ -13,7 +11,7 @@ S.FieldTitle = styled.legend`
 `;
 
 // SearchArea Index;
-S.SearchWrapper = styled.section`
+export const SearchWrapper = styled.section`
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 10px;
   color: #fff;
@@ -25,11 +23,11 @@ S.SearchWrapper = styled.section`
   justify-content: space-evenly;
 `;
 
-S.SearchForm = styled.form`
+export const SearchForm = styled.form`
   display: inline-block;
 `;
 
-S.SearchTop = styled.div`
+export const SearchTop = styled.div`
   display: inline-block;
   & > *:not(.MuiFormControl-root) {
     display: inline-block;
@@ -46,24 +44,24 @@ S.SearchTop = styled.div`
   }
 `;
 
-S.SearchBottom = styled.div`
+export const SearchBottom = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 20px 0 0;
 `;
 
 // 커스텀필요
-S.NonstopsCheck = styled.input`
+export const NonstopsCheck = styled.input`
   width: 20px;
   height: 20px;
 `;
 
 // Option Popup
-S.OptionPopupWrapper = styled.div`
+export const OptionPopupWrapper = styled.div`
   display: none;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 70px;
+  right: 0;
   width: 370px;
   ${props =>
     props.isOpen &&
@@ -72,7 +70,7 @@ S.OptionPopupWrapper = styled.div`
     `}
 `;
 
-S.StyledOptionPopup = styled.div`
+export const StyledOptionPopup = styled.div`
   padding: 15px;
   border-radius: 5px;
   background-color: #fff;
@@ -80,7 +78,10 @@ S.StyledOptionPopup = styled.div`
   font-weight: 500;
 `;
 
-S.Triangle = styled.div`
+export const Triangle = styled.div`
+  position: absolute;
+  top: -14px;
+  right: 95px;
   width: 15px;
   height: 15px;
   border-right: 15px solid transparent;
@@ -89,7 +90,7 @@ S.Triangle = styled.div`
   margin: 0 auto;
 `;
 
-S.OptionPopup = styled.div`
+export const OptionPopup = styled.div`
   padding: 15px;
   border-radius: 5px;
   background-color: #fff;
@@ -97,19 +98,19 @@ S.OptionPopup = styled.div`
   font-weight: 500;
 `;
 
-S.CategoryTitle = styled.p`
+export const CategoryTitle = styled.p`
   font-weight: 700;
   margin: 10px 0;
 `;
 
-S.SelectCabinClass = styled.select`
+export const SelectCabinClass = styled.select`
   width: 100%;
   height: 35px;
   padding-left: 10px;
   border-radius: 5px;
 `;
 
-S.RequestRequiredNotice = styled.div`
+export const RequestRequiredNotice = styled.div`
   width: 100%;
   padding: 15px;
   font-size: 1.2rem;
@@ -117,14 +118,14 @@ S.RequestRequiredNotice = styled.div`
   background-color: #eee;
 `;
 
-S.CountArea = styled.div`
+export const CountArea = styled.div`
   width: 100%;
   height: 35px;
   display: flex;
   align-items: center;
 `;
 
-S.CountButton = styled.button`
+export const CountButton = styled.button`
   width: 35px;
   height: 35px;
   border-radius: 18px;
@@ -134,32 +135,7 @@ S.CountButton = styled.button`
   border: 2px solid #eee;
 `;
 
-S.RequestRequiredNotice = styled.div`
-  width: 100%;
-  padding: 15px;
-  font-size: 1.2rem;
-  border-radius: 5px;
-  background-color: #eee;
-`;
-
-S.CountArea = styled.div`
-  width: 100%;
-  height: 35px;
-  display: flex;
-  align-items: center;
-`;
-
-S.CountButton = styled.button`
-  width: 35px;
-  height: 35px;
-  border-radius: 18px;
-  color: ${props => (props.disabled ? '#666' : `${lightBlue[800]}`)};
-  background-color: ${props => (props.disabled ? '#eee' : '')};
-  cursor: ${props => (props.disabled ? 'default' : 'pointer')};
-  border: 2px solid #eee;
-`;
-
-S.CountNum = styled.span`
+export const CountNum = styled.span`
   display: inline-block;
   width: 15px;
   text-align: center;
@@ -167,17 +143,17 @@ S.CountNum = styled.span`
   margin: 0 10px;
 `;
 
-S.AgeRangText = styled.span`
+export const AgeRangText = styled.span`
   margin-left: 10px;
 `;
 
-S.Notice = styled.p`
+export const Notice = styled.p`
   font-size: 1.2rem;
   margin: 20px 0;
   color: #999;
 `;
 
-S.CompleteButton = styled.button`
+export const CompleteButton = styled.button`
   color: #0288d1;
   font-weight: 700;
   border: 0;
@@ -187,7 +163,7 @@ S.CompleteButton = styled.button`
 
 // SearchAirport
 
-S.AirportInput = styled.input`
+export const AirportInput = styled.input`
   width: 210px;
   height: 50px;
   border: 0;
@@ -195,13 +171,13 @@ S.AirportInput = styled.input`
   padding-left: 10px;
 `;
 
-S.AirportChangeButton = styled.button`
+export const AirportChangeButton = styled.button`
   width: 50px;
   height: 50px;
 `;
 
 // SelectDate
-S.DateButton = styled.button`
+export const DateButton = styled.button`
   width: 130px;
   height: 50px;
   border: 0;
@@ -210,12 +186,12 @@ S.DateButton = styled.button`
 `;
 
 // SelectOption
-S.SelectOptionWrap = styled.div`
+export const SelectOptionWrap = styled.div`
   position: relative;
   color: #222;
 `;
 
-S.OptionButton = styled.button`
+export const OptionButton = styled.button`
   width: 220px;
   height: 50px;
   padding: 0 10px;
@@ -223,16 +199,46 @@ S.OptionButton = styled.button`
   color: #000;
 `;
 
-S.OptionValue = styled.span`
+export const OptionValue = styled.span`
   display: flex;
   justify-content: space-between;
   width: 100%;
 `;
 
-S.Popup = styled.div`
+export const Popup = styled.div`
   width: 370px;
   height: 460px;
   padding: 15px;
   border-radius: 10px;
   background-color: #fff;
+`;
+
+// SubmitButton
+export const colorChange = keyframes`
+  from {
+    background-color: #0288d1;
+  }
+
+  to {
+    background-color: #01579b;
+  }
+`;
+
+export const SearchButton = styled.button`
+  width: 150px;
+  height: 40px;
+  border: 0;
+  border-radius: 5px;
+  background-color: #0288d1;
+  font-size: 1.8rem;
+  font-weight: 700;
+  &:hover {
+    animation-name: ${colorChange};
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+  }
+`;
+
+export const ButtonText = styled.span`
+  vertical-align: middle;
 `;

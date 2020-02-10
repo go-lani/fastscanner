@@ -5,7 +5,7 @@ import SelectDate from './SelectDate';
 import SelectOption from './SelectOption';
 import SubmitButton from './SubmitButton';
 import A11yTitle from '../common/A11yTitle';
-import { S } from './SearchAreaStyled';
+import * as S from './SearchAreaStyled';
 
 const SearchArea = () => {
   const [way, setWay] = React.useState('왕복');

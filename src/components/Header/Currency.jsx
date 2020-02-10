@@ -1,16 +1,16 @@
 import React from 'react';
-import { NavButton, NavDiv } from './headerStyled';
+import * as S from './headerStyled';
 
 const Currency = ({ status, openClick, closeClick, selectCurrnecy }) => {
   return (
     <>
-      <li style={{ padding: '0 8px' }}>
-        <NavButton onClick={() => openClick('currency')}>
-          <NavDiv>
+      <li>
+        <S.NavButton onClick={() => openClick('currency')}>
+          <S.NavDiv>
             <span>{selectCurrnecy.currency}</span>
             <span>{selectCurrnecy.currencyId}</span>
-          </NavDiv>
-        </NavButton>
+          </S.NavDiv>
+        </S.NavButton>
       </li>
     </>
   );

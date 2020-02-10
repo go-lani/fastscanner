@@ -3,6 +3,17 @@ import media from '../libs/MediaQuery';
 
 export const S = {};
 
+S.MainLayout = styled.div`
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 0 20px;
+  background: url('/images/test2.jpg') center center no-repeat;
+  background-size: cover;
+`;
+
 S.ViewLayout = styled.div`
   display: flex;
   justify-content: space-between;
@@ -24,14 +35,4 @@ S.ViewLayout = styled.div`
   /* mobile */
   ${media.mobile`
   `}
-`;
-
-S.MainLayout = styled.div`
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: url('/images/test2.jpg') center center no-repeat;
-  background-size: cover;
 `;

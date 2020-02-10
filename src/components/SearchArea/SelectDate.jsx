@@ -5,7 +5,7 @@ import moment from 'moment';
 import koLocale from 'moment/locale/ko';
 import 'react-dates/lib/css/_datepicker.css';
 import './Date.css';
-import { S } from './SearchAreaStyled';
+import * as S from './SearchAreaStyled';
 
 const SelectDate = () => {
   const [startDate, setStartDate] = useState(moment());

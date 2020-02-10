@@ -1,7 +1,7 @@
 import React from 'react';
 import SwapHorizRoundedIcon from '@material-ui/icons/SwapHorizRounded';
 import A11yTitle from '../common/A11yTitle';
-import { S } from './SearchAreaStyled';
+import * as S from './SearchAreaStyled';
 
 const SelectAirport = () => {
   const changeAirport = () => {

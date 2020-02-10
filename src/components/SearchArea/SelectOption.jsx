@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ArrowDropDownOutlinedIcon from '@material-ui/icons/ArrowDropDownOutlined';
 import OptionPopup from './OptionPopup';
-import { S } from './SearchAreaStyled';
+import * as S from './SearchAreaStyled';
 
 const SelectOption = () => {
   const [isOpen, setIsOpen] = useState(false);
