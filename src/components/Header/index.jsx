@@ -50,55 +50,58 @@ const Header = props => {
   }, []);
 
   return (
-    <S.Header>
-      <S.Logo>
-        <Link to="/">
-          <img
-            src="/images/logo_blue.png"
-            alt="logo"
-            style={{ width: '100%' }}
-          />
-        </Link>
-      </S.Logo>
-      <S.Nav>
-        <S.NavUl>
-          <Country
-            status={status}
-            openClick={openClick}
-            closeClick={closeClick}
-            selectLang={selectLang}
-            setSelectLang={setSelectLang}
-          />
-          <Currency
-            status={status}
-            openClick={openClick}
-            closeClick={closeClick}
-            selectCurrnecy={selectCurrnecy}
-            setSelectCurrency={setSelectCurrency}
-          />
-          <Info />
-        </S.NavUl>
-      </S.Nav>
-      {status.lang ? (
-        <ModalPortal>
-          <CountryModal
-            status={status.lang}
-            closeClick={closeClick}
-            selectLang={selectLang}
-            setSelectLang={setSelectLang}
-          />
-        </ModalPortal>
-      ) : status.currency ? (
-        <ModalPortal>
-          <CurrencyModal
-            status={status.currency}
-            closeClick={closeClick}
-            selectCurrnecy={selectCurrnecy}
-            setSelectCurrency={setSelectCurrency}
-          />
-        </ModalPortal>
-      ) : null}
-    </S.Header>
+    <>
+      <S.GlobalStyle />
+      <S.Header>
+        <S.Logo>
+          <Link to="/">
+            <img
+              src="/images/logo_blue.png"
+              alt="logo"
+              style={{ width: '100%' }}
+            />
+          </Link>
+        </S.Logo>
+        <S.Nav>
+          <S.NavUl>
+            <Country
+              status={status}
+              openClick={openClick}
+              closeClick={closeClick}
+              selectLang={selectLang}
+              setSelectLang={setSelectLang}
+            />
+            <Currency
+              status={status}
+              openClick={openClick}
+              closeClick={closeClick}
+              selectCurrnecy={selectCurrnecy}
+              setSelectCurrency={setSelectCurrency}
+            />
+            <Info />
+          </S.NavUl>
+        </S.Nav>
+        {status.lang ? (
+          <ModalPortal>
+            <CountryModal
+              status={status.lang}
+              closeClick={closeClick}
+              selectLang={selectLang}
+              setSelectLang={setSelectLang}
+            />
+          </ModalPortal>
+        ) : status.currency ? (
+          <ModalPortal>
+            <CurrencyModal
+              status={status.currency}
+              closeClick={closeClick}
+              selectCurrnecy={selectCurrnecy}
+              setSelectCurrency={setSelectCurrency}
+            />
+          </ModalPortal>
+        ) : null}
+      </S.Header>
+    </>
   );
 };
 

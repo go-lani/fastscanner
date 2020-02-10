@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import SelectWayTap from './SelectWayTap';
+import SelectWayTap from './SelectWayTab';
 import SelectAirport from './SelectAirport';
 import SelectDate from './SelectDate';
 import SelectOption from './SelectOption';

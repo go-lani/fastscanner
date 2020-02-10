@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import ArrowDropDownOutlinedIcon from '@material-ui/icons/ArrowDropDownOutlined';
-import OptionPopup from './OptionPopup';
+// import OptionPopup from './OpenPopup';
 
 const StyledOptionButton = styled.button`
   width: 220px;
@@ -36,9 +36,9 @@ const SelectOption = () => {
   };
   const handleCloseButtonClick = () => setIsOpen(!isOpen);
 
-  const renderWidget = () => {
-    return <>{isOpen && <OptionPopup />}</>;
-  };
+  // const renderWidget = () => {
+  //   return <>{isOpen && <OptionPopup />}</>;
+  // };
 
   return (
     <>
@@ -51,7 +51,7 @@ const SelectOption = () => {
           <ArrowDropDownOutlinedIcon />
         </StyledOptionValue>
       </StyledOptionButton>
-      {ReactDOM.createPortal(renderWidget(), optionWidgetRoot)}
+      {/* {ReactDOM.createPortal(renderWidget(), optionWidgetRoot)} */}
     </>
   );
 };
