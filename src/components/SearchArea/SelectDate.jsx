@@ -1,46 +1,70 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import 'date-fns';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import React, { useState, useEffect } from 'react';
+import 'react-dates/initialize';
+import { DateRangePicker } from 'react-dates';
+import moment from 'moment';
+import koLocale from 'moment/locale/ko';
+import 'react-dates/lib/css/_datepicker.css';
+import './Date.css';
+import { S } from './SearchAreaStyled';
 
-const StyledDateButton = styled.button`
-  width: 130px;
-  height: 50px;
-  border: 0;
-  color: #000;
-  padding-left: 10px;
-`;
+const SelectDate = () => {
+  const [startDate, setStartDate] = useState(moment());
+  const [endDate, setEndDate] = useState(null);
+  const [way, setWay] = useState('');
+  const [focusedInput, setFocusedInput] = useState(null);
 
-const SelectDate = ({ way }) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  useEffect(() => {
+    moment.locale('ko', koLocale);
+  }, []);
 
-  const DatePick = ({ value, onClick }) => (
-    <StyledDateButton onClick={onClick}>{value}</StyledDateButton>
-  );
+  const handleClick = () => {
+    console.log(
+      '출국날짜',
+      startDate
+        .toISOString()
+        .split('')
+        .slice(0, 10)
+        .join(''),
+    );
+    console.log(
+      '입국날짜',
+      endDate
+        .toISOString()
+        .split('')
+        .slice(0, 10)
+        .join(''),
+    );
+    // console.log(startDate._d.toDateString(), endDate);
+  };
+
   return (
-    <>
-      <DatePicker
-        dateFormat="yyyy/MM/dd"
-        selected={startDate}
-        selectsStart
-        onChange={date => setStartDate(date)}
-        customInput={<DatePick />}
+    <fieldset>
+      <S.FieldTitle>가는날 / 오는날</S.FieldTitle>
+      <DateRangePicker
+        startDateId="startDate"
+        endDateId="endDate"
         startDate={startDate}
-        minDate={startDate}
-      />
-      <DatePicker
-        dateFormat="yyyy/MM/dd"
-        selected={endDate}
-        selectsEnd
-        onChange={date => setEndDate(date)}
-        customInput={<DatePick />}
-        disabled={way === '편도' ? true : false}
         endDate={endDate}
-        minDate={startDate}
+        endDatePlaceholderText="입국날짜"
+        // disabled="endDate"
+        onDatesChange={({ startDate, endDate }) => {
+          // console.log(startDate, endDate);
+          setStartDate(startDate);
+          setEndDate(endDate);
+        }}
+        focusedInput={focusedInput}
+        onFocusChange={focusedInput => {
+          setFocusedInput(focusedInput);
+        }}
+        disabled={way === '편도' ? 'endDate' : null}
+        numberOfMonths={1}
+        required={true}
+        displayFormat="YYYY년 MM월 DD일"
+        hideKeyboardShortcutsPanel={true}
+        noBorder={true}
+        readOnly={true}
       />
-    </>
+    </fieldset>
   );
 };
 
