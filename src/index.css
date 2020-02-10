@@ -122,6 +122,8 @@ input[type=image],
 input[type=reset],
 input[type=button],
 input[type=submit] {
+	border: 1px solid #eee;
+	background: #fff;
 	cursor: pointer;
 	-webkit-appearance: none;
 	appearance: none;

@@ -4,6 +4,9 @@ import styled, { css, keyframes } from 'styled-components';
 
 // header
 export const Header = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   justify-content: space-between;
   min-width: 600px;

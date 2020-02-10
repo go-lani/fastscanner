@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createRef } from 'react';
 import { S } from './layoutStyled';
-import SearchArea from '../components/SearchArea/index_new';
+import SearchArea from '../components/SearchArea';
 
 const ViewLayout = props => {
   const [fixed, setFixed] = useState(false);
