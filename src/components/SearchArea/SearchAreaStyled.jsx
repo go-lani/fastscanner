@@ -29,7 +29,7 @@ export const SearchForm = styled.form`
 
 export const SearchTop = styled.div`
   display: inline-block;
-  & > *:not(.MuiFormControl-root) {
+  & > *:not(.way-tab) {
     display: inline-block;
     position: relative;
     margin: 40px 0 0;
@@ -39,7 +39,7 @@ export const SearchTop = styled.div`
       border-right: none;
     }
   }
-  .MuiFormControl-root {
+  .way-tab {
     display: block;
   }
 `;
