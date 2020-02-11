@@ -3,11 +3,9 @@ import SelectWayTab from './SelectWayTab';
 import SelectAirport from './SelectAirport';
 import SelectDate from './SelectDate';
 import SelectOption from './SelectOption';
-import SubmitButton from './SubmitButton';
-import A11yTitle from '../common/A11yTitle';
-import CheckBox from '../common/CheckBox';
+import CheckBox from '../Common/CheckBox';
 import * as S from './SearchAreaStyled';
-import Button from '../common/Button';
+import Button from '../Common/Button';
 
 const SearchArea = () => {
   const [way, setWay] = React.useState('왕복');
@@ -22,7 +20,7 @@ const SearchArea = () => {
           <SelectOption />
         </S.SearchTop>
         <S.SearchBottom>
-          <CheckBox label="직항" id="nonstop" isDisable={true} />
+          <CheckBox label="직항" id="nonstop" isDisable={false} />
           <Button text="항공권 검색" size="medium" color="blue" image="plane" />
         </S.SearchBottom>
       </S.SearchForm>

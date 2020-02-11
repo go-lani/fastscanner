@@ -1,6 +1,6 @@
 import React from 'react';
-import A11yTitle from '../common/A11yTitle';
-import Radio from '../common/Radio';
+import A11yTitle from '../Common/A11yTitle';
+import Radio from '../Common/Radio';
 
 const SelectWayTab = ({ way, setWay }) => {
   const handleChange = event => {
