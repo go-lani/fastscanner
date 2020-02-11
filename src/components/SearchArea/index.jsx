@@ -23,20 +23,7 @@ const SearchArea = () => {
         </S.SearchTop>
         <S.SearchBottom>
           <CheckBox label="직항" id="nonstop" isDisable={true} />
-          <SubmitButton btxt="항공권 검색" />
-          <Button
-            text="항공권 검색"
-            size="large"
-            color="blue"
-            img="/plane.png"
-          />
-          <Button
-            text="항공권 검색"
-            size="medium"
-            color="blue"
-            img="/plane.png"
-          />
-          <Button text="선택" size="small" color="blue" image="plane" />
+          <Button text="항공권 검색" size="medium" color="blue" image="plane" />
         </S.SearchBottom>
       </S.SearchForm>
     </S.SearchWrapper>
