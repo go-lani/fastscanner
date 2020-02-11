@@ -3,22 +3,19 @@ import styled, { css, keyframes } from 'styled-components';
 
 const sizes = {
   small: {
-    width: '80px',
+    lineHeight: '24px',
     fontSize: '1.6rem',
     fontWeight: 400,
-    svgSize: '2.0rem',
   },
   medium: {
-    width: '150px',
+    lineHeight: '27px',
     fontSize: '1.8rem',
     fontWeight: 700,
-    svgSize: '2.2rem',
   },
   large: {
-    width: '200px',
+    lineHeight: '30px',
     fontSize: '2.0rem',
     fontWeight: 900,
-    svgSize: '2.4rem',
   },
 };
 
@@ -34,13 +31,9 @@ const images = {
 
 const sizeStyle = css`
   ${props => css`
-    width: ${sizes[props.size].width};
+    line-height: ${sizes[props.size].lineHeight};
     font-size: ${sizes[props.size].fontSize};
     font-weight: ${sizes[props.size].fontWeight};
-
-    img {
-      font-size: ${sizes[props.size].svgSize};
-    }
   `}
 `;
 
@@ -62,7 +55,9 @@ const colorChange = keyframes`
 `;
 
 const StyledButton = styled.button`
-  height: 40px;
+  /* 공통 */
+  display: inline-block;
+  padding: 8px 16px;
   border: 0;
   border-radius: 4px;
 
@@ -77,25 +72,27 @@ const StyledButton = styled.button`
   }
 
   /* img */
-  /* background: url('/images/plane.png') no-repeat;
-  background-repeat: no-repeat;
-  background-size: contain; */
-  span + img {
-    margin-left: 7px;
+  img {
+    display: inline-block;
+    ${props => css`
+      height: ${sizes[props.size].lineHeight};
+    `}
+    margin-left: 10px;
+    vertical-align: middle;
   }
 `;
 
-const Span = styled.span``;
+const Span = styled.span`
+  display: inline-block;
+  vertical-align: middle;
+`;
 
 const Button = ({ text, size, color, image }) => {
-  const a = images[image];
-  console.log(a);
-
   return (
     <>
       <StyledButton text={text} size={size} color={color} image={image}>
         <Span>{text}</Span>
-        <img src={`${a}`} alt={text} />
+        <img src={`${images[image]}`} alt={text} />
       </StyledButton>
     </>
   );
