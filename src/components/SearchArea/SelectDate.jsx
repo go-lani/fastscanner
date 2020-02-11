@@ -10,7 +10,7 @@ import * as S from './SearchAreaStyled';
 const SelectDate = () => {
   const [startDate, setStartDate] = useState(moment());
   const [endDate, setEndDate] = useState(null);
-  const [way, setWay] = useState('');
+  const [way] = useState('');
   const [focusedInput, setFocusedInput] = useState(null);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const SelectDate = () => {
   };
 
   return (
-    <fieldset>
+    <fieldset className="option-field date">
       <S.FieldTitle>가는날 / 오는날</S.FieldTitle>
       <DateRangePicker
         startDateId="startDate"

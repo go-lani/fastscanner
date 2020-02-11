@@ -14,8 +14,8 @@ const SearchArea = () => {
     <S.SearchWrapper>
       <A11yTitle>SearchArea(a11yText)</A11yTitle>
       <S.SearchForm>
+        <SelectWayTab way={way} setWay={setWay} />
         <S.SearchTop>
-          <SelectWayTab way={way} setWay={setWay} />
           <SelectAirport />
           <SelectDate way={way} />
           <SelectOption />

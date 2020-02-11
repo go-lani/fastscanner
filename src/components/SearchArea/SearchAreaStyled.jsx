@@ -1,5 +1,6 @@
 import styled, { css, keyframes } from 'styled-components';
 import { lightBlue } from '@material-ui/core/colors';
+import media from '../../libs/MediaQuery';
 
 // SearchArea 공통
 export const FieldTitle = styled.legend`
@@ -17,7 +18,7 @@ export const SearchWrapper = styled.section`
   color: #fff;
   font-size: 1.5rem;
   font-weight: 500;
-  padding: 20px;
+  padding: 30px;
   display: inline-flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -28,8 +29,29 @@ export const SearchForm = styled.form`
 `;
 
 export const SearchTop = styled.div`
-  display: inline-block;
-  & > *:not(.way-tab) {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px 0 0;
+
+  .option-field {
+    width: 100%;
+  }
+
+  &.options {
+    width: 100%;
+  }
+
+  ${media.desktop`
+    .option-field {
+      width: 40%;
+
+      &.options {
+        width: 20%;
+      }
+    }
+  `}
+
+  & > * {
     display: inline-block;
     position: relative;
     margin: 40px 0 0;
@@ -38,16 +60,17 @@ export const SearchTop = styled.div`
     &:last-child {
       border-right: none;
     }
-  }
-  .way-tab {
-    display: block;
+
+    ${media.mobile`
+      width: 50%;
+    `}
   }
 `;
 
 export const SearchBottom = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 20px 0 0;
+  margin: 30px 0 0;
 `;
 
 // 커스텀필요
@@ -96,6 +119,7 @@ export const OptionPopup = styled.div`
   background-color: #fff;
   font-size: 1.6rem;
   font-weight: 500;
+  color: #222;
 `;
 
 export const CategoryTitle = styled.p`
@@ -162,18 +186,25 @@ export const CompleteButton = styled.button`
 `;
 
 // SearchAirport
-
 export const AirportInput = styled.input`
-  width: 210px;
+  width: 45%;
   height: 50px;
   border: 0;
   color: #000;
   padding-left: 10px;
+
+  ${media.mobile`
+    width: 42%;
+  `}
 `;
 
 export const AirportChangeButton = styled.button`
-  width: 50px;
+  width: 10%;
   height: 50px;
+
+  ${media.mobile`
+    width: 16%;
+  `}
 `;
 
 // SelectDate
@@ -186,13 +217,8 @@ export const DateButton = styled.button`
 `;
 
 // SelectOption
-export const SelectOptionWrap = styled.div`
-  position: relative;
-  color: #222;
-`;
-
 export const OptionButton = styled.button`
-  width: 220px;
+  width: 100%;
   height: 50px;
   padding: 0 10px;
   border: 0;

@@ -1,5 +1,6 @@
 .DateInput {
-  width: 200px;
+  width: 45%;
+  border-right: 1px solid #eee;
 }
 
 .DateInput_input {
@@ -11,10 +12,27 @@
   cursor: pointer;
 }
 
+.DateRangePicker {
+  width: 100%;
+}
+
+.DateRangePickerInput {
+  width: 100%;
+}
+
+.DateRangePickerInput_arrow ~ .DateInput {
+  border-right: none;
+  border-left: 1px solid #eee;
+}
+
 .DateRangePickerInput__disabled {
   background: #fff;
 }
 
 .DateInput_input__disabled {
   cursor: not-allowed;
+}
+.DateRangePickerInput_arrow {
+  width: 10%;
+  text-align: center;
 }
