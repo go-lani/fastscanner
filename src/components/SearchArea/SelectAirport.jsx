@@ -1,6 +1,6 @@
 import React from 'react';
 import SwapHorizRoundedIcon from '@material-ui/icons/SwapHorizRounded';
-import A11yTitle from '../common/A11yTitle';
+import A11yTitle from '../Common/A11yTitle';
 import * as S from './SearchAreaStyled';
 
 const SelectAirport = () => {
