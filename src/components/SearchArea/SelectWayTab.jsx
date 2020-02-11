@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import A11yTitle from '../Common/A11yTitle';
 import Radio from '../Common/Radio';
+import { changeWaySaga } from '../../redux/modules/search';
 
-const SelectWayTab = ({ way, setWay }) => {
-  const handleChange = event => {
-    setWay(event.target.value);
-    console.log(event.target.value);
-  };
+const SelectWayTab = () => {
+  const way = useSelector(state => state.search.way);
+  const dispatch = useDispatch();
+
+  const handleChange = useCallback(
+    event => {
+      dispatch(changeWaySaga(event.target.id));
+    },
+    [dispatch],
+  );
+
   return (
     <fieldset className="way-tab">
       <A11yTitle as="legend">구간 설정</A11yTitle>
@@ -17,6 +25,7 @@ const SelectWayTab = ({ way, setWay }) => {
         value="왕복"
         label="왕복"
         onChange={handleChange}
+        default={way === 'round'}
       />
       <Radio
         radioId="oneway"
@@ -25,6 +34,7 @@ const SelectWayTab = ({ way, setWay }) => {
         value="편도"
         label="편도"
         onChange={handleChange}
+        default={way === 'oneway'}
       />
     </fieldset>
   );
