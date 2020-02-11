@@ -6,7 +6,7 @@ import MainLayout from '../layouts/MainLayout';
 const Home = () => {
   return (
     <MainLayout>
-      <Header></Header>
+      <Header />
       <SearchArea />
     </MainLayout>
   );

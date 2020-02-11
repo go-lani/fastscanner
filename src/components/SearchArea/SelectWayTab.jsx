@@ -11,22 +11,20 @@ const SelectWayTab = ({ way, setWay }) => {
     <fieldset className="way-tab">
       <A11yTitle as="legend">구간 설정</A11yTitle>
       <Radio
-        radioId="test"
-        size="large"
-        categoryName="hello"
-        text="test text"
-      />
-      <Radio
-        radioId="test2"
+        radioId="round"
         size="medium"
-        categoryName="hello"
-        text="test text2"
+        categoryName="way"
+        value="왕복"
+        label="왕복"
+        onChange={handleChange}
       />
       <Radio
-        radioId="test3"
-        size="small"
-        categoryName="hello"
-        text="test text2"
+        radioId="oneway"
+        size="medium"
+        categoryName="way"
+        value="편도"
+        label="편도"
+        onChange={handleChange}
       />
     </fieldset>
   );

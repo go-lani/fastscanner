@@ -12,10 +12,10 @@ const SearchArea = () => {
   const [way, setWay] = React.useState('왕복');
   return (
     <S.SearchWrapper>
-      <A11yTitle>SearchArea(a11yText)</A11yTitle>
+      <S.Greeting>어디로 떠나볼까요?</S.Greeting>
       <S.SearchForm>
+        <SelectWayTab way={way} setWay={setWay} />
         <S.SearchTop>
-          <SelectWayTab way={way} setWay={setWay} />
           <SelectAirport />
           <SelectDate way={way} />
           <SelectOption />
