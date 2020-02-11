@@ -9,6 +9,7 @@ const AirportDestinationBox = ({ id, value = '인천(ICN)', placeholder }) => {
         id={id}
         defaultValue={value}
         placeholder={placeholder}
+        autoComplete="off"
       />
       <S.AirportListArea>
         <S.AirportList>헬로우</S.AirportList>

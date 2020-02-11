@@ -310,17 +310,20 @@ export const AirportListArea = styled.div`
   left: 0;
   z-index: 2;
   width: 100%;
+  border-radius: 5px;
   background: #fff;
 
   ${media.desktop`
     max-width: 400px;
+    border-radius: none;
+    background: none;
   `}
 
   ${({ visible }) => css`
     display: ${visible ? 'block' : 'none'};
   `}
 
-&:before {
+  &:before {
     content: '';
     position: absolute;
     top: -15px;
@@ -334,31 +337,50 @@ export const AirportListArea = styled.div`
 
 export const SearchCategoryTitle = styled.p`
   display: block;
+  padding: 20px;
+  font-weight: 700;
   font-size: 2rem;
   color: #222;
-  padding: 0 0 15px;
-  border-bottom: 2px solid #222;
+  border-bottom: 2px solid #dedede;
+  word-break: keep-all;
 
   ${media.desktop`
     display: none;
   `}
 `;
 
-export const AirportList = styled.ul``;
+export const AirportList = styled.ul`
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 264px;
+  background: none;
+
+  ${media.desktop`
+    border-radius: 5px;
+    background: #fff;
+  `}
+`;
 
 export const AirportListItem = styled.li`
   width: 100%;
   margin: 0;
-  border-bottom: 1px solid #eee;
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   line-height: 26px;
   color: #222;
 
   button {
     display: block;
     width: 100%;
+    padding: 20px;
     border: none;
     text-align: left;
     background: transparent;
+    color: #0288d1;
+    transition: all 0.3s;
+
+    &:hover {
+      background: #0288d1;
+      color: #fff;
+    }
   }
 `;

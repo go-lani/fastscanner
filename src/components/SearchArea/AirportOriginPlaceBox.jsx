@@ -9,6 +9,7 @@ const AirportOriginPlaceBox = ({ id, value = '인천(ICN)', placeholder }) => {
         id={id}
         defaultValue={value}
         placeholder={placeholder}
+        autoComplete="off"
       />
       {/*
       1. 입력값이 있을시(show) ? 포커스있을시 show,hide
