@@ -6,12 +6,13 @@ import koLocale from 'moment/locale/ko';
 import 'react-dates/lib/css/_datepicker.css';
 import './Date.css';
 import * as S from './SearchAreaStyled';
+import { useSelector } from 'react-redux';
 
 const SelectDate = () => {
   const [startDate, setStartDate] = useState(moment());
   const [endDate, setEndDate] = useState(null);
-  const [way] = useState('편도');
   const [focusedInput, setFocusedInput] = useState(null);
+  const way = useSelector(state => state.search.way);
 
   useEffect(() => {
     moment.locale('ko', koLocale);
@@ -55,7 +56,7 @@ const SelectDate = () => {
         onFocusChange={focusedInput => {
           setFocusedInput(focusedInput);
         }}
-        disabled={way === '편도' ? 'endDate' : null}
+        disabled={way === 'oneway' ? 'endDate' : null}
         numberOfMonths={1}
         required={true}
         displayFormat="YYYY년 MM월 DD일"

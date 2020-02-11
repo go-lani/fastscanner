@@ -9,15 +9,14 @@ import Button from '../Common/Button';
 import SearchAreaPopup from './SearchAreaPopup';
 
 const SearchArea = () => {
-  const [way, setWay] = React.useState('왕복');
   return (
     <S.SearchWrapper>
       <S.Greeting>어디로 떠나볼까요?</S.Greeting>
       <S.SearchForm>
-        <SelectWayTab way={way} setWay={setWay} />
+        <SelectWayTab />
         <S.SearchTop>
           <SelectAirport />
-          <SelectDate way={way} />
+          <SelectDate />
           <SelectOption />
         </S.SearchTop>
         <S.SearchBottom>
