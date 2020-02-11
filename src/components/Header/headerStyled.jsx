@@ -15,7 +15,9 @@ export const Header = styled.header`
   padding: 0 20px;
 
   ${media.mobile`
-    /*  */
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
   `}
 `;
 

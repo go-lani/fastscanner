@@ -106,8 +106,14 @@ const Input = styled.input`
 const Radio = props => {
   return (
     <Label htmlFor={props.radioId} size={props.size}>
-      <Input id={props.radioId} name={props.categoryName} type="radio" />
-      <span>{props.text}</span>
+      <Input
+        id={props.radioId}
+        name={props.categoryName}
+        type="radio"
+        value={props.value}
+        onChange={props.onChange}
+      />
+      <span>{props.label}</span>
     </Label>
   );
 };
