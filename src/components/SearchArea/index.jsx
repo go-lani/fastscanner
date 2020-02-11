@@ -6,6 +6,7 @@ import SelectOption from './SelectOption';
 import CheckBox from '../Common/CheckBox';
 import * as S from './SearchAreaStyled';
 import Button from '../Common/Button';
+import SearchAreaPopup from './SearchAreaPopup';
 
 const SearchArea = () => {
   const [way, setWay] = React.useState('왕복');
@@ -24,6 +25,7 @@ const SearchArea = () => {
           <Button text="항공권 검색" size="medium" color="blue" image="plane" />
         </S.SearchBottom>
       </S.SearchForm>
+      <SearchAreaPopup />
     </S.SearchWrapper>
   );
 };

@@ -10,7 +10,7 @@ import * as S from './SearchAreaStyled';
 const SelectDate = () => {
   const [startDate, setStartDate] = useState(moment());
   const [endDate, setEndDate] = useState(null);
-  const [way] = useState('');
+  const [way] = useState('편도');
   const [focusedInput, setFocusedInput] = useState(null);
 
   useEffect(() => {
@@ -46,7 +46,6 @@ const SelectDate = () => {
         startDate={startDate}
         endDate={endDate}
         endDatePlaceholderText="입국날짜"
-        // disabled="endDate"
         onDatesChange={({ startDate, endDate }) => {
           // console.log(startDate, endDate);
           setStartDate(startDate);

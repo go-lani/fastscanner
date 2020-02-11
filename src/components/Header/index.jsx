@@ -4,7 +4,7 @@ import * as S from './headerStyled';
 import Country from './Country';
 import Currency from './Currency';
 import Info from './Info';
-import ModalPortal from './ModalPotal';
+import ModalPortal from '../Popup/ModalPotal';
 import CountryModal from './CountryModal';
 import CurrencyModal from './CurrencyModal';
 

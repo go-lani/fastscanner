@@ -75,8 +75,13 @@ export const SearchTop = styled.div`
       border-right: none;
     }
 
-    ${media.mobile`
+    ${media.tablet`
       width: 50%;
+      border-right: none;
+    `}
+
+    ${media.mobile`
+      border-right: none;
     `}
   }
 `;
@@ -124,7 +129,6 @@ export const Triangle = styled.div`
   border-right: 15px solid transparent;
   border-bottom: 15px solid #fff;
   border-left: 15px solid transparent;
-  margin: 0 auto;
 `;
 
 export const OptionPopup = styled.div`
@@ -200,18 +204,6 @@ export const CompleteButton = styled.button`
 `;
 
 // SearchAirport
-export const AirportInput = styled.input`
-  width: 45%;
-  height: 50px;
-  border: 0;
-  color: #000;
-  padding-left: 10px;
-
-  ${media.mobile`
-    width: 42%;
-  `}
-`;
-
 export const AirportChangeButton = styled.button`
   width: 10%;
   height: 50px;
@@ -281,4 +273,92 @@ export const SearchButton = styled.button`
 
 export const ButtonText = styled.span`
   vertical-align: middle;
+`;
+
+export const SearchAreaListBox = styled.ul`
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 400px;
+`;
+
+// AirportInputBox
+export const AirportInputBox = styled.div`
+  display: inline-block;
+  width: 45%;
+  position: static;
+
+  ${media.desktop`
+    position: relative;
+  `}
+
+  ${media.mobile`
+    width: 42%;
+  `}
+`;
+
+export const AirportInput = styled.input`
+  width: 100%;
+  height: 50px;
+  border: 0;
+  color: #000;
+  padding-left: 10px;
+`;
+
+export const AirportListArea = styled.div`
+  position: absolute;
+  top: 70px;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  background: #fff;
+
+  ${media.desktop`
+    max-width: 400px;
+  `}
+
+  ${({ visible }) => css`
+    display: ${visible ? 'block' : 'none'};
+  `}
+
+&:before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #fff;
+    border-left: 15px solid transparent;
+    transform: translateX(-50%);
+  }
+`;
+
+export const SearchCategoryTitle = styled.p`
+  display: block;
+  font-size: 2rem;
+  color: #222;
+  padding: 0 0 15px;
+  border-bottom: 2px solid #222;
+
+  ${media.desktop`
+    display: none;
+  `}
+`;
+
+export const AirportList = styled.ul``;
+
+export const AirportListItem = styled.li`
+  width: 100%;
+  margin: 0;
+  border-bottom: 1px solid #eee;
+  font-size: 1.6rem;
+  line-height: 26px;
+  color: #222;
+
+  button {
+    display: block;
+    width: 100%;
+    border: none;
+    text-align: left;
+    background: transparent;
+  }
 `;
