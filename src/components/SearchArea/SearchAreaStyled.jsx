@@ -13,19 +13,33 @@ export const FieldTitle = styled.legend`
 
 // SearchArea Index;
 export const SearchWrapper = styled.section`
-  background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 10px;
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: 500;
-  padding: 30px;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  position: relative;
+`;
+
+export const Greeting = styled.h2`
+  position: absolute;
+  top: -100px;
+  left: 0;
+  font-weight: 700;
+  font-size: 6rem;
+  line-height: 70px;
+  color: #fff;
+
+  ${media.mobile`
+    font-size: 4.5rem;
+    line-height: 50px;
+  `}
 `;
 
 export const SearchForm = styled.form`
-  display: inline-block;
+  padding: 30px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 500;
 `;
 
 export const SearchTop = styled.div`
