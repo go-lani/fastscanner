@@ -9,15 +9,10 @@ const SelectOption = () => {
   const cabinClass = useSelector(state => state.search.cabinClass);
   const countAdults = useSelector(state => state.search.adults);
   const countChildren = useSelector(state => state.search.children);
-  // const dimRef = createRef();
-
   const popupOpen = e => setIsOpen(true);
   const popupClose = () => setIsOpen(!isOpen);
 
-  // const click = e => {
-  //   console.log(e.target);
-  //   if (dimRef.current.contains(e.target)) setIsOpen(false);
-  // };
+  const dimRef = createRef();
 
   const cabinClassName = () => {
     return cabinClass === 'economy'
@@ -29,9 +24,11 @@ const SelectOption = () => {
       : '일등석';
   };
 
+  const click = e => {
+    if (dimRef.current.contains(e.target)) setIsOpen(false);
+  };
   return (
     <>
-      {/* <S.Dim ref={dimRef} onClick={click} /> */}
       <div className="option-field options">
         <S.FieldTitle as="p">좌석등급 / 승객</S.FieldTitle>
         <S.OptionButton onClick={popupOpen} type="button">
@@ -47,6 +44,7 @@ const SelectOption = () => {
           hidePopup={popupClose}
           cabinClass={cabinClass}
         />
+        <S.Dim ref={dimRef} isOpen={isOpen} onClick={click} />
       </div>
     </>
   );
