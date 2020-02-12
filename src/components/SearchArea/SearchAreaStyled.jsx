@@ -13,7 +13,8 @@ export const FieldTitle = styled.legend`
 
 // SearchArea Index;
 export const SearchWrapper = styled.section`
-  display: flex;
+  display: ${props => (props.isOpen ? 'flex' : 'none')};
+  /* display: flex; */
   flex-direction: column;
   position: relative;
   z-index: 2;
@@ -37,7 +38,8 @@ export const Greeting = styled.h2`
 export const SearchForm = styled.form`
   padding: 30px;
   border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: ${props =>
+    props.isHeader === true ? 'transparent' : 'rgba(0, 0, 0, 0.6)'};
   color: #fff;
   font-size: 1.5rem;
   font-weight: 500;
@@ -322,17 +324,24 @@ export const AirportListArea = styled.div`
   left: 0;
   z-index: 2;
   width: 100%;
+  border-radius: 5px;
   background: #fff;
 
   ${media.desktop`
     max-width: 400px;
+    border-radius: none;
+    background: none;
   `}
 
   ${({ visible }) => css`
     display: ${visible ? 'block' : 'none'};
+
+    &:before {
+      display: ${visible ? 'block' : 'none'};
+    }
   `}
 
-&:before {
+  &:before {
     content: '';
     position: absolute;
     top: -15px;
@@ -344,33 +353,156 @@ export const AirportListArea = styled.div`
   }
 `;
 
+export const SearchPlaceDim = styled.div`
+  ${({ visible }) => css`
+    display: ${visible ? 'block' : 'none'};
+  `}
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  background: transparent;
+`;
+
 export const SearchCategoryTitle = styled.p`
   display: block;
+  padding: 20px;
+  font-weight: 700;
   font-size: 2rem;
   color: #222;
-  padding: 0 0 15px;
-  border-bottom: 2px solid #222;
+  border-bottom: 2px solid #dedede;
+  word-break: keep-all;
 
   ${media.desktop`
     display: none;
   `}
 `;
 
-export const AirportList = styled.ul``;
+export const AirportList = styled.ul`
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 264px;
+  background: none;
+
+  ${media.desktop`
+    border-radius: 5px;
+    background: #fff;
+  `}
+`;
 
 export const AirportListItem = styled.li`
   width: 100%;
   margin: 0;
-  border-bottom: 1px solid #eee;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   line-height: 26px;
   color: #222;
 
   button {
     display: block;
     width: 100%;
+    padding: 20px;
     border: none;
     text-align: left;
     background: transparent;
+    color: #0288d1;
+    transition: all 0.3s;
+
+    &:hover {
+      background: #0288d1;
+      color: #fff;
+    }
   }
+`;
+
+// SearchAreaHeader
+export const SearchHeaderWrapper = styled.div`
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  ${props =>
+    props.fixed &&
+    css`
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      right: 0;
+    `}
+`;
+
+export const FlightInfoSection = styled.section`
+  width: 100%;
+  padding: 20px 0 0 10px;
+  text-align: center;
+  color: #fff;
+  line-height: 2rem;
+  cursor: pointer;
+`;
+
+export const AirportInfoWrapper = styled.div`
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  ${props =>
+    props.isOpen &&
+    css`
+      border-bottom: 1px solid rgba(115, 115, 115, 0.5);
+    `}
+`;
+
+export const AirportName = styled.span`
+  font-size: 1.8rem;
+  word-break: keep-all;
+`;
+
+export const FlightIcon = styled.img`
+  width: 15px;
+  height: 15px;
+  margin: 0 10px;
+`;
+
+export const DateOpionInfoWrapper = styled.div`
+  display: ${props => (props.isOpen || props.fixed ? 'none' : 'block')};
+`;
+
+export const DateText = styled.span`
+  font-size: 1.2rem;
+  &:first-child {
+    &:after {
+      content: '-';
+      margin: 5px;
+    }
+  }
+`;
+
+export const OptionText = styled.span`
+  font-size: 1.2rem;
+  margin: 0 2px;
+  &:after {
+    content: ',';
+  }
+  &:last-child:after {
+    content: '';
+  }
+`;
+
+export const DownButton = styled.button`
+  display: inline-block;
+  background-color: transparent;
+  border: 0;
+  padding: 15px 25px;
+`;
+
+export const ArrowIcon = styled.img`
+  width: 15px;
+  ${props =>
+    props.isOpen === true &&
+    css`
+      transform: rotate(180deg);
+    `}
 `;

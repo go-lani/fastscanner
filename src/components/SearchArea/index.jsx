@@ -8,37 +8,43 @@ import * as S from './SearchAreaStyled';
 import Button from '../Common/Button';
 import SearchAreaPopup from './SearchAreaPopup';
 
-const SearchArea = () => {
-  const dimRef = createRef();
-  const click = e => {
-    console.log(e.target);
-    // if (dimRef.current.contains(e.target)) setIsOpen(false);
-  };
+const SearchArea = ({
+  searchOrigin,
+  selectOrigin,
+  originSearchList,
+  originName,
+  searchDestination,
+  selectDestination,
+  destinationSearchList,
+  destinationName,
+  isOpen,
+}) => {
   return (
-    <>
-      <S.Dim ref={dimRef} onClick={click} />
-      <S.SearchWrapper>
-        <S.Greeting>어디로 떠나볼까요?</S.Greeting>
-        <S.SearchForm>
-          <SelectWayTab />
-          <S.SearchTop>
-            <SelectAirport />
-            <SelectDate />
-            <SelectOption />
-          </S.SearchTop>
-          <S.SearchBottom>
-            <CheckBox label="직항" id="nonstop" isDisable={false} />
-            <Button
-              text="항공권 검색"
-              size="medium"
-              color="blue"
-              image="plane"
-            />
-          </S.SearchBottom>
-        </S.SearchForm>
-        <SearchAreaPopup />
-      </S.SearchWrapper>
-    </>
+    <S.SearchWrapper isOpen={true}>
+      <S.Greeting>어디로 떠나볼까요?</S.Greeting>
+      <S.SearchForm isHeader={false}>
+        <SelectWayTab />
+        <S.SearchTop>
+          <SelectAirport
+            originSearchList={originSearchList}
+            searchOrigin={searchOrigin}
+            selectOrigin={selectOrigin}
+            originName={originName}
+            destinationSearchList={destinationSearchList}
+            searchDestination={searchDestination}
+            selectDestination={selectDestination}
+            destinationName={destinationName}
+          />
+          <SelectDate />
+          <SelectOption />
+        </S.SearchTop>
+        <S.SearchBottom>
+          <CheckBox label="직항" id="nonstop" isDisable={false} />
+          <Button text="항공권 검색" size="medium" color="blue" image="plane" />
+        </S.SearchBottom>
+      </S.SearchForm>
+      <SearchAreaPopup />
+    </S.SearchWrapper>
   );
 };
 

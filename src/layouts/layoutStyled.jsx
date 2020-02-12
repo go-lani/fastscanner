@@ -19,10 +19,10 @@ S.ViewLayout = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
-  z-index: 3;
-  margin: -200px 0 0;
-  padding: 200px 0 0;
+  z-index: -1;
+  padding: 190px 0 0;
   background: url('/images/test.jpg') center bottom no-repeat fixed;
+  margin-top: -190px;
   /* background-size: cover; */
 
   /* desktop */
