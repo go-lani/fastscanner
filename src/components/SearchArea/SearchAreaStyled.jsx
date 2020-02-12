@@ -13,13 +13,10 @@ export const FieldTitle = styled.legend`
 
 // SearchArea Index;
 export const SearchWrapper = styled.section`
-  display: flex;
+  display: ${props => (props.isOpen ? 'flex' : 'none')};
+  /* display: flex; */
   flex-direction: column;
   position: relative;
-`;
-
-export const SearchWrapperHeader = styled(SearchWrapper)`
-  display: ${props => (props.isOpen ? 'flex' : 'none')};
 `;
 
 export const Greeting = styled.h2`
