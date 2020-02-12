@@ -5,7 +5,16 @@ import * as S from './SearchAreaStyled';
 import AirportOriginPlaceBox from './AirportOriginPlaceBox';
 import AirportDestinationBox from './AirportDestinationBox';
 
-const SelectAirport = () => {
+const SelectAirport = ({
+  originSearchList,
+  selectOrigin,
+  searchOrigin,
+  originName,
+  destinationSearchList,
+  searchDestination,
+  selectDestination,
+  destinationName,
+}) => {
   const changeAirport = () => {
     console.log('출발지 도착지를 반전시킵니다.');
   };
@@ -19,6 +28,10 @@ const SelectAirport = () => {
         id="airport-depature"
         value="인천(ICN)"
         placeholder="출발지 선택"
+        originSearchList={originSearchList}
+        searchOrigin={searchOrigin}
+        selectOrigin={selectOrigin}
+        originName={originName}
       />
       <S.AirportChangeButton onClick={changeAirport}>
         <SwapHorizRoundedIcon
@@ -34,6 +47,10 @@ const SelectAirport = () => {
         id="airport-arrived"
         value=""
         placeholder="도착지 선택"
+        destinationSearchList={destinationSearchList}
+        searchDestination={searchDestination}
+        selectDestination={selectDestination}
+        destinationName={destinationName}
       />
     </fieldset>
   );

@@ -8,14 +8,32 @@ import * as S from './SearchAreaStyled';
 import Button from '../Common/Button';
 import SearchAreaPopup from './SearchAreaPopup';
 
-const SearchArea = () => {
+const SearchArea = ({
+  searchOrigin,
+  selectOrigin,
+  originSearchList,
+  originName,
+  searchDestination,
+  selectDestination,
+  destinationSearchList,
+  destinationName,
+}) => {
   return (
     <S.SearchWrapper>
       <S.Greeting>어디로 떠나볼까요?</S.Greeting>
       <S.SearchForm>
         <SelectWayTab />
         <S.SearchTop>
-          <SelectAirport />
+          <SelectAirport
+            originSearchList={originSearchList}
+            searchOrigin={searchOrigin}
+            selectOrigin={selectOrigin}
+            originName={originName}
+            destinationSearchList={destinationSearchList}
+            searchDestination={searchDestination}
+            selectDestination={selectDestination}
+            destinationName={destinationName}
+          />
           <SelectDate />
           <SelectOption />
         </S.SearchTop>

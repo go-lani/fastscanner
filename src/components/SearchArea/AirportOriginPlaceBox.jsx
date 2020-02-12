@@ -1,29 +1,77 @@
-import React from 'react';
+import React, { useState, useEffect, createRef } from 'react';
 import * as S from './SearchAreaStyled';
+import uuid from 'uuid';
+import { debounce } from 'lodash';
 
-const AirportOriginPlaceBox = ({ id, value = '인천(ICN)', placeholder }) => {
+const AirportOriginPlaceBox = ({
+  id,
+  placeholder,
+  originSearchList,
+  searchOrigin,
+  selectOrigin,
+  originName,
+}) => {
+  const [origin, setOrigin] = useState(originName);
+  const [visible, setVisible] = useState(false);
+  const originInput = createRef();
+
+  useEffect(() => {
+    originInput.current.value = origin;
+  }, [origin, originInput]);
+
+  const _handleChange = debounce(value => {
+    searchOrigin(value);
+  }, 300);
+
+  function handledChange(e) {
+    setVisible(true);
+    const value = e.target.value.trim();
+    _handleChange(value);
+  }
+
+  function handledClick(PlaceId, PlaceName) {
+    console.log(handledClick);
+    selectOrigin({ PlaceName, PlaceId });
+    setOrigin(`${PlaceName}(${PlaceId})`);
+    setVisible(false);
+  }
+
+  function hide() {
+    setVisible(false);
+  }
+
   return (
     <S.AirportInputBox>
       <S.AirportInput
+        ref={originInput}
         type="text"
         id={id}
-        defaultValue={value}
+        defaultValue={origin}
         placeholder={placeholder}
         autoComplete="off"
+        onChange={handledChange}
       />
-      {/*
-      1. 입력값이 있을시(show) ? 포커스있을시 show,hide
-      2. 검색결과가 있을시(show), 없을시(hide)
-      3. 선택시(HIDE)
-      length 값이 있을때만 노출 */}
-      <S.AirportListArea visible={true}>
-        <S.SearchCategoryTitle>출발지를 선택해주세요</S.SearchCategoryTitle>
-        <S.AirportList>
-          <S.AirportListItem>
-            <button>헬로우</button>
-          </S.AirportListItem>
-        </S.AirportList>
-      </S.AirportListArea>
+
+      {originSearchList && (
+        <>
+          <S.SearchPlaceDim onClick={hide} visible={visible} />
+          <S.AirportListArea visible={visible}>
+            <S.SearchCategoryTitle>출발지를 선택해주세요</S.SearchCategoryTitle>
+            <S.AirportList>
+              {originSearchList.map(list => (
+                <S.AirportListItem key={uuid.v4()}>
+                  <button
+                    type="button"
+                    onClick={() => handledClick(list.PlaceId, list.PlaceName)}
+                  >
+                    {`${list.PlaceName}(${list.PlaceId})`}
+                  </button>
+                </S.AirportListItem>
+              ))}
+            </S.AirportList>
+          </S.AirportListArea>
+        </>
+      )}
     </S.AirportInputBox>
   );
 };

@@ -321,6 +321,10 @@ export const AirportListArea = styled.div`
 
   ${({ visible }) => css`
     display: ${visible ? 'block' : 'none'};
+
+    &:before {
+      display: ${visible ? 'block' : 'none'};
+    }
   `}
 
   &:before {
@@ -333,6 +337,19 @@ export const AirportListArea = styled.div`
     border-left: 15px solid transparent;
     transform: translateX(-50%);
   }
+`;
+
+export const SearchPlaceDim = styled.div`
+  ${({ visible }) => css`
+    display: ${visible ? 'block' : 'none'};
+  `}
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  background: transparent;
 `;
 
 export const SearchCategoryTitle = styled.p`
@@ -364,7 +381,7 @@ export const AirportList = styled.ul`
 export const AirportListItem = styled.li`
   width: 100%;
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   line-height: 26px;
   color: #222;
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import Header from '../components/Header';
-import SearchArea from '../components/SearchArea';
 import MainLayout from '../layouts/MainLayout';
+import SearchAreaContainer from '../container/SearchAreaContainer';
 
 const Home = () => {
   return (
     <MainLayout>
       <Header />
-      <SearchArea />
+      <SearchAreaContainer />
     </MainLayout>
   );
 };
