@@ -18,6 +18,10 @@ export const SearchWrapper = styled.section`
   position: relative;
 `;
 
+export const SearchWrapperHeader = styled(SearchWrapper)`
+  display: ${props => (props.isOpen ? 'flex' : 'none')};
+`;
+
 export const Greeting = styled.h2`
   position: absolute;
   top: -100px;
@@ -36,7 +40,8 @@ export const Greeting = styled.h2`
 export const SearchForm = styled.form`
   padding: 30px;
   border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: ${props =>
+    props.isHeader === true ? 'transparent' : 'rgba(0, 0, 0, 0.6)'};
   color: #fff;
   font-size: 1.5rem;
   font-weight: 500;
@@ -400,4 +405,95 @@ export const AirportListItem = styled.li`
       color: #fff;
     }
   }
+`;
+
+// SearchAreaHeader
+export const SearchHeaderWrapper = styled.div`
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  ${props =>
+    props.fixed &&
+    css`
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      right: 0;
+    `}
+`;
+
+export const FlightInfoSection = styled.section`
+  width: 100%;
+  padding: 20px 0 0 10px;
+  text-align: center;
+  color: #fff;
+  line-height: 2rem;
+  cursor: pointer;
+`;
+
+export const AirportInfoWrapper = styled.div`
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  ${props =>
+    props.isOpen &&
+    css`
+      border-bottom: 1px solid rgba(115, 115, 115, 0.5);
+    `}
+`;
+
+export const AirportName = styled.span`
+  font-size: 1.8rem;
+  word-break: keep-all;
+`;
+
+export const FlightIcon = styled.img`
+  width: 15px;
+  height: 15px;
+  margin: 0 10px;
+`;
+
+export const DateOpionInfoWrapper = styled.div`
+  display: ${props => (props.isOpen || props.fixed ? 'none' : 'block')};
+`;
+
+export const DateText = styled.span`
+  font-size: 1.2rem;
+  &:first-child {
+    &:after {
+      content: '-';
+      margin: 5px;
+    }
+  }
+`;
+
+export const OptionText = styled.span`
+  font-size: 1.2rem;
+  margin: 0 2px;
+  &:after {
+    content: ',';
+  }
+  &:last-child:after {
+    content: '';
+  }
+`;
+
+export const DownButton = styled.button`
+  display: inline-block;
+  background-color: transparent;
+  border: 0;
+  padding: 15px 25px;
+`;
+
+export const ArrowIcon = styled.img`
+  width: 15px;
+  ${props =>
+    props.isOpen === true &&
+    css`
+      transform: rotate(180deg);
+    `}
 `;
