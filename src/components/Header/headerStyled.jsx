@@ -13,6 +13,7 @@ export const Header = styled.header`
   right: 0;
   min-width: 320px;
   padding: 0 20px;
+  z-index: 3;
 
   ${media.mobile`
     flex-direction: column;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
 import moment from 'moment';
@@ -6,49 +6,81 @@ import koLocale from 'moment/locale/ko';
 import 'react-dates/lib/css/_datepicker.css';
 import './Date.css';
 import * as S from './SearchAreaStyled';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { getOutDateSaga, getInDateSaga } from '../../redux/modules/search';
 
 const SelectDate = () => {
-  const [startDate, setStartDate] = useState(moment());
-  const [endDate, setEndDate] = useState(null);
+  const [outboundDate, setOutboundDate] = useState(moment());
+  const [inboundDate, setInboundDate] = useState(null);
   const [focusedInput, setFocusedInput] = useState(null);
   const way = useSelector(state => state.search.way);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     moment.locale('ko', koLocale);
-  }, []);
+    dispatch(
+      getOutDateSaga(
+        outboundDate
+          .toISOString()
+          .split('')
+          .slice(0, 10)
+          .join(''),
+      ),
+    );
+  }, [dispatch, outboundDate]);
 
-  const handleClick = () => {
-    console.log(
-      '출국날짜',
+  const setStartDate = startDate => {
+    if (
+      outboundDate
+        .toISOString()
+        .split('')
+        .slice(0, 10)
+        .join('') ===
       startDate
         .toISOString()
         .split('')
         .slice(0, 10)
-        .join(''),
+        .join('')
+    )
+      return;
+    setOutboundDate(startDate);
+    dispatch(
+      getOutDateSaga(
+        startDate
+          .toISOString()
+          .split('')
+          .slice(0, 10)
+          .join(''),
+      ),
     );
-    console.log(
-      '입국날짜',
-      endDate
-        .toISOString()
-        .split('')
-        .slice(0, 10)
-        .join(''),
-    );
-    // console.log(startDate._d.toDateString(), endDate);
   };
 
+  const setEndDate = endDate => {
+    if (!endDate) return;
+
+    setInboundDate(endDate);
+    dispatch(
+      getInDateSaga(
+        endDate
+          .toISOString()
+          .split('')
+          .slice(0, 10)
+          .join(''),
+      ),
+    );
+  };
+  console.log(inboundDate);
   return (
     <fieldset className="option-field date">
       <S.FieldTitle>가는날 / 오는날</S.FieldTitle>
       <DateRangePicker
         startDateId="startDate"
         endDateId="endDate"
-        startDate={startDate}
-        endDate={endDate}
-        endDatePlaceholderText="입국날짜"
+        startDate={outboundDate}
+        endDate={way === 'round' ? inboundDate : null}
+        endDatePlaceholderText={way === 'oneway' ? '(편도)' : '입국날짜'}
         onDatesChange={({ startDate, endDate }) => {
-          // console.log(startDate, endDate);
           setStartDate(startDate);
           setEndDate(endDate);
         }}

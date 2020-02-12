@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, createRef, useEffect } from 'react';
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import RemoveRoundedIcon from '@material-ui/icons/RemoveRounded';
 import * as S from './SearchAreaStyled';
+import {
+  getClassSaga,
+  getAdultsSaga,
+  getChildrenSaga,
+} from '../../redux/modules/search';
+import { useSelector, useDispatch } from 'react-redux';
 
 const OptionPopup = ({ isOpen, hidePopup }) => {
   const [countAdults, setCountAdults] = useState(1);
   const [countChildren, setCountChildren] = useState(0);
   const [cabinClass, setCabinClass] = useState('economy');
+  // const cabinClass = useSelector(state => state.search.cabinClass)
+  const cabinClassRef = createRef();
+  const dispatch = useDispatch();
 
   const minusChild = () => {
     setCountChildren(countChildren - 1);
@@ -26,8 +35,18 @@ const OptionPopup = ({ isOpen, hidePopup }) => {
 
   const changeCabinClass = ({ target }) => {
     setCabinClass(target.value);
+    dispatch(getClassSaga(cabinClassRef.current.value));
     console.log(target.value);
   };
+
+  const submitOption = () => {
+    hidePopup();
+  };
+
+  useEffect(() => {
+    dispatch(getAdultsSaga(countAdults));
+    dispatch(getChildrenSaga(countChildren));
+  }, [countAdults, countChildren, dispatch]);
 
   return (
     <S.OptionPopupWrapper isOpen={isOpen}>
@@ -38,6 +57,7 @@ const OptionPopup = ({ isOpen, hidePopup }) => {
           name="cabinClass"
           onChange={changeCabinClass}
           required
+          ref={cabinClassRef}
         >
           <option value="economy">일반석</option>
           <option value="premiumeconomy">프리미엄 일반석</option>
@@ -57,7 +77,7 @@ const OptionPopup = ({ isOpen, hidePopup }) => {
         <S.CountArea>
           <S.CountButton
             type="button"
-            disabled={countAdults ? false : true}
+            disabled={countAdults === 1 ? true : false}
             onClick={minusAdult}
           >
             <RemoveRoundedIcon fontSize="large" />
@@ -91,7 +111,7 @@ const OptionPopup = ({ isOpen, hidePopup }) => {
           유/소아 동반 여행 시 연령 제한과 정책은 항공사별로 다를 수 있으니
           예약하기 전에 해당 항공사와 확인하시기 바랍니다.
         </S.Notice>
-        <S.CompleteButton type="button" onClick={hidePopup}>
+        <S.CompleteButton type="button" onClick={submitOption}>
           완료
         </S.CompleteButton>
       </S.OptionPopup>

@@ -16,6 +16,7 @@ export const SearchWrapper = styled.section`
   display: flex;
   flex-direction: column;
   position: relative;
+  z-index: 2;
 `;
 
 export const Greeting = styled.h2`
@@ -49,6 +50,7 @@ export const SearchTop = styled.div`
 
   .option-field {
     width: 100%;
+    margin: 40px 0 0;
   }
 
   &.options {
@@ -68,7 +70,6 @@ export const SearchTop = styled.div`
   & > * {
     display: inline-block;
     position: relative;
-    margin: 40px 0 0;
     border-right: 1px solid #eee;
 
     &:last-child {
@@ -223,6 +224,17 @@ export const DateButton = styled.button`
 `;
 
 // SelectOption
+// z-index때문에 지금 다른 버튼이 눌리지 않음
+// 수정해야함
+export const Dim = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+`;
+
 export const OptionButton = styled.button`
   width: 100%;
   height: 50px;
