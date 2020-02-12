@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createRef, useCallback } from 'react';
 import { S } from './layoutStyled';
 import SearchAreaHeader from '../components/SearchArea/SearchAreaHeader';
-import ViewHeader from '../components/Header/ViewHeader';
+import Header from '../components/Header';
 
 const ViewLayout = props => {
   const [fixed, setFixed] = useState(false);
@@ -27,7 +27,7 @@ const ViewLayout = props => {
 
   return (
     <>
-      <ViewHeader />
+      <Header isView={true} />
       <SearchAreaHeader ref={searchArea} fixed={fixed} />
       <S.ViewLayout>{props.children}</S.ViewLayout>
     </>
