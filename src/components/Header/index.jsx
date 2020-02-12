@@ -51,7 +51,7 @@ const Header = props => {
 
   return (
     <>
-      <S.Header>
+      <S.Header isView={props.isView}>
         <S.Logo>
           <Link to="/">
             <img

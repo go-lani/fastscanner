@@ -1,6 +1,7 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect, createRef, useCallback } from 'react';
 import { S } from './layoutStyled';
-import SearchArea from '../components/SearchArea';
+import SearchAreaHeader from '../components/SearchArea/SearchAreaHeader';
+import ViewHeader from '../components/Header/ViewHeader';
 
 const ViewLayout = props => {
   const [fixed, setFixed] = useState(false);
@@ -9,7 +10,6 @@ const ViewLayout = props => {
   const handleSearchArea = () => {
     const searchAreaOffsetTop =
       searchArea.current && searchArea.current.offsetTop;
-
     if (window.scrollY > searchAreaOffsetTop) {
       setFixed(true);
     } else {
@@ -18,23 +18,17 @@ const ViewLayout = props => {
   };
 
   useEffect(() => {
+    console.log(fixed);
     window.addEventListener('scroll', handleSearchArea);
     return () => {
       window.removeEventListener('scroll', handleSearchArea);
     };
-  }, [handleSearchArea]);
+  }, [fixed, handleSearchArea]);
 
   return (
     <>
-      <div
-        style={{
-          height: 40,
-          background: 'pink',
-        }}
-      >
-        헤더
-      </div>
-      <SearchArea ref={searchArea} fixed={fixed} />
+      <ViewHeader />
+      <SearchAreaHeader ref={searchArea} fixed={fixed} />
       <S.ViewLayout>{props.children}</S.ViewLayout>
     </>
   );
