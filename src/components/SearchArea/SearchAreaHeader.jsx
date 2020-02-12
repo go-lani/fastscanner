@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import SelectWayTab from './SelectWayTab';
-import SelectAirport from './SelectAirport';
-import SelectDate from './SelectDate';
-import SelectOption from './SelectOption';
-import CheckBox from '../Common/CheckBox';
 import A11yTitle from '../Common/A11yTitle';
 import * as S from './SearchAreaStyled';
-import Button from '../Common/Button';
+import SearchAreaContainer from '../../container/SearchAreaContainer';
 
 const SearchAreaHeader = React.forwardRef(({ fixed }, ref) => {
   const originAirport = useSelector(state => state.search.originPlace);
@@ -38,26 +33,7 @@ const SearchAreaHeader = React.forwardRef(({ fixed }, ref) => {
             <S.OptionText>왕복</S.OptionText>
           </S.DateOpionInfoWrapper>
         </S.FlightInfoSection>
-        <S.SearchWrapperHeader isOpen={isOpen}>
-          <A11yTitle>항공권 정보 변경</A11yTitle>
-          <S.SearchForm isHeader={true}>
-            <SelectWayTab />
-            <S.SearchTop>
-              <SelectAirport />
-              <SelectDate />
-              <SelectOption />
-            </S.SearchTop>
-            <S.SearchBottom>
-              <CheckBox label="직항" id="nonstop" isDisable={false} />
-              <Button
-                text="항공권 검색"
-                size="medium"
-                color="blue"
-                image="plane"
-              />
-            </S.SearchBottom>
-          </S.SearchForm>
-        </S.SearchWrapperHeader>
+        <SearchAreaContainer isOpen={isOpen} />
         <S.DownButton type="button" onClick={showSearchForm}>
           <S.ArrowIcon
             src="/images/arrow-white-down.png"
