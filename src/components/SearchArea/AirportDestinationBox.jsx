@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as S from './SearchAreaStyled';
 import uuid from 'uuid';
 import { debounce } from 'lodash';
@@ -11,33 +11,35 @@ const AirportDestinationBox = ({
   selectDestination,
   destinationName,
 }) => {
-  const [destination, setDestination] = useState(destinationName);
   const [visible, setVisible] = useState(false);
-  const destinationInput = createRef();
+  const destinationInput = useRef();
 
   useEffect(() => {
-    destinationInput.current.value = destination;
-  }, [destination, destinationInput]);
+    destinationInput.current.value = destinationName;
+  }, [destinationInput, destinationName]);
+
+  useEffect(() => {
+    if (destinationSearchList.length) setVisible(true);
+    else setVisible(false);
+  }, [destinationSearchList]);
 
   const _handleChange = debounce(value => {
     searchDestination(value);
   }, 300);
 
   function handledChange(e) {
-    setVisible(true);
     const value = e.target.value.trim();
-
     _handleChange(value);
   }
 
   function handledClick(PlaceId, PlaceName) {
-    console.log(handledClick);
     selectDestination({ PlaceName, PlaceId });
-    setDestination(`${PlaceName}(${PlaceId})`);
     setVisible(false);
   }
 
   function hide() {
+    const { PlaceName, PlaceId } = destinationSearchList[0];
+    selectDestination({ PlaceName, PlaceId });
     setVisible(false);
   }
 
@@ -47,7 +49,7 @@ const AirportDestinationBox = ({
         ref={destinationInput}
         type="text"
         id={id}
-        defaultValue={destination}
+        defaultValue={destinationName}
         placeholder={placeholder}
         autoComplete="off"
         onChange={handledChange}

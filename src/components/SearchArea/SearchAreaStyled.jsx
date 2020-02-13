@@ -63,6 +63,7 @@ export const SearchTop = styled.div`
 
   .option-field {
     width: 100%;
+    margin: 40px 0 0;
   }
 
   &.options {
@@ -82,7 +83,6 @@ export const SearchTop = styled.div`
   & > * {
     display: inline-block;
     position: relative;
-    margin: 40px 0 0;
     border-right: 1px solid #eee;
 
     &:last-child {
@@ -113,6 +113,19 @@ export const NonstopsCheck = styled.input`
 `;
 
 // Option Popup
+export const Dim = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 0;
+
+  ${({ isOpen }) => css`
+    display: ${isOpen ? 'block' : 'none'};
+  `};
+`;
+
 export const OptionPopupWrapper = styled.div`
   display: none;
   position: absolute;
@@ -124,6 +137,7 @@ export const OptionPopupWrapper = styled.div`
     css`
       display: block;
     `}
+  z-index:3;
 `;
 
 export const StyledOptionPopup = styled.div`
@@ -152,6 +166,7 @@ export const OptionPopup = styled.div`
   font-size: 1.6rem;
   font-weight: 500;
   color: #222;
+  z-index: 2;
 `;
 
 export const CategoryTitle = styled.p`
@@ -336,9 +351,9 @@ export const AirportListArea = styled.div`
   ${({ visible }) => css`
     display: ${visible ? 'block' : 'none'};
 
-    &:before {
+    /* &:before {
       display: ${visible ? 'block' : 'none'};
-    }
+    } */
   `}
 
   &:before {
