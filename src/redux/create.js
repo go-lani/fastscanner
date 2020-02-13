@@ -5,7 +5,6 @@ import { createBrowserHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './modules/saga';
-import { relativeTimeRounding } from 'moment';
 
 export const history = createBrowserHistory();
 const sagaMiddleware = createSagaMiddleware();
@@ -27,6 +26,10 @@ const create = () => {
         children: null,
         stops: 1,
         way: 'round',
+        originSearch: [],
+        originName: '인천(ICN)',
+        destinationSearch: [],
+        destinationName: null,
       },
     },
     composeWithDevTools(

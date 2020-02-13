@@ -13,7 +13,8 @@ export const FieldTitle = styled.legend`
 
 // SearchArea Index;
 export const SearchWrapper = styled.section`
-  display: flex;
+  display: ${props => (props.isHeader && !props.isOpen ? 'none' : 'flex')};
+  /* display: flex; */
   flex-direction: column;
   position: relative;
 `;
@@ -26,6 +27,18 @@ export const Greeting = styled.h2`
   font-size: 6rem;
   line-height: 70px;
   color: #fff;
+  ${props =>
+    props.isHeader &&
+    css`
+      overflow: hidden;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      background-color: transparent;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    `}
 
   ${media.mobile`
     font-size: 4.5rem;
@@ -36,7 +49,8 @@ export const Greeting = styled.h2`
 export const SearchForm = styled.form`
   padding: 30px;
   border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: ${props =>
+    props.isHeader === true ? 'transparent' : 'rgba(0, 0, 0, 0.6)'};
   color: #fff;
   font-size: 1.5rem;
   font-weight: 500;
@@ -49,6 +63,7 @@ export const SearchTop = styled.div`
 
   .option-field {
     width: 100%;
+    margin: 40px 0 0;
   }
 
   &.options {
@@ -68,15 +83,19 @@ export const SearchTop = styled.div`
   & > * {
     display: inline-block;
     position: relative;
-    margin: 40px 0 0;
     border-right: 1px solid #eee;
 
     &:last-child {
       border-right: none;
     }
 
-    ${media.mobile`
+    ${media.tablet`
       width: 50%;
+      border-right: none;
+    `}
+
+    ${media.mobile`
+      border-right: none;
     `}
   }
 `;
@@ -94,6 +113,19 @@ export const NonstopsCheck = styled.input`
 `;
 
 // Option Popup
+export const Dim = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 0;
+
+  ${({ isOpen }) => css`
+    display: ${isOpen ? 'block' : 'none'};
+  `};
+`;
+
 export const OptionPopupWrapper = styled.div`
   display: none;
   position: absolute;
@@ -105,6 +137,7 @@ export const OptionPopupWrapper = styled.div`
     css`
       display: block;
     `}
+  z-index:3;
 `;
 
 export const StyledOptionPopup = styled.div`
@@ -124,7 +157,6 @@ export const Triangle = styled.div`
   border-right: 15px solid transparent;
   border-bottom: 15px solid #fff;
   border-left: 15px solid transparent;
-  margin: 0 auto;
 `;
 
 export const OptionPopup = styled.div`
@@ -134,6 +166,7 @@ export const OptionPopup = styled.div`
   font-size: 1.6rem;
   font-weight: 500;
   color: #222;
+  z-index: 2;
 `;
 
 export const CategoryTitle = styled.p`
@@ -200,18 +233,6 @@ export const CompleteButton = styled.button`
 `;
 
 // SearchAirport
-export const AirportInput = styled.input`
-  width: 45%;
-  height: 50px;
-  border: 0;
-  color: #000;
-  padding-left: 10px;
-
-  ${media.mobile`
-    width: 42%;
-  `}
-`;
-
 export const AirportChangeButton = styled.button`
   width: 10%;
   height: 50px;
@@ -281,4 +302,222 @@ export const SearchButton = styled.button`
 
 export const ButtonText = styled.span`
   vertical-align: middle;
+`;
+
+export const SearchAreaListBox = styled.ul`
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 400px;
+`;
+
+// AirportInputBox
+export const AirportInputBox = styled.div`
+  display: inline-block;
+  width: 45%;
+  position: static;
+
+  ${media.desktop`
+    position: relative;
+  `}
+
+  ${media.mobile`
+    width: 42%;
+  `}
+`;
+
+export const AirportInput = styled.input`
+  width: 100%;
+  height: 50px;
+  border: 0;
+  color: #000;
+  padding-left: 10px;
+`;
+
+export const AirportListArea = styled.div`
+  position: absolute;
+  top: 70px;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  border-radius: 5px;
+  background: #fff;
+
+  ${media.desktop`
+    max-width: 400px;
+    border-radius: none;
+    background: none;
+  `}
+
+  ${({ visible }) => css`
+    display: ${visible ? 'block' : 'none'};
+
+    /* &:before {
+      display: ${visible ? 'block' : 'none'};
+    } */
+  `}
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #fff;
+    border-left: 15px solid transparent;
+    transform: translateX(-50%);
+  }
+`;
+
+export const SearchPlaceDim = styled.div`
+  ${({ visible }) => css`
+    display: ${visible ? 'block' : 'none'};
+  `}
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  background: transparent;
+`;
+
+export const SearchCategoryTitle = styled.p`
+  display: block;
+  padding: 20px;
+  font-weight: 700;
+  font-size: 2rem;
+  color: #222;
+  border-bottom: 2px solid #dedede;
+  word-break: keep-all;
+
+  ${media.desktop`
+    display: none;
+  `}
+`;
+
+export const AirportList = styled.ul`
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 264px;
+  background: none;
+
+  ${media.desktop`
+    border-radius: 5px;
+    background: #fff;
+  `}
+`;
+
+export const AirportListItem = styled.li`
+  width: 100%;
+  margin: 0;
+  font-size: 1.4rem;
+  line-height: 26px;
+  color: #222;
+
+  button {
+    display: block;
+    width: 100%;
+    padding: 20px;
+    border: none;
+    text-align: left;
+    background: transparent;
+    color: #0288d1;
+    transition: all 0.3s;
+
+    &:hover {
+      background: #0288d1;
+      color: #fff;
+    }
+  }
+`;
+
+// SearchAreaHeader
+export const SearchHeaderWrapper = styled.div`
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  ${props =>
+    props.fixed &&
+    css`
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      right: 0;
+    `}
+`;
+
+export const FlightInfoSection = styled.section`
+  width: 100%;
+  padding: 20px 0 0 10px;
+  text-align: center;
+  color: #fff;
+  line-height: 2rem;
+  cursor: pointer;
+`;
+
+export const AirportInfoWrapper = styled.div`
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  ${props =>
+    props.isOpen &&
+    css`
+      border-bottom: 1px solid rgba(115, 115, 115, 0.5);
+    `}
+`;
+
+export const AirportName = styled.span`
+  font-size: 1.8rem;
+  word-break: keep-all;
+`;
+
+export const FlightIcon = styled.img`
+  width: 15px;
+  height: 15px;
+  margin: 0 10px;
+`;
+
+export const DateOpionInfoWrapper = styled.div`
+  display: ${props => (props.isOpen || props.fixed ? 'none' : 'block')};
+`;
+
+export const DateText = styled.span`
+  font-size: 1.2rem;
+  &:first-child {
+    &:after {
+      content: '-';
+      margin: 5px;
+    }
+  }
+`;
+
+export const OptionText = styled.span`
+  font-size: 1.2rem;
+  margin: 0 2px;
+  &:after {
+    content: ',';
+  }
+  &:last-child:after {
+    content: '';
+  }
+`;
+
+export const DownButton = styled.button`
+  display: inline-block;
+  background-color: transparent;
+  border: 0;
+  padding: 15px 25px;
+`;
+
+export const ArrowIcon = styled.img`
+  width: 15px;
+  ${props =>
+    props.isOpen === true &&
+    css`
+      transform: rotate(180deg);
+    `}
 `;
