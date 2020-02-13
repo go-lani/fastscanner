@@ -1,13 +1,14 @@
-import React, { createRef } from 'react';
+import React from 'react';
+import qs from 'query-string';
+import { withRouter } from 'react-router-dom';
 import SelectWayTab from './SelectWayTab';
 import SelectAirport from './SelectAirport';
 import SelectDate from './SelectDate';
 import SelectOption from './SelectOption';
 import CheckBox from '../Common/CheckBox';
-import * as S from './SearchAreaStyled';
 import Button from '../Common/Button';
 import SearchAreaPopup from './SearchAreaPopup';
-import { withRouter } from 'react-router-dom';
+import * as S from './SearchAreaStyled';
 
 const SearchArea = ({
   way,
@@ -16,11 +17,14 @@ const SearchArea = ({
   selectOrigin,
   originSearchList,
   originName,
+  originPlace,
   searchDestination,
   selectDestination,
   destinationSearchList,
   destinationName,
+  destinationPlace,
   inboundDate,
+  outboundDate,
   cabinClass,
   countAdults,
   countChildren,
@@ -34,7 +38,27 @@ const SearchArea = ({
   history,
 }) => {
   function searchSubmit() {
-    history.push('/transport/flights');
+    const originCode = originPlace.slice(0, -4).toLowerCase();
+    const outboundCode = outboundDate
+      .split('-')
+      .join('')
+      .slice(-6);
+    const inboundCode = inboundDate
+      .split('-')
+      .join('')
+      .slice(-6);
+
+    const params = qs.stringify({
+      adults: 1,
+    });
+
+    if (way === 'oneway') {
+    } else {
+      // history.push('/transport/flights/');
+    }
+    history.push(
+      `/transport/flights/${originCode}/${outboundCode}/${inboundCode}/?${params}`,
+    );
   }
 
   return (
