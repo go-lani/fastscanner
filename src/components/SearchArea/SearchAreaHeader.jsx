@@ -33,7 +33,7 @@ const SearchAreaHeader = React.forwardRef(({ fixed }, ref) => {
             <S.OptionText>왕복</S.OptionText>
           </S.DateOpionInfoWrapper>
         </S.FlightInfoSection>
-        <SearchAreaContainer isOpen={isOpen} />
+        <SearchAreaContainer isOpen={isOpen} isHeader={true} />
         <S.DownButton type="button" onClick={showSearchForm}>
           <S.ArrowIcon
             src="/images/arrow-white-down.png"

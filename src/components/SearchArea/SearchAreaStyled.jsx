@@ -13,7 +13,7 @@ export const FieldTitle = styled.legend`
 
 // SearchArea Index;
 export const SearchWrapper = styled.section`
-  display: ${props => (props.isOpen ? 'flex' : 'none')};
+  display: ${props => (props.isHeader && !props.isOpen ? 'none' : 'flex')};
   /* display: flex; */
   flex-direction: column;
   position: relative;
@@ -27,6 +27,18 @@ export const Greeting = styled.h2`
   font-size: 6rem;
   line-height: 70px;
   color: #fff;
+  ${props =>
+    props.isHeader &&
+    css`
+      overflow: hidden;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      background-color: transparent;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    `}
 
   ${media.mobile`
     font-size: 4.5rem;
