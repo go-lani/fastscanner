@@ -28,6 +28,7 @@ const SearchArea = ({
   cabinClass,
   countAdults,
   countChildren,
+  stops,
   selectOutboundDate,
   selectInboundDate,
   selectCabinClass,
@@ -49,16 +50,22 @@ const SearchArea = ({
       .slice(-6);
 
     const params = qs.stringify({
-      adults: 1,
+      adults: countAdults,
+      children: countChildren,
+      cabinclass: cabinClass,
+      rtn: way === 'round' ? 1 : 0,
+      preferdirects: stops ? false : true,
     });
 
-    if (way === 'oneway') {
+    if (inboundDate) {
+      history.push(
+        `/transport/flights/${originCode}/${outboundCode}/${inboundCode}/?${params}`,
+      );
     } else {
-      // history.push('/transport/flights/');
+      history.push(
+        `/transport/flights/${originCode}/${outboundCode}/?${params}`,
+      );
     }
-    history.push(
-      `/transport/flights/${originCode}/${outboundCode}/${inboundCode}/?${params}`,
-    );
   }
 
   return (

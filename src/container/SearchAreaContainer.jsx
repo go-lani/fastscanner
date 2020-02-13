@@ -27,6 +27,7 @@ export default connect(
     cabinClass: state.search.cabinClass,
     countAdults: state.search.adults,
     countChildren: state.search.children,
+    stops: state.search.stops,
   }),
   dispatch => ({
     changeWay: id => {
