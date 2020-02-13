@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as S from './SearchAreaStyled';
 import uuid from 'uuid';
 import { debounce } from 'lodash';
@@ -11,12 +11,13 @@ const AirportDestinationBox = ({
   selectDestination,
   destinationName,
 }) => {
+  const [destination, setDestination] = useState(destinationName);
   const [visible, setVisible] = useState(false);
-  const destinationInput = createRef();
+  const destinationInput = useRef();
 
   useEffect(() => {
-    destinationInput.current.value = destinationName;
-  }, [destinationInput, destinationName]);
+    setDestination(destinationName);
+  }, [destinationName]);
 
   useEffect(() => {
     if (destinationSearchList.length) setVisible(true);
@@ -49,7 +50,7 @@ const AirportDestinationBox = ({
         ref={destinationInput}
         type="text"
         id={id}
-        defaultValue={destinationName}
+        defaultValue={destination}
         placeholder={placeholder}
         autoComplete="off"
         onChange={handledChange}

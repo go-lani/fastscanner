@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as S from './SearchAreaStyled';
 import uuid from 'uuid';
 import { debounce } from 'lodash';
@@ -12,7 +12,7 @@ const AirportOriginPlaceBox = ({
   originName,
 }) => {
   const [visible, setVisible] = useState(false);
-  const originInput = createRef();
+  const originInput = useRef();
 
   useEffect(() => {
     originInput.current.value = originName;
