@@ -34,6 +34,7 @@ const SearchArea = ({
   selectCabinClass,
   selectAdults,
   selectChildren,
+  selectStops,
   isOpen,
   isHeader,
   history,
@@ -70,6 +71,10 @@ const SearchArea = ({
     }
   }
 
+  const checkNonstops = e => {
+    selectStops(e.target.checked ? '0' : '1');
+  };
+
   return (
     <S.SearchWrapper isOpen={isOpen} isHeader={isHeader}>
       <S.Greeting isHeader={isHeader}>어디로 떠나볼까요?</S.Greeting>
@@ -102,7 +107,12 @@ const SearchArea = ({
           />
         </S.SearchTop>
         <S.SearchBottom>
-          <CheckBox label="직항" id="nonstop" isDisable={false} />
+          <CheckBox
+            label="직항"
+            id="nonstop"
+            isDisable={false}
+            onClick={checkNonstops}
+          />
           <Button
             type="button"
             text="항공권 검색"

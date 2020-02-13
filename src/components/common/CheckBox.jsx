@@ -32,10 +32,15 @@ const StyledLabel = styled.label`
     `};
 `;
 
-const CheckBox = ({ label, id, isDisable }) => {
+const CheckBox = ({ label, id, isDisable, onClick }) => {
   return (
     <span>
-      <StyledCheckbox type="checkbox" id={id} disabled={isDisable} />
+      <StyledCheckbox
+        type="checkbox"
+        id={id}
+        disabled={isDisable}
+        onClick={onClick}
+      />
       <StyledLabel htmlFor={id} isDisable>
         {label}
       </StyledLabel>
