@@ -7,6 +7,7 @@ import CheckBox from '../Common/CheckBox';
 import * as S from './SearchAreaStyled';
 import Button from '../Common/Button';
 import SearchAreaPopup from './SearchAreaPopup';
+import { withRouter } from 'react-router-dom';
 
 const SearchArea = ({
   way,
@@ -30,7 +31,12 @@ const SearchArea = ({
   selectChildren,
   isOpen,
   isHeader,
+  history,
 }) => {
+  function searchSubmit() {
+    history.push('/transport/flights');
+  }
+
   return (
     <S.SearchWrapper isOpen={isOpen} isHeader={isHeader}>
       <S.Greeting isHeader={isHeader}>어디로 떠나볼까요?</S.Greeting>
@@ -64,7 +70,14 @@ const SearchArea = ({
         </S.SearchTop>
         <S.SearchBottom>
           <CheckBox label="직항" id="nonstop" isDisable={false} />
-          <Button text="항공권 검색" size="medium" color="blue" image="plane" />
+          <Button
+            type="button"
+            text="항공권 검색"
+            size="medium"
+            color="blue"
+            image="plane"
+            onClick={searchSubmit}
+          />
         </S.SearchBottom>
       </S.SearchForm>
       <SearchAreaPopup />
@@ -72,4 +85,4 @@ const SearchArea = ({
   );
 };
 
-export default SearchArea;
+export default withRouter(SearchArea);

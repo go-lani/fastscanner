@@ -13,9 +13,6 @@ const SelectOption = ({
   selectChildren,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  // const cabinClass = useSelector(state => state.search.cabinClass);
-  // const countAdults = useSelector(state => state.search.adults);
-  // const countChildren = useSelector(state => state.search.children);
   const popupOpen = e => setIsOpen(true);
   const popupClose = () => setIsOpen(!isOpen);
 
@@ -30,9 +27,7 @@ const SelectOption = ({
       ? '비즈니스석'
       : '일등석';
   };
-  useEffect(() => {
-    console.log(countChildren, countAdults);
-  }, [countAdults, countChildren]);
+
   const click = e => {
     if (dimRef.current.contains(e.target)) setIsOpen(false);
   };

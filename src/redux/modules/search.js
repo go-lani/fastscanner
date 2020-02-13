@@ -36,8 +36,7 @@ function* searchOriginSaga({ payload }) {
     const { data } = yield call(SearchService.originSearch, payload);
 
     const newData = data.filter(
-      list =>
-        list.PlaceId !== list.CountryId && list.PlaceName !== list.CityName,
+      list => list.PlaceId !== list.CountryId && !list.IataCode,
     );
 
     if (newData.length) yield put(success({ originSearch: newData }));
@@ -70,8 +69,7 @@ function* searchDestinationSaga({ payload }) {
     const { data } = yield call(SearchService.destinationSearch, payload);
 
     const newData = data.filter(
-      list =>
-        list.PlaceId !== list.CountryId && list.PlaceName !== list.CityName,
+      list => list.PlaceId !== list.CountryId && !list.IataCode,
     );
 
     if (newData.length) yield put(success({ destinationSearch: newData }));
