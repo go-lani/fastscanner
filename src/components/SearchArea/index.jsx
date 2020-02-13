@@ -9,6 +9,8 @@ import Button from '../Common/Button';
 import SearchAreaPopup from './SearchAreaPopup';
 
 const SearchArea = ({
+  way,
+  changeWay,
   searchOrigin,
   selectOrigin,
   originSearchList,
@@ -17,6 +19,15 @@ const SearchArea = ({
   selectDestination,
   destinationSearchList,
   destinationName,
+  inboundDate,
+  cabinClass,
+  countAdults,
+  countChildren,
+  selectOutboundDate,
+  selectInboundDate,
+  selectCabinClass,
+  selectAdults,
+  selectChildren,
   isOpen,
   isHeader,
 }) => {
@@ -24,7 +35,7 @@ const SearchArea = ({
     <S.SearchWrapper isOpen={isOpen} isHeader={isHeader}>
       <S.Greeting isHeader={isHeader}>어디로 떠나볼까요?</S.Greeting>
       <S.SearchForm isHeader={isHeader}>
-        <SelectWayTab />
+        <SelectWayTab way={way} changeWay={changeWay} />
         <S.SearchTop>
           <SelectAirport
             originSearchList={originSearchList}
@@ -36,8 +47,20 @@ const SearchArea = ({
             selectDestination={selectDestination}
             destinationName={destinationName}
           />
-          <SelectDate />
-          <SelectOption />
+          <SelectDate
+            way={way}
+            inboundDate={inboundDate}
+            selectOutboundDate={selectOutboundDate}
+            selectInboundDate={selectInboundDate}
+          />
+          <SelectOption
+            cabinClass={cabinClass}
+            countAdults={countAdults}
+            countChildren={countChildren}
+            selectCabinClass={selectCabinClass}
+            selectAdults={selectAdults}
+            selectChildren={selectChildren}
+          />
         </S.SearchTop>
         <S.SearchBottom>
           <CheckBox label="직항" id="nonstop" isDisable={false} />
