@@ -1,14 +1,21 @@
-import React, { useState, createRef } from 'react';
+import React, { useState, createRef, useEffect } from 'react';
 import ArrowDropDownOutlinedIcon from '@material-ui/icons/ArrowDropDownOutlined';
 import OptionPopup from './OptionPopup';
 import * as S from './SearchAreaStyled';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 
-const SelectOption = () => {
+const SelectOption = ({
+  cabinClass,
+  countAdults,
+  countChildren,
+  selectCabinClass,
+  selectAdults,
+  selectChildren,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const cabinClass = useSelector(state => state.search.cabinClass);
-  const countAdults = useSelector(state => state.search.adults);
-  const countChildren = useSelector(state => state.search.children);
+  // const cabinClass = useSelector(state => state.search.cabinClass);
+  // const countAdults = useSelector(state => state.search.adults);
+  // const countChildren = useSelector(state => state.search.children);
   const popupOpen = e => setIsOpen(true);
   const popupClose = () => setIsOpen(!isOpen);
 
@@ -23,7 +30,9 @@ const SelectOption = () => {
       ? '비즈니스석'
       : '일등석';
   };
-
+  useEffect(() => {
+    console.log(countChildren, countAdults);
+  }, [countAdults, countChildren]);
   const click = e => {
     if (dimRef.current.contains(e.target)) setIsOpen(false);
   };
@@ -43,6 +52,9 @@ const SelectOption = () => {
           isOpen={isOpen}
           hidePopup={popupClose}
           cabinClass={cabinClass}
+          selectCabinClass={selectCabinClass}
+          selectAdults={selectAdults}
+          selectChildren={selectChildren}
         />
         <S.Dim ref={dimRef} isOpen={isOpen} onClick={click} />
       </div>

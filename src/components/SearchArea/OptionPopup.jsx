@@ -9,10 +9,16 @@ import {
 } from '../../redux/modules/search';
 import { useSelector, useDispatch } from 'react-redux';
 
-const OptionPopup = ({ isOpen, hidePopup }) => {
+const OptionPopup = ({
+  isOpen,
+  hidePopup,
+  selectCabinClass,
+  selectAdults,
+  selectChildren,
+}) => {
   const [countAdults, setCountAdults] = useState(1);
   const [countChildren, setCountChildren] = useState(0);
-  const [cabinClass, setCabinClass] = useState('economy');
+  // const [cabinClass, setCabinClass] = useState('economy');
   // const cabinClass = useSelector(state => state.search.cabinClass)
   const cabinClassRef = createRef();
 
@@ -35,8 +41,7 @@ const OptionPopup = ({ isOpen, hidePopup }) => {
   };
 
   const changeCabinClass = ({ target }) => {
-    setCabinClass(target.value);
-    dispatch(getClassSaga(cabinClassRef.current.value));
+    selectCabinClass(cabinClassRef.current.value);
     console.log(target.value);
   };
 
@@ -45,12 +50,12 @@ const OptionPopup = ({ isOpen, hidePopup }) => {
   };
 
   useEffect(() => {
-    dispatch(getAdultsSaga(countAdults));
-  }, [countAdults, dispatch]);
+    selectAdults(countAdults);
+  }, [countAdults, selectAdults]);
 
   useEffect(() => {
-    dispatch(getChildrenSaga(countChildren));
-  }, [countChildren, dispatch]);
+    selectChildren(countChildren);
+  }, [countChildren, selectChildren]);
 
   return (
     <>

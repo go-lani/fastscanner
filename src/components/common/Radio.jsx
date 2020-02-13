@@ -112,7 +112,7 @@ const Radio = props => {
         type="radio"
         value={props.value}
         onChange={props.onChange}
-        checked={props.default}
+        checked={props.checked}
       />
       <span>{props.label}</span>
     </Label>
