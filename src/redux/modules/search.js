@@ -27,7 +27,7 @@ function* searchOriginSaga({ payload }) {
   try {
     yield put(pending());
 
-    if (payload === '') return yield put(success({ originSearch: null }));
+    if (payload === '') return yield put(success({ originSearch: [] }));
 
     const { data } = yield call(SearchService.originSearch, payload);
 
@@ -37,7 +37,7 @@ function* searchOriginSaga({ payload }) {
     );
 
     if (newData.length) yield put(success({ originSearch: newData }));
-    else yield put(success({ originSearch: null }));
+    else yield put(success({ originSearch: [] }));
   } catch (error) {
     yield put(fail(error));
   }
@@ -61,7 +61,7 @@ function* searchDestinationSaga({ payload }) {
   try {
     yield put(pending());
 
-    if (payload === '') return yield put(success({ destinationSearch: null }));
+    if (payload === '') return yield put(success({ destinationSearch: [] }));
 
     const { data } = yield call(SearchService.destinationSearch, payload);
 
@@ -71,7 +71,7 @@ function* searchDestinationSaga({ payload }) {
     );
 
     if (newData.length) yield put(success({ destinationSearch: newData }));
-    else yield put(success({ destinationSearch: null }));
+    else yield put(success({ destinationSearch: [] }));
   } catch (error) {
     yield put(fail(error));
   }

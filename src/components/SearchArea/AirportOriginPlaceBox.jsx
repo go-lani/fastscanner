@@ -11,32 +11,35 @@ const AirportOriginPlaceBox = ({
   selectOrigin,
   originName,
 }) => {
-  const [origin, setOrigin] = useState(originName);
   const [visible, setVisible] = useState(false);
   const originInput = createRef();
 
   useEffect(() => {
-    originInput.current.value = origin;
-  }, [origin, originInput]);
+    originInput.current.value = originName;
+  }, [originInput, originName]);
+
+  useEffect(() => {
+    if (originSearchList.length) setVisible(true);
+    else setVisible(false);
+  }, [originSearchList]);
 
   const _handleChange = debounce(value => {
     searchOrigin(value);
   }, 300);
 
   function handledChange(e) {
-    setVisible(true);
     const value = e.target.value.trim();
     _handleChange(value);
   }
 
   function handledClick(PlaceId, PlaceName) {
-    console.log(handledClick);
     selectOrigin({ PlaceName, PlaceId });
-    setOrigin(`${PlaceName}(${PlaceId})`);
     setVisible(false);
   }
 
   function hide() {
+    const { PlaceName, PlaceId } = originSearchList[0];
+    selectOrigin({ PlaceName, PlaceId });
     setVisible(false);
   }
 
@@ -46,7 +49,7 @@ const AirportOriginPlaceBox = ({
         ref={originInput}
         type="text"
         id={id}
-        defaultValue={origin}
+        defaultValue={originName}
         placeholder={placeholder}
         autoComplete="off"
         onChange={handledChange}

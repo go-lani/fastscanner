@@ -339,9 +339,9 @@ export const AirportListArea = styled.div`
   ${({ visible }) => css`
     display: ${visible ? 'block' : 'none'};
 
-    &:before {
+    /* &:before {
       display: ${visible ? 'block' : 'none'};
-    }
+    } */
   `}
 
   &:before {
