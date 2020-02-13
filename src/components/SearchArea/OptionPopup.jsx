@@ -46,8 +46,11 @@ const OptionPopup = ({ isOpen, hidePopup }) => {
 
   useEffect(() => {
     dispatch(getAdultsSaga(countAdults));
+  }, [countAdults, dispatch]);
+
+  useEffect(() => {
     dispatch(getChildrenSaga(countChildren));
-  }, [countAdults, countChildren, dispatch]);
+  }, [countChildren, dispatch]);
 
   return (
     <>

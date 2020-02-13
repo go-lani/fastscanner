@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import A11yTitle from '../Common/A11yTitle';
 import Radio from '../Common/Radio';
-import { changeWaySaga, getInDateSaga } from '../../redux/modules/search';
+import { changeWaySaga } from '../../redux/modules/search';
 
 const SelectWayTab = () => {
   const way = useSelector(state => state.search.way);
@@ -11,7 +11,6 @@ const SelectWayTab = () => {
   const handleChange = useCallback(
     event => {
       dispatch(changeWaySaga(event.target.id));
-      dispatch(getInDateSaga(null));
     },
     [dispatch],
   );
