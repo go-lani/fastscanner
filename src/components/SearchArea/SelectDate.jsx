@@ -9,45 +9,50 @@ import * as S from './SearchAreaStyled';
 import { useSelector, useDispatch } from 'react-redux';
 import { getOutDateSaga, getInDateSaga } from '../../redux/modules/search';
 
-const SelectDate = () => {
+const SelectDate = ({
+  way,
+  inboundDate,
+  selectOutboundDate,
+  selectInboundDate,
+}) => {
   const [outboundDate, setOutboundDate] = useState(moment());
-  const [inboundDate, setInboundDate] = useState(null);
+  const [inboundDateState, setInboundDate] = useState(null);
   const [focusedInput, setFocusedInput] = useState(null);
-  const way = useSelector(state => state.search.way);
-  const inboundDateInRedux = useSelector(state => state.search.inboundDate);
+
+  // const way = useSelector(state => state.search.way);
+  // const inboundDateInRedux = useSelector(state => state.search.inboundDate);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     moment.locale('ko', koLocale);
-    dispatch(
-      getOutDateSaga(
-        moment()
-          .toISOString()
-          .split('')
-          .slice(0, 10)
-          .join(''),
-      ),
+  }, []);
+
+  useEffect(() => {
+    selectOutboundDate(
+      moment()
+        .toISOString()
+        .split('')
+        .slice(0, 10)
+        .join(''),
     );
-  }, [dispatch]);
+  }, [selectOutboundDate]);
 
   useEffect(() => {
     if (way === 'oneway') {
-      dispatch(getInDateSaga(null));
+      selectInboundDate(null);
     } else {
-      if (!inboundDateInRedux && inboundDate) {
-        dispatch(
-          getInDateSaga(
-            inboundDate
-              .toISOString()
-              .split('')
-              .slice(0, 10)
-              .join(''),
-          ),
+      if (inboundDateState && !inboundDate) {
+        selectInboundDate(
+          inboundDateState
+            .toISOString()
+            .split('')
+            .slice(0, 10)
+            .join(''),
         );
       }
     }
-  }, [dispatch, inboundDate, inboundDateInRedux, way]);
+  }, [inboundDate, inboundDateState, selectInboundDate, way]);
 
   const setStartDate = startDate => {
     if (
@@ -65,14 +70,12 @@ const SelectDate = () => {
       return;
 
     setOutboundDate(startDate);
-    dispatch(
-      getOutDateSaga(
-        startDate
-          .toISOString()
-          .split('')
-          .slice(0, 10)
-          .join(''),
-      ),
+    selectOutboundDate(
+      startDate
+        .toISOString()
+        .split('')
+        .slice(0, 10)
+        .join(''),
     );
   };
 
@@ -81,14 +84,12 @@ const SelectDate = () => {
 
     setInboundDate(endDate);
     if (way === 'round') {
-      dispatch(
-        getInDateSaga(
-          endDate
-            .toISOString()
-            .split('')
-            .slice(0, 10)
-            .join(''),
-        ),
+      selectInboundDate(
+        endDate
+          .toISOString()
+          .split('')
+          .slice(0, 10)
+          .join(''),
       );
     }
   };
@@ -100,7 +101,7 @@ const SelectDate = () => {
         startDateId="startDate"
         endDateId="endDate"
         startDate={outboundDate}
-        endDate={way === 'round' ? inboundDate : null}
+        endDate={way === 'round' ? inboundDateState : null}
         endDatePlaceholderText={way === 'oneway' ? '(편도)' : '입국날짜'}
         onDatesChange={({ startDate, endDate }) => {
           setStartDate(startDate);
