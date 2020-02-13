@@ -17,12 +17,11 @@ const SearchArea = ({
   selectDestination,
   destinationSearchList,
   destinationName,
-  isOpen,
 }) => {
   return (
-    <S.SearchWrapper isOpen={isOpen}>
+    <S.SearchWrapper isOpen={true}>
       <S.Greeting>어디로 떠나볼까요?</S.Greeting>
-      <S.SearchForm isHeader={true}>
+      <S.SearchForm isHeader={false}>
         <SelectWayTab />
         <S.SearchTop>
           <SelectAirport
