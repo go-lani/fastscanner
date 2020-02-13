@@ -11,13 +11,12 @@ const AirportDestinationBox = ({
   selectDestination,
   destinationName,
 }) => {
-  const [destination, setDestination] = useState(destinationName);
   const [visible, setVisible] = useState(false);
   const destinationInput = useRef();
 
   useEffect(() => {
-    setDestination(destinationName);
-  }, [destinationName]);
+    destinationInput.current.value = destinationName;
+  }, [destinationInput, destinationName]);
 
   useEffect(() => {
     if (destinationSearchList.length) setVisible(true);
@@ -50,7 +49,7 @@ const AirportDestinationBox = ({
         ref={destinationInput}
         type="text"
         id={id}
-        defaultValue={destination}
+        defaultValue={destinationName}
         placeholder={placeholder}
         autoComplete="off"
         onChange={handledChange}
