@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import SelectWayTab from './SelectWayTab';
 import SelectAirport from './SelectAirport';
 import SelectDate from './SelectDate';
@@ -20,9 +20,9 @@ const SearchArea = ({
   isOpen,
 }) => {
   return (
-    <S.SearchWrapper isOpen={isOpen}>
+    <S.SearchWrapper isOpen={true}>
       <S.Greeting>어디로 떠나볼까요?</S.Greeting>
-      <S.SearchForm isHeader={true}>
+      <S.SearchForm isHeader={false}>
         <SelectWayTab />
         <S.SearchTop>
           <SelectAirport
