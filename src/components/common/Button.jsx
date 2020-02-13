@@ -87,10 +87,10 @@ const Span = styled.span`
   vertical-align: middle;
 `;
 
-const Button = ({ text, size, color, image }) => {
+const Button = ({ text, image, ...rest }) => {
   return (
     <>
-      <StyledButton text={text} size={size} color={color} image={image}>
+      <StyledButton {...rest}>
         <Span>{text}</Span>
         <img src={`${images[image]}`} alt={text} />
       </StyledButton>

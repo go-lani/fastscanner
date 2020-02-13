@@ -1,4 +1,4 @@
-import { put, select, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
 import SearchService from '../../service/SearchService';
 
@@ -16,12 +16,16 @@ const { success, pending, fail } = createActions(
   options,
 );
 
-// 왕복 선택
-export const changeWaySaga = createAction('CHANGE_WAY_SAGA');
-export const originSearchSaga = createAction('ORIGIN_SEARCH_SAGA');
-export const originSelectSaga = createAction('ORIGIN_SELECT_SAGA');
-export const destinationSearchSaga = createAction('DESTINATION_SEARCH_SAGA');
-export const destinationSelectSaga = createAction('DESTINATION_SELECT_SAGA');
+// 출발지/도착지 선택
+export const setChangeWaySaga = createAction('SET_CHANGE_WAY_SAGA');
+export const setOriginSearchSaga = createAction('SET_ORIGIN_SEARCH_SAGA');
+export const setOriginSelectSaga = createAction('SET_ORIGIN_SELECT_SAGA');
+export const setDestinationSearchSaga = createAction(
+  'SET_DESTINATION_SEARCH_SAGA',
+);
+export const setDestinationSelectSaga = createAction(
+  'SET_DESTINATION_SELECT_SAGA',
+);
 
 function* searchOriginSaga({ payload }) {
   try {
@@ -32,8 +36,7 @@ function* searchOriginSaga({ payload }) {
     const { data } = yield call(SearchService.originSearch, payload);
 
     const newData = data.filter(
-      list =>
-        list.PlaceId !== list.CountryId && list.PlaceName !== list.CityName,
+      list => list.PlaceId !== list.CountryId && !list.IataCode,
     );
 
     if (newData.length) yield put(success({ originSearch: newData }));
@@ -66,8 +69,7 @@ function* searchDestinationSaga({ payload }) {
     const { data } = yield call(SearchService.destinationSearch, payload);
 
     const newData = data.filter(
-      list =>
-        list.PlaceId !== list.CountryId && list.PlaceName !== list.CityName,
+      list => list.PlaceId !== list.CountryId && !list.IataCode,
     );
 
     if (newData.length) yield put(success({ destinationSearch: newData }));
@@ -102,9 +104,9 @@ function* selectWaySaga({ payload }) {
 }
 
 // 좌석등급 & 승객
-export const getClassSaga = createAction('GET_CLASS_SAGA');
-export const getAdultsSaga = createAction('GET_ADULTS_SAGA');
-export const getChildrenSaga = createAction('GET_CHILDREN_SAGA');
+export const setClassSaga = createAction('SET_CLASS_SAGA');
+export const setAdultsSaga = createAction('SET_ADULTS_SAGA');
+export const setChildrenSaga = createAction('SET_CHILDREN_SAGA');
 
 function* selectClassSaga({ payload }) {
   try {
@@ -137,8 +139,8 @@ function* selectChildrenSaga({ payload }) {
 }
 
 // 출국날짜 & 입국날짜
-export const getOutDateSaga = createAction('GET_OUTDATE_SAGA');
-export const getInDateSaga = createAction('GET_INDATE_SAGA');
+export const setOutDateSaga = createAction('SET_OUTDATE_SAGA');
+export const setInDateSaga = createAction('SET_INDATE_SAGA');
 
 function* selectOutDateSaga({ payload }) {
   try {
@@ -158,17 +160,30 @@ function* selectInDateSaga({ payload }) {
   }
 }
 
+// 직항 여부 선택
+export const setStopsSelectSaga = createAction('SET_STOPS_SELECT_SAGA');
+
+function* selectStopsSaga({ payload }) {
+  try {
+    yield put(pending());
+    yield put(success({ stops: payload }));
+  } catch (error) {
+    yield put(fail(error));
+  }
+}
+
 export function* searchSaga() {
-  yield takeLatest('CHANGE_WAY_SAGA', selectWaySaga);
-  yield takeLatest('GET_CLASS_SAGA', selectClassSaga);
-  yield takeLatest('GET_ADULTS_SAGA', selectAdultsSaga);
-  yield takeLatest('GET_CHILDREN_SAGA', selectChildrenSaga);
-  yield takeLatest('GET_OUTDATE_SAGA', selectOutDateSaga);
-  yield takeLatest('GET_INDATE_SAGA', selectInDateSaga);
-  yield takeLatest('ORIGIN_SEARCH_SAGA', searchOriginSaga);
-  yield takeLatest('ORIGIN_SELECT_SAGA', selectOriginSaga);
-  yield takeLatest('DESTINATION_SEARCH_SAGA', searchDestinationSaga);
-  yield takeLatest('DESTINATION_SELECT_SAGA', selectDestinationSaga);
+  yield takeLatest('SET_CHANGE_WAY_SAGA', selectWaySaga);
+  yield takeLatest('SET_CLASS_SAGA', selectClassSaga);
+  yield takeLatest('SET_ADULTS_SAGA', selectAdultsSaga);
+  yield takeLatest('SET_CHILDREN_SAGA', selectChildrenSaga);
+  yield takeLatest('SET_OUTDATE_SAGA', selectOutDateSaga);
+  yield takeLatest('SET_INDATE_SAGA', selectInDateSaga);
+  yield takeLatest('SET_ORIGIN_SEARCH_SAGA', searchOriginSaga);
+  yield takeLatest('SET_ORIGIN_SELECT_SAGA', selectOriginSaga);
+  yield takeLatest('SET_DESTINATION_SEARCH_SAGA', searchDestinationSaga);
+  yield takeLatest('SET_DESTINATION_SELECT_SAGA', selectDestinationSaga);
+  yield takeLatest('SET_STOPS_SELECT_SAGA', selectStopsSaga);
 }
 
 // initialState
@@ -182,7 +197,8 @@ const initialState = {
   inboundDate: '',
   adults: 1,
   cabinClass: 'economy',
-  children: null,
+  children: 0,
+  infants: 0,
   stops: 1,
   loading: false,
   error: null,
