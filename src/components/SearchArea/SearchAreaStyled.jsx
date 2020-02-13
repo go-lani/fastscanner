@@ -17,7 +17,6 @@ export const SearchWrapper = styled.section`
   /* display: flex; */
   flex-direction: column;
   position: relative;
-  z-index: 2;
 `;
 
 export const Greeting = styled.h2`
@@ -102,6 +101,19 @@ export const NonstopsCheck = styled.input`
 `;
 
 // Option Popup
+export const Dim = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 0;
+
+  ${({ isOpen }) => css`
+    display: ${isOpen ? 'block' : 'none'};
+  `};
+`;
+
 export const OptionPopupWrapper = styled.div`
   display: none;
   position: absolute;
@@ -113,6 +125,7 @@ export const OptionPopupWrapper = styled.div`
     css`
       display: block;
     `}
+  z-index:3;
 `;
 
 export const StyledOptionPopup = styled.div`
@@ -141,6 +154,7 @@ export const OptionPopup = styled.div`
   font-size: 1.6rem;
   font-weight: 500;
   color: #222;
+  z-index: 2;
 `;
 
 export const CategoryTitle = styled.p`
@@ -226,17 +240,6 @@ export const DateButton = styled.button`
 `;
 
 // SelectOption
-// z-index때문에 지금 다른 버튼이 눌리지 않음
-// 수정해야함
-export const Dim = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  z-index: -1;
-`;
-
 export const OptionButton = styled.button`
   width: 100%;
   height: 50px;

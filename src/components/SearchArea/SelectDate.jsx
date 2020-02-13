@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
 import moment from 'moment';
@@ -14,6 +14,7 @@ const SelectDate = () => {
   const [inboundDate, setInboundDate] = useState(null);
   const [focusedInput, setFocusedInput] = useState(null);
   const way = useSelector(state => state.search.way);
+  const inboundDateInRedux = useSelector(state => state.search.inboundDate);
 
   const dispatch = useDispatch();
 
@@ -21,14 +22,32 @@ const SelectDate = () => {
     moment.locale('ko', koLocale);
     dispatch(
       getOutDateSaga(
-        outboundDate
+        moment()
           .toISOString()
           .split('')
           .slice(0, 10)
           .join(''),
       ),
     );
-  }, [dispatch, outboundDate]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (way === 'oneway') {
+      dispatch(getInDateSaga(null));
+    } else {
+      if (!inboundDateInRedux && inboundDate) {
+        dispatch(
+          getInDateSaga(
+            inboundDate
+              .toISOString()
+              .split('')
+              .slice(0, 10)
+              .join(''),
+          ),
+        );
+      }
+    }
+  }, [dispatch, inboundDate, inboundDateInRedux, way]);
 
   const setStartDate = startDate => {
     if (
@@ -44,6 +63,7 @@ const SelectDate = () => {
         .join('')
     )
       return;
+
     setOutboundDate(startDate);
     dispatch(
       getOutDateSaga(
@@ -60,17 +80,19 @@ const SelectDate = () => {
     if (!endDate) return;
 
     setInboundDate(endDate);
-    dispatch(
-      getInDateSaga(
-        endDate
-          .toISOString()
-          .split('')
-          .slice(0, 10)
-          .join(''),
-      ),
-    );
+    if (way === 'round') {
+      dispatch(
+        getInDateSaga(
+          endDate
+            .toISOString()
+            .split('')
+            .slice(0, 10)
+            .join(''),
+        ),
+      );
+    }
   };
-  console.log(inboundDate);
+
   return (
     <fieldset className="option-field date">
       <S.FieldTitle>가는날 / 오는날</S.FieldTitle>
