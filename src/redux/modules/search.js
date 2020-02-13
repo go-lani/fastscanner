@@ -1,4 +1,4 @@
-import { put, select, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
 import SearchService from '../../service/SearchService';
 
@@ -36,8 +36,7 @@ function* searchOriginSaga({ payload }) {
     const { data } = yield call(SearchService.originSearch, payload);
 
     const newData = data.filter(
-      list =>
-        list.PlaceId !== list.CountryId && list.PlaceName !== list.CityName,
+      list => list.PlaceId !== list.CountryId && !list.IataCode,
     );
 
     if (newData.length) yield put(success({ originSearch: newData }));
@@ -70,8 +69,7 @@ function* searchDestinationSaga({ payload }) {
     const { data } = yield call(SearchService.destinationSearch, payload);
 
     const newData = data.filter(
-      list =>
-        list.PlaceId !== list.CountryId && list.PlaceName !== list.CityName,
+      list => list.PlaceId !== list.CountryId && !list.IataCode,
     );
 
     if (newData.length) yield put(success({ destinationSearch: newData }));
@@ -186,7 +184,8 @@ const initialState = {
   inboundDate: '',
   adults: 1,
   cabinClass: 'economy',
-  children: null,
+  children: 0,
+  infants: 0,
   stops: 1,
   loading: false,
   error: null,
