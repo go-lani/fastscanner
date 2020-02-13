@@ -40,6 +40,7 @@ const SearchArea = ({
 }) => {
   function searchSubmit() {
     const originCode = originPlace.slice(0, -4).toLowerCase();
+    const destinationCode = destinationPlace.slice(0, -4).toLowerCase();
     const outboundCode = outboundDate
       .split('-')
       .join('')
@@ -53,17 +54,18 @@ const SearchArea = ({
       adults: countAdults,
       children: countChildren,
       cabinclass: cabinClass,
+      infants: 0,
       rtn: way === 'round' ? 1 : 0,
       preferdirects: stops ? false : true,
     });
 
     if (inboundDate) {
       history.push(
-        `/transport/flights/${originCode}/${outboundCode}/${inboundCode}/?${params}`,
+        `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/${inboundCode}/?${params}`,
       );
     } else {
       history.push(
-        `/transport/flights/${originCode}/${outboundCode}/?${params}`,
+        `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
       );
     }
   }

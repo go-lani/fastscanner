@@ -1,4 +1,4 @@
-import { put, select, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
 import SearchService from '../../service/SearchService';
 
@@ -184,7 +184,8 @@ const initialState = {
   inboundDate: '',
   adults: 1,
   cabinClass: 'economy',
-  children: null,
+  children: 0,
+  infants: 0,
   stops: 1,
   loading: false,
   error: null,
