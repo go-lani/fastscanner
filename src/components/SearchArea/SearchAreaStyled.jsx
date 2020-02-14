@@ -11,17 +11,25 @@ export const FieldTitle = styled.legend`
   color: #fff;
 `;
 
-// SearchArea Index;
 export const SearchWrapper = styled.section`
-  display: ${props => (props.isHeader && !props.isOpen ? 'none' : 'flex')};
-  /* display: flex; */
-  flex-direction: column;
   position: relative;
+  padding: ${props => (props.isHeader ? 0 : '120px 0')};
+
+  ${props =>
+    props.isHeader && !props.isOpen
+      ? css`
+          display: none;
+        `
+      : css`
+          display: flex;
+          flex-direction: column;
+          align-self: flex-start;
+        `};
 `;
 
 export const Greeting = styled.h2`
   position: absolute;
-  top: -100px;
+  top: 0;
   left: 0;
   font-weight: 700;
   font-size: 6rem;
@@ -31,7 +39,9 @@ export const Greeting = styled.h2`
     props.isHeader &&
     css`
       overflow: hidden;
-      position: absolute;
+      position: static;
+      top: auto;
+      left: auto;
       width: 1px;
       height: 1px;
       margin: -1px;
@@ -47,11 +57,12 @@ export const Greeting = styled.h2`
 `;
 
 export const SearchForm = styled.form`
-  padding: 30px;
+  padding: ${({ isOpen }) => (isOpen ? '0' : '30px')};
   border-radius: 10px;
-  background-color: ${props =>
-    props.isHeader === true ? 'transparent' : 'rgba(0, 0, 0, 0.6)'};
+  background-color: ${({ isHeader }) =>
+    isHeader ? 'transparent' : 'rgba(0, 0, 0, 0.6)'};
   color: #fff;
+  transition: padding 0.3s;
   font-size: 1.5rem;
   font-weight: 500;
 `;
@@ -428,41 +439,22 @@ export const AirportListItem = styled.li`
 
 // SearchAreaHeader
 export const SearchHeaderWrapper = styled.div`
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
   align-items: center;
-  ${props =>
-    props.fixed &&
-    css`
-      position: fixed;
-      z-index: 10;
-      top: 0;
-      left: 0;
-      right: 0;
-    `}
+  width: 100%;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
 `;
 
 export const FlightInfoSection = styled.section`
   width: 100%;
-  padding: 20px 0 0 10px;
   text-align: center;
   color: #fff;
   line-height: 2rem;
   cursor: pointer;
-`;
-
-export const AirportInfoWrapper = styled.div`
-  padding-bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  ${props =>
-    props.isOpen &&
-    css`
-      border-bottom: 1px solid rgba(115, 115, 115, 0.5);
-    `}
 `;
 
 export const AirportName = styled.span`
@@ -476,7 +468,20 @@ export const FlightIcon = styled.img`
   margin: 0 10px;
 `;
 
-export const DateOpionInfoWrapper = styled.div`
+export const OptionArea = styled.div`
+  ${({ isOpen }) => css`
+    display: ${isOpen ? 'none' : 'block'};
+  `}
+`;
+
+export const AirportInfoBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0 20px;
+`;
+
+export const DateOpionInfoBox = styled.div`
   display: ${props => (props.isOpen || props.fixed ? 'none' : 'block')};
 `;
 
@@ -506,6 +511,7 @@ export const DownButton = styled.button`
   background-color: transparent;
   border: 0;
   padding: 15px 25px;
+  margin: 0 0 -20px;
 `;
 
 export const ArrowIcon = styled.img`

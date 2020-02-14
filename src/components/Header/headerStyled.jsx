@@ -7,13 +7,11 @@ export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: ${props => (props.isView ? 'unset' : 'fixed')};
-  top: 0;
-  left: 0;
-  right: 0;
+  align-self: flex-start;
+  width: 100vw;
   min-width: 320px;
-  padding: 0 20px;
-  z-index: 3;
+  padding: ${({ isView }) => (isView ? '0 20px' : '0')};
+  background: ${({ isView }) => (isView ? 'rgba(0,0,0,.3)' : 'transparent')};
 
   ${media.mobile`
     flex-direction: column;

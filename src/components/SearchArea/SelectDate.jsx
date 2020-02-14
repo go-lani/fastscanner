@@ -26,6 +26,8 @@ const SelectDate = ({
 
   useEffect(() => {
     moment.locale('ko', koLocale);
+    // console.log('outboundDate', outboundDate);
+    // console.log('format', moment('20200229').format());
   }, []);
 
   useEffect(() => {

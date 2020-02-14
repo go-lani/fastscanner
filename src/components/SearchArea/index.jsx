@@ -78,7 +78,7 @@ const SearchArea = ({
   return (
     <S.SearchWrapper isOpen={isOpen} isHeader={isHeader}>
       <S.Greeting isHeader={isHeader}>어디로 떠나볼까요?</S.Greeting>
-      <S.SearchForm isHeader={isHeader}>
+      <S.SearchForm isHeader={isHeader} isOpen={isOpen}>
         <SelectWayTab way={way} changeWay={changeWay} />
         <S.SearchTop>
           <SelectAirport
