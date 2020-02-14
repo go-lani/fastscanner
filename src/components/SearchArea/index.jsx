@@ -99,6 +99,7 @@ const SearchArea = ({
           />
           <SelectDate
             way={way}
+            outboundDate={outboundDate}
             inboundDate={inboundDate}
             selectOutboundDate={selectOutboundDate}
             selectInboundDate={selectInboundDate}
@@ -116,6 +117,10 @@ const SearchArea = ({
             selectAdults={selectAdults}
             selectChildren={selectChildren}
             selectInfants={selectInfants}
+            originPlace={originPlace}
+            destinationPlace={destinationPlace}
+            outboundDate={outboundDate}
+            inboundDate={inboundDate}
           />
         </S.SearchTop>
         <S.SearchBottom>

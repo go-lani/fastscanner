@@ -13,6 +13,10 @@ const OptionPopup = ({
   selectAdults,
   selectChildren,
   selectInfants,
+  originPlace,
+  destinationPlace,
+  outboundDate,
+  inboundDate,
 }) => {
   // 전체 인원수는 최대 16명으로 지정
   // useState애 초기값은 리덕스의 initialState 값을 넣어줘야한다.
@@ -61,26 +65,32 @@ const OptionPopup = ({
         <S.Triangle />
         <S.OptionPopup>
           <S.CategoryTitle>좌석 등급</S.CategoryTitle>
-          <S.SelectCabinClass
-            name="cabinClass"
-            onChange={changeCabinClass}
-            required
-            ref={cabinClassRef}
-          >
-            <option value="economy">일반석</option>
-            <option value="premiumeconomy">프리미엄 일반석</option>
-            <option value="business">비즈니스석</option>
-            <option value="first">일등석</option>
-          </S.SelectCabinClass>
-          <S.RequestRequiredNotice>
-            <p style={{ fontWeight: '700' }}>
-              검색하신 노선은 일반석 가격만 보여 드릴 수 있습니다.
-            </p>
-            <p>
-              비즈니스석 및 일등석 옵션을 보려면 정확한 날짜 및/또는 도착지 도시
-              이름을 알려주세요.
-            </p>
-          </S.RequestRequiredNotice>
+          {!originPlace ||
+          !destinationPlace ||
+          !outboundDate ||
+          !inboundDate ? (
+            <S.RequestRequiredNotice>
+              <p style={{ fontWeight: '700' }}>
+                검색하신 노선은 일반석 가격만 보여 드릴 수 있습니다.
+              </p>
+              <p>
+                비즈니스석 및 일등석 옵션을 보려면 정확한 날짜 및/또는 도착지
+                도시 이름을 알려주세요.
+              </p>
+            </S.RequestRequiredNotice>
+          ) : (
+            <S.SelectCabinClass
+              name="cabinClass"
+              onChange={changeCabinClass}
+              required
+              ref={cabinClassRef}
+            >
+              <option value="economy">일반석</option>
+              <option value="premiumeconomy">프리미엄 일반석</option>
+              <option value="business">비즈니스석</option>
+              <option value="first">일등석</option>
+            </S.SelectCabinClass>
+          )}
           <S.CategoryTitle>성인</S.CategoryTitle>
           <S.CountArea>
             <S.CountButton
