@@ -9,6 +9,7 @@ import {
   setClassSaga,
   setAdultsSaga,
   setChildrenSaga,
+  setInfantsSaga,
   setOutDateSaga,
   setInDateSaga,
   setStopsSelectSaga,
@@ -26,8 +27,9 @@ export default connect(
     inboundDate: state.search.inboundDate,
     outboundDate: state.search.outboundDate,
     cabinClass: state.search.cabinClass,
-    countAdults: state.search.adults,
-    countChildren: state.search.children,
+    adults: state.search.adults,
+    children: state.search.children,
+    infants: state.search.infants,
     stops: state.search.stops,
   }),
   dispatch => ({
@@ -60,6 +62,9 @@ export default connect(
     },
     selectChildren: value => {
       dispatch(setChildrenSaga(value));
+    },
+    selectInfants: value => {
+      dispatch(setInfantsSaga(value));
     },
     selectStops: value => {
       dispatch(setStopsSelectSaga(value));

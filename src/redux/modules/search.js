@@ -107,6 +107,7 @@ function* selectWaySaga({ payload }) {
 export const setClassSaga = createAction('SET_CLASS_SAGA');
 export const setAdultsSaga = createAction('SET_ADULTS_SAGA');
 export const setChildrenSaga = createAction('SET_CHILDREN_SAGA');
+export const setInfantsSaga = createAction('SET_INFANTS_SAGA');
 
 function* selectClassSaga({ payload }) {
   try {
@@ -132,6 +133,16 @@ function* selectChildrenSaga({ payload }) {
   try {
     yield put(pending());
     yield put(success({ children: payload }));
+  } catch (error) {
+    console.log(error);
+    yield put(fail(error));
+  }
+}
+
+function* selectInfantsSaga({ payload }) {
+  try {
+    yield put(pending());
+    yield put(success({ infants: payload }));
   } catch (error) {
     console.log(error);
     yield put(fail(error));
@@ -177,6 +188,7 @@ export function* searchSaga() {
   yield takeLatest('SET_CLASS_SAGA', selectClassSaga);
   yield takeLatest('SET_ADULTS_SAGA', selectAdultsSaga);
   yield takeLatest('SET_CHILDREN_SAGA', selectChildrenSaga);
+  yield takeLatest('SET_INFANTS_SAGA', selectInfantsSaga);
   yield takeLatest('SET_OUTDATE_SAGA', selectOutDateSaga);
   yield takeLatest('SET_INDATE_SAGA', selectInDateSaga);
   yield takeLatest('SET_ORIGIN_SEARCH_SAGA', searchOriginSaga);

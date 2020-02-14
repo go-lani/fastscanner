@@ -26,14 +26,16 @@ const SearchArea = ({
   inboundDate,
   outboundDate,
   cabinClass,
-  countAdults,
-  countChildren,
+  adults,
+  children,
+  infants,
   stops,
   selectOutboundDate,
   selectInboundDate,
   selectCabinClass,
   selectAdults,
   selectChildren,
+  selectInfants,
   selectStops,
   isOpen,
   isHeader,
@@ -52,8 +54,8 @@ const SearchArea = ({
       .slice(-6);
 
     const params = qs.stringify({
-      adults: countAdults,
-      children: countChildren,
+      adults: adults,
+      children: children,
       cabinclass: cabinClass,
       infants: 0,
       rtn: way === 'round' ? 1 : 0,
@@ -99,11 +101,13 @@ const SearchArea = ({
           />
           <SelectOption
             cabinClass={cabinClass}
-            countAdults={countAdults}
-            countChildren={countChildren}
+            adults={adults}
+            children={children}
+            infants={infants}
             selectCabinClass={selectCabinClass}
             selectAdults={selectAdults}
             selectChildren={selectChildren}
+            selectInfants={selectInfants}
           />
         </S.SearchTop>
         <S.SearchBottom>

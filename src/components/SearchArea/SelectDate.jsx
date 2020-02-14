@@ -6,8 +6,6 @@ import koLocale from 'moment/locale/ko';
 import 'react-dates/lib/css/_datepicker.css';
 import './Date.css';
 import * as S from './SearchAreaStyled';
-import { useSelector, useDispatch } from 'react-redux';
-import { getOutDateSaga, getInDateSaga } from '../../redux/modules/search';
 
 const SelectDate = ({
   way,
@@ -19,14 +17,10 @@ const SelectDate = ({
   const [inboundDateState, setInboundDate] = useState(null);
   const [focusedInput, setFocusedInput] = useState(null);
 
-  // const way = useSelector(state => state.search.way);
-  // const inboundDateInRedux = useSelector(state => state.search.inboundDate);
-
-  const dispatch = useDispatch();
-
   useEffect(() => {
     moment.locale('ko', koLocale);
-  }, []);
+    console.log(outboundDate);
+  }, [outboundDate]);
 
   useEffect(() => {
     selectOutboundDate(
@@ -104,6 +98,8 @@ const SelectDate = ({
         endDate={way === 'round' ? inboundDateState : null}
         endDatePlaceholderText={way === 'oneway' ? '(편도)' : '입국날짜'}
         onDatesChange={({ startDate, endDate }) => {
+          console.log(startDate);
+          console.log(endDate);
           setStartDate(startDate);
           setEndDate(endDate);
         }}
