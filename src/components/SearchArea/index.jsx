@@ -25,6 +25,8 @@ const SearchArea = ({
   destinationPlace,
   inboundDate,
   outboundDate,
+  momentOutDate,
+  momentInDate,
   cabinClass,
   adults,
   children,
@@ -32,6 +34,8 @@ const SearchArea = ({
   stops,
   selectOutboundDate,
   selectInboundDate,
+  selectMomentOutboundDate,
+  selectMoemntInboundDate,
   selectCabinClass,
   selectAdults,
   selectChildren,
@@ -98,6 +102,10 @@ const SearchArea = ({
             inboundDate={inboundDate}
             selectOutboundDate={selectOutboundDate}
             selectInboundDate={selectInboundDate}
+            momentOutDate={momentOutDate}
+            momentInDate={momentInDate}
+            selectMomentOutboundDate={selectMomentOutboundDate}
+            selectMoemntInboundDate={selectMoemntInboundDate}
           />
           <SelectOption
             cabinClass={cabinClass}

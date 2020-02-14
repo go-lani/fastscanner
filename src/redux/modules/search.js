@@ -152,6 +152,8 @@ function* selectInfantsSaga({ payload }) {
 // 출국날짜 & 입국날짜
 export const setOutDateSaga = createAction('SET_OUTDATE_SAGA');
 export const setInDateSaga = createAction('SET_INDATE_SAGA');
+export const setMomentOutDateSaga = createAction('SET_MOMENTOUTDATE_SAGA');
+export const setMomentInDateSaga = createAction('SET_MOMENTINDATE_SAGA');
 
 function* selectOutDateSaga({ payload }) {
   try {
@@ -166,6 +168,24 @@ function* selectInDateSaga({ payload }) {
   try {
     yield put(pending());
     yield put(success({ inboundDate: payload }));
+  } catch (error) {
+    yield put(fail(error));
+  }
+}
+
+function* selectMomentOutDateSaga({ payload }) {
+  try {
+    yield put(pending());
+    yield put(success({ momentOutDate: payload }));
+  } catch (error) {
+    yield put(fail(error));
+  }
+}
+
+function* selectMomentInDateSaga({ payload }) {
+  try {
+    yield put(pending());
+    yield put(success({ momentInDate: payload }));
   } catch (error) {
     yield put(fail(error));
   }
@@ -196,6 +216,8 @@ export function* searchSaga() {
   yield takeLatest('SET_DESTINATION_SEARCH_SAGA', searchDestinationSaga);
   yield takeLatest('SET_DESTINATION_SELECT_SAGA', selectDestinationSaga);
   yield takeLatest('SET_STOPS_SELECT_SAGA', selectStopsSaga);
+  yield takeLatest('SET_MOMENTOUTDATE_SAGA', selectMomentOutDateSaga);
+  yield takeLatest('SET_MOMENTINDATE_SAGA', selectMomentInDateSaga);
 }
 
 // initialState
@@ -219,6 +241,8 @@ const initialState = {
   originName: '인천(ICN)',
   destinationSearch: [],
   destinationName: null,
+  momentOutDate: '',
+  momentInDate: '',
 };
 
 // reducer
