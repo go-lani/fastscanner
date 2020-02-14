@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 import SelectWayTab from './SelectWayTab';
@@ -45,17 +45,39 @@ const SearchArea = ({
   isHeader,
   history,
 }) => {
+  const [originInputValue, setOriginInputValue] = useState(originPlace);
+  const [destinationInputValue, setDestinationInputValue] = useState();
+
+  function originInputCheck(value) {
+    setOriginInputValue(value);
+  }
+
+  function destinationInputCheck(value) {
+    setDestinationInputValue(value);
+  }
+
+  useEffect(() => {
+    console.log('originInputValue', originInputValue);
+    console.log('destinationInputValue', destinationInputValue);
+  }, [originInputValue, destinationInputValue]);
+
   function searchSubmit() {
     const originCode = originPlace.slice(0, -4).toLowerCase();
-    const destinationCode = destinationPlace.slice(0, -4).toLowerCase();
+
+    const destinationCode =
+      destinationPlace && destinationPlace.slice(0, -4).toLowerCase();
+
     const outboundCode = outboundDate
       .split('-')
       .join('')
       .slice(-6);
-    const inboundCode = inboundDate
-      .split('-')
-      .join('')
-      .slice(-6);
+
+    const inboundCode =
+      inboundDate &&
+      inboundDate
+        .split('-')
+        .join('')
+        .slice(-6);
 
     const params = qs.stringify({
       adults: adults,
@@ -66,21 +88,33 @@ const SearchArea = ({
       preferdirects: stops ? false : true,
     });
 
-    if (inboundDate) {
+    function resetSearchList() {
+      searchOrigin('');
+      searchDestination('');
+    }
+
+    if (way === 'round') {
+      if (!originInputValue) return alert('출발지를 선택해주세요.');
+      if (!destinationInputValue) return alert('도착지를 선택해주세요.');
+      if (!inboundDate) return alert('입국날짜를 선택해주세요.');
+
       history.push(
         `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/${inboundCode}/?${params}`,
       );
+      resetSearchList();
     } else {
+      if (!originInputValue) return alert('출발지를 선택해주세요.');
+      if (!destinationInputValue) return alert('도착지를 선택해주세요.');
+
       history.push(
         `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
       );
+      resetSearchList();
     }
-    searchOrigin('');
-    searchDestination('');
   }
 
   const checkNonstops = e => {
-    selectStops(e.target.checked ? '0' : '1');
+    selectStops(e.target.checked ? 0 : 1);
   };
 
   return (
@@ -98,6 +132,8 @@ const SearchArea = ({
             searchDestination={searchDestination}
             selectDestination={selectDestination}
             destinationName={destinationName}
+            originInputCheck={originInputCheck}
+            destinationInputCheck={destinationInputCheck}
           />
           <SelectDate
             way={way}

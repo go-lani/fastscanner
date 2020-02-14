@@ -10,6 +10,7 @@ const AirportOriginPlaceBox = ({
   searchOrigin,
   selectOrigin,
   originName,
+  originInputCheck,
 }) => {
   const [visible, setVisible] = useState(false);
   const originInput = useRef();
@@ -30,6 +31,7 @@ const AirportOriginPlaceBox = ({
   function handledChange(e) {
     const value = e.target.value.trim();
     _handleChange(value);
+    originInputCheck(value);
   }
 
   function handledClick(PlaceId, PlaceName) {

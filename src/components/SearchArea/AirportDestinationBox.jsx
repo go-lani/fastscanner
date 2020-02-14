@@ -10,6 +10,7 @@ const AirportDestinationBox = ({
   searchDestination,
   selectDestination,
   destinationName,
+  destinationInputCheck,
 }) => {
   const [visible, setVisible] = useState(false);
   const destinationInput = useRef();
@@ -23,12 +24,9 @@ const AirportDestinationBox = ({
     else setVisible(false);
   }, [destinationSearchList]);
 
-  useEffect(() => {
-    console.log('visible', visible);
-  }, [visible]);
-
   const _handleChange = debounce(value => {
     searchDestination(value);
+    destinationInputCheck(value);
   }, 300);
 
   function handledChange(e) {

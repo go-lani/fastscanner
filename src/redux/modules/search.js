@@ -238,7 +238,7 @@ const initialState = {
   error: null,
   way: 'round',
   originSearch: [],
-  originName: '인천(ICN)',
+  originName: '인천국제공항(ICN)',
   destinationSearch: [],
   destinationName: null,
   momentOutDate: '',
@@ -248,19 +248,17 @@ const initialState = {
 // reducer
 const search = handleActions(
   {
-    PEDNING: (state, action) => ({
+    PENDING: (state, action) => ({
       ...state,
       loading: true,
       error: null,
     }),
-    SUCCESS: (state, action) => {
-      return {
-        ...state,
-        ...action.payload.search,
-        loading: false,
-        error: null,
-      };
-    },
+    SUCCESS: (state, action) => ({
+      ...state,
+      ...action.payload.search,
+      loading: false,
+      error: null,
+    }),
     FAIL: (state, action) => ({
       ...state,
       loading: false,

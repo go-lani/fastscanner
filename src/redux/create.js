@@ -29,7 +29,7 @@ const create = () => {
         stops: 1,
         way: 'round',
         originSearch: [],
-        originName: '인천(ICN)',
+        originName: '인천국제공항(ICN)',
         destinationSearch: [],
         destinationName: null,
       },

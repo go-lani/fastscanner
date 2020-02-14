@@ -14,6 +14,8 @@ const SelectAirport = ({
   searchDestination,
   selectDestination,
   destinationName,
+  originInputCheck,
+  destinationInputCheck,
 }) => {
   const changeAirport = () => {
     console.log('출발지 도착지를 반전시킵니다.');
@@ -26,12 +28,13 @@ const SelectAirport = ({
       </A11yTitle>
       <AirportOriginPlaceBox
         id="airport-depature"
-        value="인천(ICN)"
+        value="인천국제공항(ICN)"
         placeholder="출발지 선택"
         originSearchList={originSearchList}
         searchOrigin={searchOrigin}
         selectOrigin={selectOrigin}
         originName={originName}
+        originInputCheck={originInputCheck}
       />
       <S.AirportChangeButton onClick={changeAirport}>
         <SwapHorizRoundedIcon
@@ -51,6 +54,7 @@ const SelectAirport = ({
         searchDestination={searchDestination}
         selectDestination={selectDestination}
         destinationName={destinationName}
+        destinationInputCheck={destinationInputCheck}
       />
     </fieldset>
   );
