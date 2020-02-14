@@ -34,12 +34,14 @@ const SearchArea = ({
   selectCabinClass,
   selectAdults,
   selectChildren,
+  selectStops,
   isOpen,
   isHeader,
   history,
 }) => {
   function searchSubmit() {
     const originCode = originPlace.slice(0, -4).toLowerCase();
+    const destinationCode = destinationPlace.slice(0, -4).toLowerCase();
     const outboundCode = outboundDate
       .split('-')
       .join('')
@@ -53,20 +55,25 @@ const SearchArea = ({
       adults: countAdults,
       children: countChildren,
       cabinclass: cabinClass,
+      infants: 0,
       rtn: way === 'round' ? 1 : 0,
       preferdirects: stops ? false : true,
     });
 
     if (inboundDate) {
       history.push(
-        `/transport/flights/${originCode}/${outboundCode}/${inboundCode}/?${params}`,
+        `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/${inboundCode}/?${params}`,
       );
     } else {
       history.push(
-        `/transport/flights/${originCode}/${outboundCode}/?${params}`,
+        `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
       );
     }
   }
+
+  const checkNonstops = e => {
+    selectStops(e.target.checked ? '0' : '1');
+  };
 
   return (
     <S.SearchWrapper isOpen={isOpen} isHeader={isHeader}>
@@ -100,7 +107,13 @@ const SearchArea = ({
           />
         </S.SearchTop>
         <S.SearchBottom>
-          <CheckBox label="직항" id="nonstop" isDisable={false} />
+          <CheckBox
+            label="직항"
+            id="nonstop"
+            isDisable={false}
+            size="large"
+            onClick={checkNonstops}
+          />
           <Button
             type="button"
             text="항공권 검색"

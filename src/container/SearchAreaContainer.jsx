@@ -11,6 +11,7 @@ import {
   setChildrenSaga,
   setOutDateSaga,
   setInDateSaga,
+  setStopsSelectSaga,
 } from '../redux/modules/search';
 
 export default connect(
@@ -59,6 +60,9 @@ export default connect(
     },
     selectChildren: value => {
       dispatch(setChildrenSaga(value));
+    },
+    selectStops: value => {
+      dispatch(setStopsSelectSaga(value));
     },
   }),
 )(SearchArea);

@@ -1,4 +1,4 @@
-import { put, select, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
 import SearchService from '../../service/SearchService';
 
@@ -160,6 +160,18 @@ function* selectInDateSaga({ payload }) {
   }
 }
 
+// 직항 여부 선택
+export const setStopsSelectSaga = createAction('SET_STOPS_SELECT_SAGA');
+
+function* selectStopsSaga({ payload }) {
+  try {
+    yield put(pending());
+    yield put(success({ stops: payload }));
+  } catch (error) {
+    yield put(fail(error));
+  }
+}
+
 export function* searchSaga() {
   yield takeLatest('SET_CHANGE_WAY_SAGA', selectWaySaga);
   yield takeLatest('SET_CLASS_SAGA', selectClassSaga);
@@ -171,6 +183,7 @@ export function* searchSaga() {
   yield takeLatest('SET_ORIGIN_SELECT_SAGA', selectOriginSaga);
   yield takeLatest('SET_DESTINATION_SEARCH_SAGA', searchDestinationSaga);
   yield takeLatest('SET_DESTINATION_SELECT_SAGA', selectDestinationSaga);
+  yield takeLatest('SET_STOPS_SELECT_SAGA', selectStopsSaga);
 }
 
 // initialState
@@ -184,7 +197,8 @@ const initialState = {
   inboundDate: '',
   adults: 1,
   cabinClass: 'economy',
-  children: null,
+  children: 0,
+  infants: 0,
   stops: 1,
   loading: false,
   error: null,
