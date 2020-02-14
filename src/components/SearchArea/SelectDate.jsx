@@ -27,73 +27,24 @@ const SelectDate = ({
   }, [momentOutDate, selectMomentOutboundDate]);
 
   useEffect(() => {
-    selectOutboundDate(
-      moment()
-        ._d.toISOString()
-        .split('')
-        .slice(0, 10)
-        .join(''),
-    );
-  }, [selectOutboundDate]);
-
-  useEffect(() => {
     if (way === 'oneway') {
       selectInboundDate(null);
+    } else {
+      if (momentInDate) selectInboundDate(momentInDate.format('YYYY-MM-DD'));
     }
-  }, [inboundDate, selectInboundDate, way]);
-
-  useEffect(() => {
-    // outboundDate 와 momentOutboundDate가 다르면 outboundDate를 momnetOutboundDate로 업데이트한다.
-    // if (
-    //   momentOutDate &&
-    //   outboundDate !==
-    //     momentOutDate._d
-    //       .toISOString()
-    //       .split('')
-    //       .slice(0, 10)
-    //       .join('')
-    // )
-    //   selectOutboundDate(momentOutDate)
-    //     ._d.toISOString()
-    //     .split('')
-    //     .slice(0, 10)
-    //     .join('');
-  }, [momentOutDate, outboundDate, selectOutboundDate]);
+  }, [momentInDate, selectInboundDate, way]);
 
   const setStartDate = startDate => {
-    if (
-      startDate._d
-        .toISOString()
-        .split('')
-        .slice(0, 10)
-        .join('') ===
-      momentOutDate._d
-        .toISOString()
-        .split('')
-        .slice(0, 10)
-        .join('')
-    )
+    if (startDate.format('YYYY-MM-DD') === momentOutDate.format('YYYY-MM-DD'))
       return;
     selectMomentOutboundDate(startDate);
-    selectOutboundDate(
-      startDate._d
-        .toISOString()
-        .split('')
-        .slice(0, 10)
-        .join(''),
-    );
+    selectOutboundDate(startDate.format('YYYY-MM-DD'));
   };
 
   const setEndDate = endDate => {
     if (!endDate) return;
     selectMoemntInboundDate(endDate);
-    selectInboundDate(
-      endDate
-        .toISOString()
-        .split('')
-        .slice(0, 10)
-        .join(''),
-    );
+    selectInboundDate(endDate.format('YYYY-MM-DD'));
   };
 
   return (

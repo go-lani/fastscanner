@@ -4,7 +4,6 @@ import SearchAreaContainer from '../container/SearchAreaContainer';
 import styled from 'styled-components';
 
 const MainLayout = styled.div`
-  overflow: hidden;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -18,10 +17,13 @@ const MainLayout = styled.div`
 
 const Home = () => {
   return (
-    <MainLayout>
-      <Header />
-      <SearchAreaContainer />
-    </MainLayout>
+    <>
+      <MainLayout>
+        <Header />
+        <SearchAreaContainer />
+      </MainLayout>
+      <div style={{ height: 300 }}></div>
+    </>
   );
 };
 
