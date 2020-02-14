@@ -9,6 +9,7 @@ import * as S from './SearchAreaStyled';
 
 const SelectDate = ({
   way,
+  outboundDate,
   inboundDate,
   selectOutboundDate,
   selectInboundDate,
@@ -20,10 +21,10 @@ const SelectDate = ({
   const [focusedInput, setFocusedInput] = useState(null);
 
   useEffect(() => {
-    console.log(moment());
     moment.locale('ko', koLocale);
+    if (momentOutDate) return;
     selectMomentOutboundDate(moment());
-  }, [selectMomentOutboundDate]);
+  }, [momentOutDate, selectMomentOutboundDate]);
 
   useEffect(() => {
     selectOutboundDate(
@@ -41,7 +42,38 @@ const SelectDate = ({
     }
   }, [inboundDate, selectInboundDate, way]);
 
+  useEffect(() => {
+    // outboundDate 와 momentOutboundDate가 다르면 outboundDate를 momnetOutboundDate로 업데이트한다.
+    // if (
+    //   momentOutDate &&
+    //   outboundDate !==
+    //     momentOutDate._d
+    //       .toISOString()
+    //       .split('')
+    //       .slice(0, 10)
+    //       .join('')
+    // )
+    //   selectOutboundDate(momentOutDate)
+    //     ._d.toISOString()
+    //     .split('')
+    //     .slice(0, 10)
+    //     .join('');
+  }, [momentOutDate, outboundDate, selectOutboundDate]);
+
   const setStartDate = startDate => {
+    if (
+      startDate._d
+        .toISOString()
+        .split('')
+        .slice(0, 10)
+        .join('') ===
+      momentOutDate._d
+        .toISOString()
+        .split('')
+        .slice(0, 10)
+        .join('')
+    )
+      return;
     selectMomentOutboundDate(startDate);
     selectOutboundDate(
       startDate._d
