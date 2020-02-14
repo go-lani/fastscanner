@@ -107,6 +107,7 @@ function* selectWaySaga({ payload }) {
 export const setClassSaga = createAction('SET_CLASS_SAGA');
 export const setAdultsSaga = createAction('SET_ADULTS_SAGA');
 export const setChildrenSaga = createAction('SET_CHILDREN_SAGA');
+export const setInfantsSaga = createAction('SET_INFANTS_SAGA');
 
 function* selectClassSaga({ payload }) {
   try {
@@ -138,9 +139,21 @@ function* selectChildrenSaga({ payload }) {
   }
 }
 
+function* selectInfantsSaga({ payload }) {
+  try {
+    yield put(pending());
+    yield put(success({ infants: payload }));
+  } catch (error) {
+    console.log(error);
+    yield put(fail(error));
+  }
+}
+
 // 출국날짜 & 입국날짜
 export const setOutDateSaga = createAction('SET_OUTDATE_SAGA');
 export const setInDateSaga = createAction('SET_INDATE_SAGA');
+export const setMomentOutDateSaga = createAction('SET_MOMENTOUTDATE_SAGA');
+export const setMomentInDateSaga = createAction('SET_MOMENTINDATE_SAGA');
 
 function* selectOutDateSaga({ payload }) {
   try {
@@ -155,6 +168,24 @@ function* selectInDateSaga({ payload }) {
   try {
     yield put(pending());
     yield put(success({ inboundDate: payload }));
+  } catch (error) {
+    yield put(fail(error));
+  }
+}
+
+function* selectMomentOutDateSaga({ payload }) {
+  try {
+    yield put(pending());
+    yield put(success({ momentOutDate: payload }));
+  } catch (error) {
+    yield put(fail(error));
+  }
+}
+
+function* selectMomentInDateSaga({ payload }) {
+  try {
+    yield put(pending());
+    yield put(success({ momentInDate: payload }));
   } catch (error) {
     yield put(fail(error));
   }
@@ -177,6 +208,7 @@ export function* searchSaga() {
   yield takeLatest('SET_CLASS_SAGA', selectClassSaga);
   yield takeLatest('SET_ADULTS_SAGA', selectAdultsSaga);
   yield takeLatest('SET_CHILDREN_SAGA', selectChildrenSaga);
+  yield takeLatest('SET_INFANTS_SAGA', selectInfantsSaga);
   yield takeLatest('SET_OUTDATE_SAGA', selectOutDateSaga);
   yield takeLatest('SET_INDATE_SAGA', selectInDateSaga);
   yield takeLatest('SET_ORIGIN_SEARCH_SAGA', searchOriginSaga);
@@ -184,6 +216,8 @@ export function* searchSaga() {
   yield takeLatest('SET_DESTINATION_SEARCH_SAGA', searchDestinationSaga);
   yield takeLatest('SET_DESTINATION_SELECT_SAGA', selectDestinationSaga);
   yield takeLatest('SET_STOPS_SELECT_SAGA', selectStopsSaga);
+  yield takeLatest('SET_MOMENTOUTDATE_SAGA', selectMomentOutDateSaga);
+  yield takeLatest('SET_MOMENTINDATE_SAGA', selectMomentInDateSaga);
 }
 
 // initialState
@@ -207,6 +241,8 @@ const initialState = {
   originName: '인천(ICN)',
   destinationSearch: [],
   destinationName: null,
+  momentOutDate: '',
+  momentInDate: '',
 };
 
 // reducer
