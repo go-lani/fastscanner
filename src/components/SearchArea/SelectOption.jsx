@@ -1,23 +1,9 @@
-import React, { useState, createRef, useEffect } from 'react';
+import React, { useState, createRef } from 'react';
+import OptionPopupContainer from '../../container/OptionPopupContainer';
 import ArrowDropDownOutlinedIcon from '@material-ui/icons/ArrowDropDownOutlined';
-import OptionPopup from './OptionPopup';
 import * as S from './SearchAreaStyled';
-// import { useSelector } from 'react-redux';
 
-const SelectOption = ({
-  cabinClass,
-  adults,
-  children,
-  infants,
-  selectCabinClass,
-  selectAdults,
-  selectChildren,
-  selectInfants,
-  originPlace,
-  destinationPlace,
-  outboundDate,
-  inboundDate,
-}) => {
+const SelectOption = ({ cabinClass, adults, children, infants }) => {
   const [isOpen, setIsOpen] = useState(false);
   const popupOpen = e => setIsOpen(true);
   const popupClose = () => setIsOpen(!isOpen);
@@ -49,22 +35,8 @@ const SelectOption = ({
             <ArrowDropDownOutlinedIcon />
           </S.OptionValue>
         </S.OptionButton>
-        <OptionPopup
-          isOpen={isOpen}
-          hidePopup={popupClose}
-          cabinClass={cabinClass}
-          adults={adults}
-          children={children}
-          infants={infants}
-          selectCabinClass={selectCabinClass}
-          selectAdults={selectAdults}
-          selectChildren={selectChildren}
-          selectInfants={selectInfants}
-          originPlace={originPlace}
-          destinationPlace={destinationPlace}
-          outboundDate={outboundDate}
-          inboundDate={inboundDate}
-        />
+        <OptionPopupContainer isOpen={isOpen} hidePopup={popupClose} />
+
         <S.Dim ref={dimRef} isOpen={isOpen} onClick={click} />
       </div>
     </>

@@ -1,49 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 import SelectWayTab from './SelectWayTab';
-import SelectAirport from './SelectAirport';
-import SelectDate from './SelectDate';
-import SelectOption from './SelectOption';
+import SelectDateContainer from '../../container/SelectDateContainer';
+import SelectAirportContainer from '../../container/SelectAirportContainer';
+import SelectOptionContainer from '../../container/SelectOptionContainer';
+
 import CheckBox from '../Common/CheckBox';
 import Button from '../Common/Button';
 import SearchAreaPopup from './SearchAreaPopup';
 import * as S from './SearchAreaStyled';
 
 const SearchArea = ({
+  isOpen,
+  isHeader,
+  history,
   way,
-  changeWay,
-  searchOrigin,
-  selectOrigin,
-  originSearchList,
-  originName,
   originPlace,
-  searchDestination,
-  selectDestination,
-  destinationSearchList,
-  destinationName,
   destinationPlace,
   inboundDate,
   outboundDate,
-  momentOutDate,
-  momentInDate,
   cabinClass,
   adults,
   children,
   infants,
   stops,
-  selectOutboundDate,
-  selectInboundDate,
-  selectMomentOutboundDate,
-  selectMoemntInboundDate,
-  selectCabinClass,
-  selectAdults,
-  selectChildren,
-  selectInfants,
+  changeWay,
   selectStops,
-  isOpen,
-  isHeader,
-  history,
+  searchOrigin,
+  searchDestination,
 }) => {
   const [originInputValue, setOriginInputValue] = useState(originPlace);
   const [destinationInputValue, setDestinationInputValue] = useState();
@@ -55,11 +40,6 @@ const SearchArea = ({
   function destinationInputCheck(value) {
     setDestinationInputValue(value);
   }
-
-  useEffect(() => {
-    console.log('originInputValue', originInputValue);
-    console.log('destinationInputValue', destinationInputValue);
-  }, [originInputValue, destinationInputValue]);
 
   function searchSubmit() {
     const originCode = originPlace.slice(0, -4).toLowerCase();
@@ -123,43 +103,12 @@ const SearchArea = ({
       <S.SearchForm isHeader={isHeader} isOpen={isOpen}>
         <SelectWayTab way={way} changeWay={changeWay} />
         <S.SearchTop>
-          <SelectAirport
-            originSearchList={originSearchList}
-            searchOrigin={searchOrigin}
-            selectOrigin={selectOrigin}
-            originName={originName}
-            destinationSearchList={destinationSearchList}
-            searchDestination={searchDestination}
-            selectDestination={selectDestination}
-            destinationName={destinationName}
+          <SelectAirportContainer
             originInputCheck={originInputCheck}
             destinationInputCheck={destinationInputCheck}
           />
-          <SelectDate
-            way={way}
-            outboundDate={outboundDate}
-            inboundDate={inboundDate}
-            selectOutboundDate={selectOutboundDate}
-            selectInboundDate={selectInboundDate}
-            momentOutDate={momentOutDate}
-            momentInDate={momentInDate}
-            selectMomentOutboundDate={selectMomentOutboundDate}
-            selectMoemntInboundDate={selectMoemntInboundDate}
-          />
-          <SelectOption
-            cabinClass={cabinClass}
-            adults={adults}
-            children={children}
-            infants={infants}
-            selectCabinClass={selectCabinClass}
-            selectAdults={selectAdults}
-            selectChildren={selectChildren}
-            selectInfants={selectInfants}
-            originPlace={originPlace}
-            destinationPlace={destinationPlace}
-            outboundDate={outboundDate}
-            inboundDate={inboundDate}
-          />
+          <SelectDateContainer />
+          <SelectOptionContainer />
         </S.SearchTop>
         <S.SearchBottom>
           <CheckBox
