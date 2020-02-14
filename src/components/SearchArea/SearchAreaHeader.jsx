@@ -12,26 +12,28 @@ const SearchAreaHeader = React.forwardRef(({ fixed }, ref) => {
   };
   return (
     <>
-      <S.SearchHeaderWrapper fixed={fixed} ref={ref}>
+      <S.SearchHeaderWrapper ref={ref}>
         <S.FlightInfoSection onClick={showSearchForm}>
           <A11yTitle>항공권 입력 정보</A11yTitle>
-          <S.AirportInfoWrapper isOpen={isOpen}>
+          <S.AirportInfoBox>
             <S.AirportName>{originAirport}</S.AirportName>
             <S.FlightIcon
               src="/images/flight-white.png"
               alt="출발지에서 도착지로 이동"
             />
             <S.AirportName>파리샤를드골 (CDG)</S.AirportName>
-          </S.AirportInfoWrapper>
-          <S.DateOpionInfoWrapper isOpen={isOpen} fixed={fixed}>
-            <S.DateText>2020년 02월 12일 (수)</S.DateText>
-            <S.DateText>2020년 02월 19일 (수)</S.DateText>
-          </S.DateOpionInfoWrapper>
-          <S.DateOpionInfoWrapper isOpen={isOpen} fixed={fixed}>
-            <S.OptionText>1 성인</S.OptionText>
-            <S.OptionText>일반석</S.OptionText>
-            <S.OptionText>왕복</S.OptionText>
-          </S.DateOpionInfoWrapper>
+          </S.AirportInfoBox>
+          <S.OptionArea isOpen={isOpen}>
+            <S.DateOpionInfoBox>
+              <S.DateText>2020년 02월 12일 (수)</S.DateText>
+              <S.DateText>2020년 02월 19일 (수)</S.DateText>
+            </S.DateOpionInfoBox>
+            <S.DateOpionInfoBox>
+              <S.OptionText>1 성인</S.OptionText>
+              <S.OptionText>일반석</S.OptionText>
+              <S.OptionText>왕복</S.OptionText>
+            </S.DateOpionInfoBox>
+          </S.OptionArea>
         </S.FlightInfoSection>
         <SearchAreaContainer isOpen={isOpen} isHeader={true} />
         <S.DownButton type="button" onClick={showSearchForm}>

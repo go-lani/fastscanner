@@ -1,8 +1,14 @@
 import React, { useEffect } from 'react';
 import qs from 'query-string';
+import { withRouter } from 'react-router-dom';
+import styled from 'styled-components';
 import FilterArea from './FilterArea';
 import ListArea from './ListArea';
-import { withRouter } from 'react-router-dom';
+
+const FlightLayout = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
 const FlightArea = ({ location, getFlightData }) => {
   useEffect(() => {
@@ -55,10 +61,10 @@ const FlightArea = ({ location, getFlightData }) => {
     }
   }, [getFlightData, location.pathname, location.search]);
   return (
-    <>
+    <FlightLayout>
       <FilterArea></FilterArea>
       <ListArea></ListArea>
-    </>
+    </FlightLayout>
   );
 };
 

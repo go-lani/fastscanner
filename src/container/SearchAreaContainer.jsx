@@ -9,11 +9,12 @@ import {
   setClassSaga,
   setAdultsSaga,
   setChildrenSaga,
+  setInfantsSaga,
   setOutDateSaga,
   setInDateSaga,
   setStopsSelectSaga,
-  setOutDateMomentSaga,
-  setInDateMomentSaga,
+  setMomentOutDateSaga,
+  setMomentInDateSaga,
 } from '../redux/modules/search';
 
 export default connect(
@@ -28,11 +29,12 @@ export default connect(
     inboundDate: state.search.inboundDate,
     outboundDate: state.search.outboundDate,
     cabinClass: state.search.cabinClass,
-    countAdults: state.search.adults,
-    countChildren: state.search.children,
+    adults: state.search.adults,
+    children: state.search.children,
+    infants: state.search.infants,
     stops: state.search.stops,
-    momentOutboundDate: state.search.momentOutboundDate,
-    momentInboundDate: state.search.momentInboundDate,
+    momentOutDate: state.search.momentOutDate,
+    momentInDate: state.search.momentInDate,
   }),
   dispatch => ({
     changeWay: id => {
@@ -56,6 +58,12 @@ export default connect(
     selectInboundDate: date => {
       dispatch(setInDateSaga(date));
     },
+    selectMomentOutboundDate: date => {
+      dispatch(setMomentOutDateSaga(date));
+    },
+    selectMoemntInboundDate: date => {
+      dispatch(setMomentInDateSaga(date));
+    },
     selectCabinClass: value => {
       dispatch(setClassSaga(value));
     },
@@ -65,14 +73,11 @@ export default connect(
     selectChildren: value => {
       dispatch(setChildrenSaga(value));
     },
+    selectInfants: value => {
+      dispatch(setInfantsSaga(value));
+    },
     selectStops: value => {
       dispatch(setStopsSelectSaga(value));
-    },
-    selectOutMomentDate: value => {
-      dispatch(setOutDateMomentSaga(value));
-    },
-    selectInMomentDate: value => {
-      dispatch(setInDateMomentSaga(value));
     },
   }),
 )(SearchArea);

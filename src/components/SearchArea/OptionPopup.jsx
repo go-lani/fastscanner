@@ -1,43 +1,49 @@
-import React, { useState, useCallback, createRef, useEffect } from 'react';
+import React, { useState, createRef, useEffect } from 'react';
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import RemoveRoundedIcon from '@material-ui/icons/RemoveRounded';
 import * as S from './SearchAreaStyled';
-import {
-  getClassSaga,
-  getAdultsSaga,
-  getChildrenSaga,
-} from '../../redux/modules/search';
-import { useSelector, useDispatch } from 'react-redux';
 
 const OptionPopup = ({
   isOpen,
   hidePopup,
+  adults,
+  children,
+  infants,
   selectCabinClass,
   selectAdults,
   selectChildren,
+  selectInfants,
 }) => {
-  const [countAdults, setCountAdults] = useState(1);
-  const [countChildren, setCountChildren] = useState(0);
-  // const [cabinClass, setCabinClass] = useState('economy');
-  // const cabinClass = useSelector(state => state.search.cabinClass)
+  // 전체 인원수는 최대 16명으로 지정
+  // useState애 초기값은 리덕스의 initialState 값을 넣어줘야한다.
+  // const [countAdults, setCountAdults] = useState(adults);
+  // const [countChildren, setCountChildren] = useState(children);
+  // const [countInfants, setCountInfants] = useState(infants);
   const cabinClassRef = createRef();
 
-  const dispatch = useDispatch();
+  const minusAdult = () => {
+    selectAdults(adults - 1);
+  };
 
   const minusChild = () => {
-    setCountChildren(countChildren - 1);
+    selectChildren(children - 1);
   };
 
-  const minusAdult = () => {
-    setCountAdults(countAdults - 1);
-  };
-
-  const plusChild = () => {
-    setCountChildren(countChildren + 1);
+  const minusInfants = () => {
+    selectInfants(infants - 1);
   };
 
   const plusAdult = () => {
-    setCountAdults(countAdults + 1);
+    selectAdults(adults + 1);
+  };
+
+  const plusChild = () => {
+    selectChildren(children + 1);
+  };
+
+  const plusInfants = () => {
+    // countInfants를 올리는데 countAdults의 수와 같지 않다면 alert을 표시
+    selectInfants(infants + 1);
   };
 
   const changeCabinClass = ({ target }) => {
@@ -48,14 +54,6 @@ const OptionPopup = ({
   const submitOption = () => {
     hidePopup();
   };
-
-  useEffect(() => {
-    selectAdults(countAdults);
-  }, [countAdults, selectAdults]);
-
-  useEffect(() => {
-    selectChildren(countChildren);
-  }, [countChildren, selectChildren]);
 
   return (
     <>
@@ -87,31 +85,46 @@ const OptionPopup = ({
           <S.CountArea>
             <S.CountButton
               type="button"
-              disabled={countAdults === 1 ? true : false}
+              disabled={adults === 1 ? true : false}
               onClick={minusAdult}
             >
               <RemoveRoundedIcon fontSize="large" />
             </S.CountButton>
-            <S.CountNum>{countAdults}</S.CountNum>
+            <S.CountNum>{adults}</S.CountNum>
             <S.CountButton type="button" onClick={plusAdult}>
               <AddRoundedIcon fontSize="large" />
             </S.CountButton>
             <S.AgeRangText>만 16세 이상</S.AgeRangText>
           </S.CountArea>
-          <S.CategoryTitle>유/소아</S.CategoryTitle>
+          <S.CategoryTitle>소아</S.CategoryTitle>
           <S.CountArea>
             <S.CountButton
               type="button"
-              disabled={countChildren ? false : true}
+              disabled={children ? false : true}
               onClick={minusChild}
             >
               <RemoveRoundedIcon fontSize="large" />
             </S.CountButton>
-            <S.CountNum>{countChildren}</S.CountNum>
+            <S.CountNum>{children}</S.CountNum>
             <S.CountButton type="button" onClick={plusChild}>
               <AddRoundedIcon fontSize="large" />
             </S.CountButton>
-            <S.AgeRangText>만 0 - 15세</S.AgeRangText>
+            <S.AgeRangText>만 16세 미만</S.AgeRangText>
+          </S.CountArea>
+          <S.CategoryTitle>유아</S.CategoryTitle>
+          <S.CountArea>
+            <S.CountButton
+              type="button"
+              disabled={infants ? false : true}
+              onClick={minusInfants}
+            >
+              <RemoveRoundedIcon fontSize="large" />
+            </S.CountButton>
+            <S.CountNum>{infants}</S.CountNum>
+            <S.CountButton type="button" onClick={plusInfants}>
+              <AddRoundedIcon fontSize="large" />
+            </S.CountButton>
+            <S.AgeRangText>만 24개월 미만</S.AgeRangText>
           </S.CountArea>
           <S.Notice>
             여행 시 탑승객의 나이는 예약된 연령 범주에 부합해야 합니다. 항공사는

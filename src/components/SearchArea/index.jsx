@@ -25,15 +25,21 @@ const SearchArea = ({
   destinationPlace,
   inboundDate,
   outboundDate,
+  momentOutDate,
+  momentInDate,
   cabinClass,
-  countAdults,
-  countChildren,
+  adults,
+  children,
+  infants,
   stops,
   selectOutboundDate,
   selectInboundDate,
+  selectMomentOutboundDate,
+  selectMoemntInboundDate,
   selectCabinClass,
   selectAdults,
   selectChildren,
+  selectInfants,
   selectStops,
   isOpen,
   isHeader,
@@ -52,8 +58,8 @@ const SearchArea = ({
       .slice(-6);
 
     const params = qs.stringify({
-      adults: countAdults,
-      children: countChildren,
+      adults: adults,
+      children: children,
       cabinclass: cabinClass,
       infants: 0,
       rtn: way === 'round' ? 1 : 0,
@@ -78,7 +84,7 @@ const SearchArea = ({
   return (
     <S.SearchWrapper isOpen={isOpen} isHeader={isHeader}>
       <S.Greeting isHeader={isHeader}>어디로 떠나볼까요?</S.Greeting>
-      <S.SearchForm isHeader={isHeader}>
+      <S.SearchForm isHeader={isHeader} isOpen={isOpen}>
         <SelectWayTab way={way} changeWay={changeWay} />
         <S.SearchTop>
           <SelectAirport
@@ -96,14 +102,20 @@ const SearchArea = ({
             inboundDate={inboundDate}
             selectOutboundDate={selectOutboundDate}
             selectInboundDate={selectInboundDate}
+            momentOutDate={momentOutDate}
+            momentInDate={momentInDate}
+            selectMomentOutboundDate={selectMomentOutboundDate}
+            selectMoemntInboundDate={selectMoemntInboundDate}
           />
           <SelectOption
             cabinClass={cabinClass}
-            countAdults={countAdults}
-            countChildren={countChildren}
+            adults={adults}
+            children={children}
+            infants={infants}
             selectCabinClass={selectCabinClass}
             selectAdults={selectAdults}
             selectChildren={selectChildren}
+            selectInfants={selectInfants}
           />
         </S.SearchTop>
         <S.SearchBottom>

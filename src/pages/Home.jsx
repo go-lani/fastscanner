@@ -6,10 +6,11 @@ import styled from 'styled-components';
 const MainLayout = styled.div`
   overflow: hidden;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   padding: 0 20px;
   background: url('/images/test2.jpg') center center no-repeat;
   background-size: cover;

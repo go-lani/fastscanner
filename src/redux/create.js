@@ -32,8 +32,6 @@ const create = () => {
         originName: '인천(ICN)',
         destinationSearch: [],
         destinationName: null,
-        momentOutboundDate: moment(),
-        momentInboundDate: {},
       },
     },
     composeWithDevTools(

@@ -6,11 +6,13 @@ import * as S from './SearchAreaStyled';
 
 const SelectOption = ({
   cabinClass,
-  countAdults,
-  countChildren,
+  adults,
+  children,
+  infants,
   selectCabinClass,
   selectAdults,
   selectChildren,
+  selectInfants,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const popupOpen = e => setIsOpen(true);
@@ -38,7 +40,7 @@ const SelectOption = ({
         <S.OptionButton onClick={popupOpen} type="button">
           <S.OptionValue>
             <span>
-              {countAdults + countChildren} 승객, {cabinClassName()}
+              {adults + children + infants} 승객, {cabinClassName()}
             </span>
             <ArrowDropDownOutlinedIcon />
           </S.OptionValue>
@@ -47,9 +49,13 @@ const SelectOption = ({
           isOpen={isOpen}
           hidePopup={popupClose}
           cabinClass={cabinClass}
+          adults={adults}
+          children={children}
+          infants={infants}
           selectCabinClass={selectCabinClass}
           selectAdults={selectAdults}
           selectChildren={selectChildren}
+          selectInfants={selectInfants}
         />
         <S.Dim ref={dimRef} isOpen={isOpen} onClick={click} />
       </div>

@@ -6,32 +6,29 @@ import koLocale from 'moment/locale/ko';
 import 'react-dates/lib/css/_datepicker.css';
 import './Date.css';
 import * as S from './SearchAreaStyled';
-import { useSelector, useDispatch } from 'react-redux';
-import { getOutDateSaga, getInDateSaga } from '../../redux/modules/search';
 
 const SelectDate = ({
   way,
   inboundDate,
   selectOutboundDate,
   selectInboundDate,
-  momentOutboundDate,
-  momentInboundDate,
+  momentOutDate,
+  momentInDate,
+  selectMomentOutboundDate,
+  selectMoemntInboundDate,
 }) => {
-  const [outboundDate, setOutboundDate] = useState(moment());
-  const [inboundDateState, setInboundDate] = useState(null);
   const [focusedInput, setFocusedInput] = useState(null);
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log(moment());
     moment.locale('ko', koLocale);
-  }, []);
+    selectMomentOutboundDate(moment());
+  }, [selectMomentOutboundDate]);
 
   useEffect(() => {
     selectOutboundDate(
       moment()
-        .toISOString()
+        ._d.toISOString()
         .split('')
         .slice(0, 10)
         .join(''),
@@ -41,37 +38,13 @@ const SelectDate = ({
   useEffect(() => {
     if (way === 'oneway') {
       selectInboundDate(null);
-    } else {
-      if (inboundDateState && !inboundDate) {
-        selectInboundDate(
-          inboundDateState
-            .toISOString()
-            .split('')
-            .slice(0, 10)
-            .join(''),
-        );
-      }
     }
-  }, [inboundDate, inboundDateState, selectInboundDate, way]);
+  }, [inboundDate, selectInboundDate, way]);
 
   const setStartDate = startDate => {
-    if (
-      outboundDate
-        .toISOString()
-        .split('')
-        .slice(0, 10)
-        .join('') ===
-      startDate
-        .toISOString()
-        .split('')
-        .slice(0, 10)
-        .join('')
-    )
-      return;
-
-    setOutboundDate(startDate);
+    selectMomentOutboundDate(startDate);
     selectOutboundDate(
-      startDate
+      startDate._d
         .toISOString()
         .split('')
         .slice(0, 10)
@@ -81,17 +54,14 @@ const SelectDate = ({
 
   const setEndDate = endDate => {
     if (!endDate) return;
-
-    setInboundDate(endDate);
-    if (way === 'round') {
-      selectInboundDate(
-        endDate
-          .toISOString()
-          .split('')
-          .slice(0, 10)
-          .join(''),
-      );
-    }
+    selectMoemntInboundDate(endDate);
+    selectInboundDate(
+      endDate
+        .toISOString()
+        .split('')
+        .slice(0, 10)
+        .join(''),
+    );
   };
 
   return (
@@ -100,8 +70,8 @@ const SelectDate = ({
       <DateRangePicker
         startDateId="startDate"
         endDateId="endDate"
-        startDate={outboundDate}
-        endDate={way === 'round' ? inboundDateState : null}
+        startDate={momentOutDate}
+        endDate={way === 'round' ? momentInDate : null}
         endDatePlaceholderText={way === 'oneway' ? '(편도)' : '입국날짜'}
         onDatesChange={({ startDate, endDate }) => {
           setStartDate(startDate);
