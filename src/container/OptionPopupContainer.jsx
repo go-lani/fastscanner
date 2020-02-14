@@ -1,15 +1,14 @@
 import { connect } from 'react-redux';
-import SearchArea from '../components/SearchArea';
+import OptionPopup from '../components/SearchArea/OptionPopup';
 import {
-  setChangeWaySaga,
-  setOriginSearchSaga,
-  setDestinationSearchSaga,
-  setStopsSelectSaga,
+  setClassSaga,
+  setAdultsSaga,
+  setChildrenSaga,
+  setInfantsSaga,
 } from '../redux/modules/search';
 
 export default connect(
   state => ({
-    way: state.search.way,
     originPlace: state.search.originPlace,
     destinationPlace: state.search.destinationPlace,
     inboundDate: state.search.inboundDate,
@@ -18,20 +17,19 @@ export default connect(
     adults: state.search.adults,
     children: state.search.children,
     infants: state.search.infants,
-    stops: state.search.stops,
   }),
   dispatch => ({
-    changeWay: id => {
-      dispatch(setChangeWaySaga(id));
+    selectCabinClass: value => {
+      dispatch(setClassSaga(value));
     },
-    searchOrigin: value => {
-      dispatch(setOriginSearchSaga(value));
+    selectAdults: value => {
+      dispatch(setAdultsSaga(value));
     },
-    searchDestination: value => {
-      dispatch(setDestinationSearchSaga(value));
+    selectChildren: value => {
+      dispatch(setChildrenSaga(value));
     },
-    selectStops: value => {
-      dispatch(setStopsSelectSaga(value));
+    selectInfants: value => {
+      dispatch(setInfantsSaga(value));
     },
   }),
-)(SearchArea);
+)(OptionPopup);
