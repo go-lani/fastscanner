@@ -13,6 +13,10 @@ const SelectOption = ({
   selectAdults,
   selectChildren,
   selectInfants,
+  originPlace,
+  destinationPlace,
+  outboundDate,
+  inboundDate,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const popupOpen = e => setIsOpen(true);
@@ -56,6 +60,10 @@ const SelectOption = ({
           selectAdults={selectAdults}
           selectChildren={selectChildren}
           selectInfants={selectInfants}
+          originPlace={originPlace}
+          destinationPlace={destinationPlace}
+          outboundDate={outboundDate}
+          inboundDate={inboundDate}
         />
         <S.Dim ref={dimRef} isOpen={isOpen} onClick={click} />
       </div>
