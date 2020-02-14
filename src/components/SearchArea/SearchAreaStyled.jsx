@@ -103,13 +103,8 @@ export const SearchTop = styled.div`
 export const SearchBottom = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin: 30px 0 0;
-`;
-
-// 커스텀필요
-export const NonstopsCheck = styled.input`
-  width: 20px;
-  height: 20px;
 `;
 
 // Option Popup

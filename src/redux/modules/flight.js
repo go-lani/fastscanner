@@ -1,6 +1,6 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
-import FlightService from '../../service/FlightService';
+// import FlightService from '../../service/FlightService';
 
 const options = {
   prefix: 'fastscanner/Flight',
@@ -23,8 +23,8 @@ function* loadFlightData({ payload }) {
   console.log('saga', payload);
   try {
     yield put(pending());
-    const res = yield call(FlightService.createSession, payload);
-    console.log(res);
+    // const res = yield call(FlightService.createSession, payload);
+    // console.log(res);
   } catch (error) {
     yield put(fail(error));
   }

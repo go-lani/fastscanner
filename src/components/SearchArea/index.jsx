@@ -111,6 +111,7 @@ const SearchArea = ({
             label="직항"
             id="nonstop"
             isDisable={false}
+            size="large"
             onClick={checkNonstops}
           />
           <Button
