@@ -5,6 +5,7 @@ import { createBrowserHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './modules/saga';
+import moment from 'moment';
 
 export const history = createBrowserHistory();
 const sagaMiddleware = createSagaMiddleware();

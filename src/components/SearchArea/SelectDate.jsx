@@ -20,6 +20,7 @@ const SelectDate = ({
   const [focusedInput, setFocusedInput] = useState(null);
 
   useEffect(() => {
+    console.log(moment());
     moment.locale('ko', koLocale);
     selectMomentOutboundDate(moment());
   }, [selectMomentOutboundDate]);
