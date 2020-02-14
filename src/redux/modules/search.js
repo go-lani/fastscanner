@@ -172,6 +172,30 @@ function* selectStopsSaga({ payload }) {
   }
 }
 
+// moment Date
+export const setOutDateMomentSaga = createAction('SET_OUT_DATE_MOMENT_SAGA');
+export const setInDateMomentSaga = createAction('SET_IN_DATE_MOMENT_SAGA');
+
+function* selectOutDateMomentSaga({ payload }) {
+  try {
+    yield put(pending());
+    yield put(success({ momentOutboundDate: payload }));
+  } catch (error) {
+    console.log(error);
+    yield put(fail(error));
+  }
+}
+
+function* selectInDateMomentSaga({ payload }) {
+  try {
+    yield put(pending());
+    yield put(success({ momentInboundDate: payload }));
+  } catch (error) {
+    console.log(error);
+    yield put(fail(error));
+  }
+}
+
 export function* searchSaga() {
   yield takeLatest('SET_CHANGE_WAY_SAGA', selectWaySaga);
   yield takeLatest('SET_CLASS_SAGA', selectClassSaga);
@@ -184,6 +208,8 @@ export function* searchSaga() {
   yield takeLatest('SET_DESTINATION_SEARCH_SAGA', searchDestinationSaga);
   yield takeLatest('SET_DESTINATION_SELECT_SAGA', selectDestinationSaga);
   yield takeLatest('SET_STOPS_SELECT_SAGA', selectStopsSaga);
+  yield takeLatest('SET_OUT_DATE_MOMENT_SAGA', selectOutDateMomentSaga);
+  yield takeLatest('SET_IN_DATE_MOMENT_SAGA', selectInDateMomentSaga);
 }
 
 // initialState
@@ -207,6 +233,8 @@ const initialState = {
   originName: '인천(ICN)',
   destinationSearch: [],
   destinationName: null,
+  momentOutboundDate: {},
+  momentInboundDate: {},
 };
 
 // reducer

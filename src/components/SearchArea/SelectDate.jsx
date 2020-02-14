@@ -14,17 +14,17 @@ const SelectDate = ({
   inboundDate,
   selectOutboundDate,
   selectInboundDate,
+  momentOutboundDate,
+  momentInboundDate,
 }) => {
   const [outboundDate, setOutboundDate] = useState(moment());
   const [inboundDateState, setInboundDate] = useState(null);
   const [focusedInput, setFocusedInput] = useState(null);
 
-  // const way = useSelector(state => state.search.way);
-  // const inboundDateInRedux = useSelector(state => state.search.inboundDate);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log(moment());
     moment.locale('ko', koLocale);
   }, []);
 

@@ -12,6 +12,8 @@ import {
   setOutDateSaga,
   setInDateSaga,
   setStopsSelectSaga,
+  setOutDateMomentSaga,
+  setInDateMomentSaga,
 } from '../redux/modules/search';
 
 export default connect(
@@ -29,6 +31,8 @@ export default connect(
     countAdults: state.search.adults,
     countChildren: state.search.children,
     stops: state.search.stops,
+    momentOutboundDate: state.search.momentOutboundDate,
+    momentInboundDate: state.search.momentInboundDate,
   }),
   dispatch => ({
     changeWay: id => {
@@ -63,6 +67,12 @@ export default connect(
     },
     selectStops: value => {
       dispatch(setStopsSelectSaga(value));
+    },
+    selectOutMomentDate: value => {
+      dispatch(setOutDateMomentSaga(value));
+    },
+    selectInMomentDate: value => {
+      dispatch(setInDateMomentSaga(value));
     },
   }),
 )(SearchArea);
