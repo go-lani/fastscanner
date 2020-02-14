@@ -41,6 +41,7 @@ export default connect(
       dispatch(setChangeWaySaga(id));
     },
     searchOrigin: value => {
+      console.log(value);
       dispatch(setOriginSearchSaga(value));
     },
     selectOrigin: id => {

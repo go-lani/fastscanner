@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 import SelectWayTab from './SelectWayTab';
@@ -75,6 +75,8 @@ const SearchArea = ({
         `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
       );
     }
+    searchOrigin('');
+    searchDestination('');
   }
 
   const checkNonstops = e => {

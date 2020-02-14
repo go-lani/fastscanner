@@ -23,6 +23,10 @@ const AirportDestinationBox = ({
     else setVisible(false);
   }, [destinationSearchList]);
 
+  useEffect(() => {
+    console.log('visible', visible);
+  }, [visible]);
+
   const _handleChange = debounce(value => {
     searchDestination(value);
   }, 300);
@@ -54,7 +58,7 @@ const AirportDestinationBox = ({
         autoComplete="off"
         onChange={handledChange}
       />
-      {destinationSearchList && (
+      {destinationSearchList && visible && (
         <>
           <S.SearchPlaceDim onClick={hide} visible={visible} />
           <S.AirportListArea visible={visible}>

@@ -12,19 +12,18 @@ export const FieldTitle = styled.legend`
 `;
 
 export const SearchWrapper = styled.section`
+  display: flex;
+  flex-direction: column;
   position: relative;
   padding: ${props => (props.isHeader ? 0 : '120px 0')};
+  align-self: ${props => (props.isHeader ? 'auto' : 'flex-start')};
 
   ${props =>
-    props.isHeader && !props.isOpen
-      ? css`
-          display: none;
-        `
-      : css`
-          display: flex;
-          flex-direction: column;
-          align-self: flex-start;
-        `};
+    props.isHeader &&
+    !props.isOpen &&
+    css`
+      display: none;
+    `}
 `;
 
 export const Greeting = styled.h2`
