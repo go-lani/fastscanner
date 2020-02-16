@@ -275,9 +275,21 @@ export const OptionButton = styled.button`
 `;
 
 export const OptionValue = styled.span`
-  display: flex;
-  justify-content: space-between;
+  display: block;
+  position: relative;
   width: 100%;
+  padding: 0 15px 0 0;
+  text-align: left;
+
+  svg {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  ${media.desktop`
+    width: 200px;
+  `}
 `;
 
 export const Popup = styled.div`
