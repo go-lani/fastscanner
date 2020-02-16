@@ -26,7 +26,8 @@ const colors = {
 };
 
 const images = {
-  plane: '/images/plane.png',
+  plane: '/images/plane_white.png',
+  planeHover: '/images/plane_blue.png',
 };
 
 const sizeStyle = css`
@@ -43,16 +44,16 @@ const colorStyle = css`
   `}
 `;
 
-const colorChange = keyframes`
-  from {
-    background: #0288d1;
-  }
+// const colorChange = keyframes`
+//   from {
+//     background: #0288d1;
+//   }
 
-  to {
-    background: #fff;
-    color: #0288d1
-  }
-`;
+//   to {
+//     background: #fff;
+//     color: #0288d1
+//   }
+// `;
 
 const StyledButton = styled.button`
   /* 공통 */
@@ -66,10 +67,6 @@ const StyledButton = styled.button`
 
   /* 색상 */
   ${colorStyle}
-
-  &:hover {
-    animation: ${colorChange} 0.5s forwards;
-  }
 
   /* img */
   img {
