@@ -399,7 +399,7 @@ export const SearchCategoryTitle = styled.p`
   display: block;
   padding: 20px;
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 1.6rem;
   color: #222;
   border-bottom: 2px solid #dedede;
   word-break: keep-all;
@@ -431,16 +431,29 @@ export const AirportListItem = styled.li`
   button {
     display: block;
     width: 100%;
-    padding: 20px;
+    padding: 5px 10px 5px 40px;
     border: none;
     text-align: left;
-    background: transparent;
+    background-color: #fff;
+    background-image: url('/images/flight-lightgray.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    background-size: 20px;
     color: #0288d1;
     transition: all 0.3s;
 
     &:hover {
-      background: #0288d1;
+      background-color: #0288d1;
+      background-image: url('/images/flight-white.png');
       color: #fff;
+    }
+
+    span {
+      display: block;
+
+      &:last-child {
+        font-size: 1.2rem;
+      }
     }
   }
 `;

@@ -69,7 +69,8 @@ const AirportOriginPlaceBox = ({
                     type="button"
                     onClick={() => handledClick(list.PlaceId, list.PlaceName)}
                   >
-                    {`${list.PlaceName}(${list.PlaceId})`}
+                    <span>{`${list.PlaceName}(${list.PlaceId})`}</span>
+                    <span>{list.CountryName}</span>
                   </button>
                 </S.AirportListItem>
               ))}
