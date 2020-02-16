@@ -526,6 +526,12 @@ export const DateText = styled.span`
       margin: 5px;
     }
   }
+
+  &:only-child {
+    &:after {
+      display: none;
+    }
+  }
 `;
 
 export const OptionText = styled.span`

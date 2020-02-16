@@ -35,12 +35,17 @@ export const getConfigureSaga = createAction('GET_CONFIGURE_SAGA');
 
 function* loadConfigureSaga({
   payload: {
+    way,
     originPlace: origin,
     destinationPlace: destination,
     outboundDate,
     momentOutDate,
     inboundDate,
     momentInDate,
+    adults,
+    children,
+    infants,
+    cabinclass,
   },
 }) {
   try {
@@ -62,6 +67,7 @@ function* loadConfigureSaga({
 
     yield put(
       success({
+        way,
         originPlace: `${originPlaceId}-sky`,
         originName: `${originPlaceName}(${originPlaceId})`,
         destinationPlace: `${destinationPlaceId}-sky`,
@@ -70,6 +76,10 @@ function* loadConfigureSaga({
         momentOutDate,
         inboundDate,
         momentInDate,
+        adults,
+        children,
+        infants,
+        cabinClass: cabinclass,
       }),
     );
   } catch (error) {
