@@ -31,7 +31,9 @@ const SearchArea = ({
   searchDestination,
 }) => {
   const [originInputValue, setOriginInputValue] = useState(originPlace);
-  const [destinationInputValue, setDestinationInputValue] = useState();
+  const [destinationInputValue, setDestinationInputValue] = useState(
+    destinationPlace,
+  );
 
   function originInputCheck(value) {
     setOriginInputValue(value);
@@ -74,6 +76,7 @@ const SearchArea = ({
     }
 
     if (way === 'round') {
+      console.log(destinationInputValue);
       if (!originInputValue) return alert('출발지를 선택해주세요.');
       if (!destinationInputValue) return alert('도착지를 선택해주세요.');
       if (!inboundDate) return alert('입국날짜를 선택해주세요.');

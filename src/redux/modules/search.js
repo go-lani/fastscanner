@@ -1,4 +1,4 @@
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { put, call, select, takeLatest } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
 import SearchService from '../../service/SearchService';
 
@@ -16,8 +16,20 @@ const { success, pending, fail } = createActions(
   options,
 );
 
-// 출발지/도착지 선택
+// 왕복 & 편도
 export const setChangeWaySaga = createAction('SET_CHANGE_WAY_SAGA');
+
+function* selectWaySaga({ payload }) {
+  try {
+    yield put(pending());
+    yield put(success({ way: payload }));
+  } catch (error) {
+    console.log(error);
+    yield put(fail(error));
+  }
+}
+
+// 출발지 & 도착지
 export const setOriginSearchSaga = createAction('SET_ORIGIN_SEARCH_SAGA');
 export const setOriginSelectSaga = createAction('SET_ORIGIN_SELECT_SAGA');
 export const setDestinationSearchSaga = createAction(
@@ -26,6 +38,7 @@ export const setDestinationSearchSaga = createAction(
 export const setDestinationSelectSaga = createAction(
   'SET_DESTINATION_SELECT_SAGA',
 );
+export const setChangePlaceSaga = createAction('CHANGE_PLACE_SAGA');
 
 function* searchOriginSaga({ payload }) {
   try {
@@ -93,12 +106,26 @@ function* selectDestinationSaga({ payload }) {
   }
 }
 
-function* selectWaySaga({ payload }) {
+function* changePlaceSaga() {
+  const prevOriginName = yield select(state => state.search.originName);
+  const prevOriginPlace = yield select(state => state.search.originPlace);
+  const prevDestinationName = yield select(
+    state => state.search.destinationName,
+  );
+  const prevDestinationPlace = yield select(
+    state => state.search.destinationPlace,
+  );
   try {
     yield put(pending());
-    yield put(success({ way: payload }));
+    yield put(
+      success({
+        originName: prevDestinationName,
+        originPlace: prevDestinationPlace,
+        destinationPlace: prevOriginPlace,
+        destinationName: prevOriginName,
+      }),
+    );
   } catch (error) {
-    console.log(error);
     yield put(fail(error));
   }
 }
@@ -215,6 +242,7 @@ export function* searchSaga() {
   yield takeLatest('SET_ORIGIN_SELECT_SAGA', selectOriginSaga);
   yield takeLatest('SET_DESTINATION_SEARCH_SAGA', searchDestinationSaga);
   yield takeLatest('SET_DESTINATION_SELECT_SAGA', selectDestinationSaga);
+  yield takeLatest('CHANGE_PLACE_SAGA', changePlaceSaga);
   yield takeLatest('SET_STOPS_SELECT_SAGA', selectStopsSaga);
   yield takeLatest('SET_MOMENTOUTDATE_SAGA', selectMomentOutDateSaga);
   yield takeLatest('SET_MOMENTINDATE_SAGA', selectMomentInDateSaga);

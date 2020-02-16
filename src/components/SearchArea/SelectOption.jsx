@@ -36,7 +36,6 @@ const SelectOption = ({ cabinClass, adults, children, infants }) => {
           </S.OptionValue>
         </S.OptionButton>
         <OptionPopupContainer isOpen={isOpen} hidePopup={popupClose} />
-
         <S.Dim ref={dimRef} isOpen={isOpen} onClick={click} />
       </div>
     </>

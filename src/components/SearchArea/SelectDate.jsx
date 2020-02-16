@@ -70,10 +70,7 @@ const SelectDate = ({
             setEndDate(endDate);
           }}
           focusedInput={focusedInput}
-          onFocusChange={focusedInput => {
-            console.log(focusedInput);
-            setFocusedInput(focusedInput);
-          }}
+          onFocusChange={focusedInput => setFocusedInput(focusedInput)}
           disabled={way === 'oneway' ? 'endDate' : null}
           numberOfMonths={1}
           required={true}

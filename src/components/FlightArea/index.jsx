@@ -51,7 +51,7 @@ const FlightArea = ({ location, getFlightData }) => {
         outboundDate: '2020-02-15',
         adults: 1,
       };
-      getFlightData(requestBody);
+      // getFlightData(requestBody);
     } else {
       const [originPlace, destinationPlace, outboundDate] = path;
       console.log('편도 originPlace', originPlace);

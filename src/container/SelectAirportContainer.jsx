@@ -5,6 +5,7 @@ import {
   setOriginSelectSaga,
   setDestinationSelectSaga,
   setDestinationSearchSaga,
+  setChangePlaceSaga,
 } from '../redux/modules/search';
 
 export default connect(
@@ -28,6 +29,9 @@ export default connect(
     },
     selectDestination: id => {
       dispatch(setDestinationSelectSaga(id));
+    },
+    changePlace: () => {
+      dispatch(setChangePlaceSaga());
     },
   }),
 )(SelectAirport);
