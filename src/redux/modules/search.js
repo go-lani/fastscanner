@@ -41,6 +41,8 @@ export const setDestinationSelectSaga = createAction(
 export const setChangePlaceSaga = createAction('CHANGE_PLACE_SAGA');
 
 function* searchOriginSaga({ payload }) {
+  const prevOriginSearch = yield select(state => state.search.originSearch);
+
   try {
     yield put(pending());
 
@@ -53,7 +55,7 @@ function* searchOriginSaga({ payload }) {
     );
 
     if (newData.length) yield put(success({ originSearch: newData }));
-    else yield put(success({ originSearch: [] }));
+    else yield put(success({ originSearch: prevOriginSearch }));
   } catch (error) {
     yield put(fail(error));
   }
@@ -74,6 +76,9 @@ function* selectOriginSaga({ payload }) {
 }
 
 function* searchDestinationSaga({ payload }) {
+  const prevDestinationSearch = yield select(
+    state => state.search.destinationSearch,
+  );
   try {
     yield put(pending());
 
@@ -86,7 +91,7 @@ function* searchDestinationSaga({ payload }) {
     );
 
     if (newData.length) yield put(success({ destinationSearch: newData }));
-    else yield put(success({ destinationSearch: [] }));
+    else yield put(success({ destinationSearch: prevDestinationSearch }));
   } catch (error) {
     yield put(fail(error));
   }
