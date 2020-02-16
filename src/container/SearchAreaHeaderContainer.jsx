@@ -5,17 +5,19 @@ import {
   setOriginSearchSaga,
   setDestinationSearchSaga,
   setStopsSelectSaga,
-  getPlaceSaga,
+  getConfigureSaga,
 } from '../redux/modules/search';
 
 export default connect(
   state => ({
     originName: state.search.originName,
     destinationName: state.search.destinationName,
+    outboundDate: state.search.outboundDate,
+    inboundDate: state.search.inboundDate,
   }),
   dispatch => ({
-    getPlace: value => {
-      dispatch(getPlaceSaga(value));
+    getConfigure: value => {
+      dispatch(getConfigureSaga(value));
     },
     changeWay: id => {
       // id 값으로는 oneway or round

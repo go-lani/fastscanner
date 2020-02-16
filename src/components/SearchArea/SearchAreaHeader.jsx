@@ -4,14 +4,22 @@ import qs from 'query-string';
 import A11yTitle from '../Common/A11yTitle';
 import * as S from './SearchAreaStyled';
 import SearchAreaContainer from '../../container/SearchAreaContainer';
+import moment from 'moment';
+import koLocale from 'moment/locale/ko';
 
 const SearchAreaHeader = ({
   location,
   originName,
   destinationName,
-  getPlace,
+  getConfigure,
   selectStops,
+  outboundDate,
+  inboundDate,
 }) => {
+  useEffect(() => {
+    moment.locale('ko', koLocale);
+  }, []);
+
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     const path = location.pathname
@@ -40,9 +48,21 @@ const SearchAreaHeader = ({
 
     if (+rtn) {
       const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
+      // 2020-02-16
+      const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
+      const momentOutBound = moment(moment(`20${outboundDate}`));
+      const inBound = moment(`20${inboundDate}`).format('YYYY-MM-DD');
+      const momentInBound = moment(moment(`20${inboundDate}`));
 
-      // 출발지 & 도착지 초기세팅
-      getPlace({ originPlace, destinationPlace });
+      // 초기세팅
+      getConfigure({
+        originPlace,
+        destinationPlace,
+        outboundDate: outBound,
+        momentOutDate: momentOutBound,
+        inboundDate: inBound,
+        momentInDate: momentInBound,
+      });
 
       console.log(
         '왕복',
@@ -55,7 +75,7 @@ const SearchAreaHeader = ({
       const [originPlace, destinationPlace, outboundDate] = path;
       console.log('편도', originPlace, destinationPlace, outboundDate);
     }
-  }, [getPlace, location.pathname, location.search, selectStops]);
+  }, [getConfigure, location.pathname, location.search, selectStops]);
 
   const showSearchForm = () => {
     setIsOpen(!isOpen);
@@ -75,8 +95,8 @@ const SearchAreaHeader = ({
           </S.AirportInfoBox>
           <S.OptionArea isOpen={isOpen}>
             <S.DateOpionInfoBox>
-              <S.DateText>2020년 02월 12일 (수)</S.DateText>
-              <S.DateText>2020년 02월 19일 (수)</S.DateText>
+              <S.DateText>{moment(outboundDate).format('LL')}</S.DateText>
+              <S.DateText>{moment(inboundDate).format('LL')}</S.DateText>
             </S.DateOpionInfoBox>
             <S.DateOpionInfoBox>
               <S.OptionText>1 성인</S.OptionText>

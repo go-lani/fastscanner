@@ -20,7 +20,7 @@ const create = () => {
         locale: 'ko-KR',
         originPlace: 'ICN-sky',
         destinationPlace: null,
-        outboundDate: '',
+        outboundDate: moment().format('YYYY-MM-DD'),
         inboundDate: '',
         adults: 1,
         cabinClass: 'economy',
@@ -32,6 +32,7 @@ const create = () => {
         originName: '인천국제공항(ICN)',
         destinationSearch: [],
         destinationName: null,
+        momentOutDate: moment(),
       },
     },
     composeWithDevTools(

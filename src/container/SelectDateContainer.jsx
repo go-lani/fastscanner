@@ -25,7 +25,7 @@ export default connect(
     selectMomentOutboundDate: date => {
       dispatch(setMomentOutDateSaga(date));
     },
-    selectMoemntInboundDate: date => {
+    selectMomentInboundDate: date => {
       dispatch(setMomentInDateSaga(date));
     },
   }),
