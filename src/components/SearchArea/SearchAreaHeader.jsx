@@ -1,22 +1,68 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
+import qs from 'query-string';
 import A11yTitle from '../Common/A11yTitle';
 import * as S from './SearchAreaStyled';
 import SearchAreaContainer from '../../container/SearchAreaContainer';
 
-const SearchAreaHeader = React.forwardRef(({ fixed }, ref) => {
-  const originAirport = useSelector(state => state.search.originPlace);
+const SearchAreaHeader = ({
+  location,
+  changeWay,
+  searchOrigin,
+  searchDestination,
+  selectStops,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    const path = location.pathname
+      .slice(1, -1)
+      .split('/')
+      .slice(2);
+    //   location.pathname
+    //   inboundDate: '2020-02-19',
+    //   originPlace: 'ICN-sky',
+    //   destinationPlace: 'CJU-sky',
+    //   outboundDate: '2020-02-10',
+
+    const query = qs.parse(location.search);
+    const {
+      cabinclass: cabinClass,
+      children,
+      infants,
+      adults,
+      preferdirects,
+      rtn,
+    } = query;
+
+    // 직항 & 경유 초기세팅
+    if (preferdirects === 'true') selectStops(0);
+    else selectStops(1);
+
+    if (+rtn) {
+      const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
+      console.log(
+        '왕복',
+        originPlace,
+        destinationPlace,
+        outboundDate,
+        inboundDate,
+      );
+    } else {
+      const [originPlace, destinationPlace, outboundDate] = path;
+      console.log('편도', originPlace, destinationPlace, outboundDate);
+    }
+  }, [location.pathname, location.search, selectStops]);
+
   const showSearchForm = () => {
     setIsOpen(!isOpen);
   };
   return (
     <>
-      <S.SearchHeaderWrapper ref={ref}>
+      <S.SearchHeaderWrapper>
         <S.FlightInfoSection onClick={showSearchForm}>
           <A11yTitle>항공권 입력 정보</A11yTitle>
           <S.AirportInfoBox>
-            <S.AirportName>{originAirport}</S.AirportName>
+            <S.AirportName>출발지</S.AirportName>
             <S.FlightIcon
               src="/images/flight-white.png"
               alt="출발지에서 도착지로 이동"
@@ -46,6 +92,6 @@ const SearchAreaHeader = React.forwardRef(({ fixed }, ref) => {
       </S.SearchHeaderWrapper>
     </>
   );
-});
+};
 
-export default SearchAreaHeader;
+export default withRouter(SearchAreaHeader);

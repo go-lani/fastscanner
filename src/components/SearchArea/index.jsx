@@ -111,9 +111,9 @@ const SearchArea = ({
           <CheckBox
             label="직항"
             id="nonstop"
-            isDisable={false}
             size="large"
-            onClick={checkNonstops}
+            onChange={checkNonstops}
+            stops={stops}
           />
           <Button
             type="button"
