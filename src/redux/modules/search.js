@@ -30,6 +30,7 @@ function* selectWaySaga({ payload }) {
 }
 
 // 출발지 & 도착지
+export const getPlaceSaga = createAction('GET_PLACE_SAGA');
 export const setOriginSearchSaga = createAction('SET_ORIGIN_SEARCH_SAGA');
 export const setOriginSelectSaga = createAction('SET_ORIGIN_SELECT_SAGA');
 export const setDestinationSearchSaga = createAction(
@@ -39,6 +40,39 @@ export const setDestinationSelectSaga = createAction(
   'SET_DESTINATION_SELECT_SAGA',
 );
 export const setChangePlaceSaga = createAction('CHANGE_PLACE_SAGA');
+
+function* loadPlaceSaga({
+  payload: { originPlace: origin, destinationPlace: destination },
+}) {
+  try {
+    yield put(pending());
+    const { data: originData } = yield call(SearchService.originSearch, origin);
+    const { data: destinationData } = yield call(
+      SearchService.destinationSearch,
+      destination,
+    );
+
+    const {
+      PlaceId: originPlaceId,
+      PlaceName: originPlaceName,
+    } = originData[0];
+    const {
+      PlaceId: destinationPlaceId,
+      PlaceName: destinationPlaceName,
+    } = destinationData[0];
+
+    yield put(
+      success({
+        originPlace: `${originPlaceId}-sky`,
+        originName: `${originPlaceName}(${originPlaceId})`,
+        destinationPlace: `${destinationPlaceId}-sky`,
+        destinationName: `${destinationPlaceName}(${destinationPlaceId})`,
+      }),
+    );
+  } catch (error) {
+    yield put(fail(error));
+  }
+}
 
 function* searchOriginSaga({ payload }) {
   const prevOriginSearch = yield select(state => state.search.originSearch);
@@ -243,6 +277,7 @@ export function* searchSaga() {
   yield takeLatest('SET_INFANTS_SAGA', selectInfantsSaga);
   yield takeLatest('SET_OUTDATE_SAGA', selectOutDateSaga);
   yield takeLatest('SET_INDATE_SAGA', selectInDateSaga);
+  yield takeLatest('GET_PLACE_SAGA', loadPlaceSaga);
   yield takeLatest('SET_ORIGIN_SEARCH_SAGA', searchOriginSaga);
   yield takeLatest('SET_ORIGIN_SELECT_SAGA', selectOriginSaga);
   yield takeLatest('SET_DESTINATION_SEARCH_SAGA', searchDestinationSaga);

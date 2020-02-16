@@ -7,9 +7,9 @@ import SearchAreaContainer from '../../container/SearchAreaContainer';
 
 const SearchAreaHeader = ({
   location,
-  changeWay,
-  searchOrigin,
-  searchDestination,
+  originName,
+  destinationName,
+  getPlace,
   selectStops,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +40,10 @@ const SearchAreaHeader = ({
 
     if (+rtn) {
       const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
+
+      // 출발지 & 도착지 초기세팅
+      getPlace({ originPlace, destinationPlace });
+
       console.log(
         '왕복',
         originPlace,
@@ -51,7 +55,7 @@ const SearchAreaHeader = ({
       const [originPlace, destinationPlace, outboundDate] = path;
       console.log('편도', originPlace, destinationPlace, outboundDate);
     }
-  }, [location.pathname, location.search, selectStops]);
+  }, [getPlace, location.pathname, location.search, selectStops]);
 
   const showSearchForm = () => {
     setIsOpen(!isOpen);
@@ -62,12 +66,12 @@ const SearchAreaHeader = ({
         <S.FlightInfoSection onClick={showSearchForm}>
           <A11yTitle>항공권 입력 정보</A11yTitle>
           <S.AirportInfoBox>
-            <S.AirportName>출발지</S.AirportName>
+            <S.AirportName>{originName}</S.AirportName>
             <S.FlightIcon
               src="/images/flight-white.png"
               alt="출발지에서 도착지로 이동"
             />
-            <S.AirportName>파리샤를드골 (CDG)</S.AirportName>
+            <S.AirportName>{destinationName}</S.AirportName>
           </S.AirportInfoBox>
           <S.OptionArea isOpen={isOpen}>
             <S.DateOpionInfoBox>
