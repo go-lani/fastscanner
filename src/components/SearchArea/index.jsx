@@ -43,11 +43,6 @@ const SearchArea = ({
     setDestinationInputValue(value);
   }
 
-  function resetSearchList() {
-    searchOrigin('');
-    searchDestination('');
-  }
-
   function searchSubmit() {
     const originCode = originPlace.slice(0, -4).toLowerCase();
     const destinationCode =
@@ -91,8 +86,9 @@ const SearchArea = ({
   }
 
   useEffect(() => {
-    resetSearchList();
-  }, [resetSearchList]);
+    searchOrigin('');
+    searchDestination('');
+  }, [searchOrigin, searchDestination]);
 
   const checkNonstops = e => {
     selectStops(e.target.checked ? 0 : 1);
