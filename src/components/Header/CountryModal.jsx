@@ -15,9 +15,12 @@ const CountryModal = ({ status, closeClick, selectLang, setSelectLang }) => {
     <>
       <S.Modal onClick={click} status={status}>
         <S.ModalContents ref={modalContainer}>
-          <S.ModalButton onClick={closeClick} autoFocus={true}>
-            <CloseIcon style={{ width: '2.0em', height: '2.0em' }} />
-          </S.ModalButton>
+          <S.ModalHeader>
+            <S.ModalTitle>언어 및 지역 설정</S.ModalTitle>
+            <S.ModalButton onClick={closeClick} autoFocus={true}>
+              <CloseIcon style={{ width: '2.0em', height: '2.0em' }} />
+            </S.ModalButton>
+          </S.ModalHeader>
           <CountryModalContents
             selectLang={selectLang}
             setSelectLang={setSelectLang}

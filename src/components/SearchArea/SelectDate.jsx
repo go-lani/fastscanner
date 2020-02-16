@@ -27,7 +27,8 @@ const SelectDate = ({
     moment.locale('ko', koLocale);
     if (momentOutDate) return;
     selectMomentOutboundDate(moment());
-  }, [momentOutDate, selectMomentOutboundDate]);
+    selectOutboundDate(moment().format('YYYY-MM-DD'));
+  }, [momentOutDate, selectMomentOutboundDate, selectOutboundDate]);
 
   useEffect(() => {
     if (way === 'oneway') {
