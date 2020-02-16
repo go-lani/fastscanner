@@ -1,4 +1,4 @@
-import React, { useState, createRef, useEffect } from 'react';
+import React, { createRef } from 'react';
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import RemoveRoundedIcon from '@material-ui/icons/RemoveRounded';
 import * as S from './SearchAreaStyled';
@@ -6,6 +6,9 @@ import * as S from './SearchAreaStyled';
 const OptionPopup = ({
   isOpen,
   hidePopup,
+  way,
+  destinationPlace,
+  inboundDate,
   adults,
   children,
   infants,
@@ -13,17 +16,9 @@ const OptionPopup = ({
   selectAdults,
   selectChildren,
   selectInfants,
-  originPlace,
-  destinationPlace,
-  outboundDate,
-  inboundDate,
 }) => {
-  // 전체 인원수는 최대 16명으로 지정
-  // useState애 초기값은 리덕스의 initialState 값을 넣어줘야한다.
-  // const [countAdults, setCountAdults] = useState(adults);
-  // const [countChildren, setCountChildren] = useState(children);
-  // const [countInfants, setCountInfants] = useState(infants);
   const cabinClassRef = createRef();
+  const allCount = adults + children + infants;
 
   const minusAdult = () => {
     selectAdults(adults - 1);
@@ -47,6 +42,8 @@ const OptionPopup = ({
 
   const plusInfants = () => {
     // countInfants를 올리는데 countAdults의 수와 같지 않다면 alert을 표시
+    if (adults === infants)
+      return alert('성인 1명당 유아 1명까지 선택할 수 있습니다.');
     selectInfants(infants + 1);
   };
 
@@ -59,26 +56,19 @@ const OptionPopup = ({
     hidePopup();
   };
 
+  const selectClass = () => {
+    if (way === 'round')
+      return !destinationPlace || !inboundDate ? false : true;
+    else return !destinationPlace ? false : true;
+  };
+
   return (
     <>
       <S.OptionPopupWrapper isOpen={isOpen}>
         <S.Triangle />
         <S.OptionPopup>
           <S.CategoryTitle>좌석 등급</S.CategoryTitle>
-          {!originPlace ||
-          !destinationPlace ||
-          !outboundDate ||
-          !inboundDate ? (
-            <S.RequestRequiredNotice>
-              <p style={{ fontWeight: '700' }}>
-                검색하신 노선은 일반석 가격만 보여 드릴 수 있습니다.
-              </p>
-              <p>
-                비즈니스석 및 일등석 옵션을 보려면 정확한 날짜 및/또는 도착지
-                도시 이름을 알려주세요.
-              </p>
-            </S.RequestRequiredNotice>
-          ) : (
+          {selectClass() ? (
             <S.SelectCabinClass
               name="cabinClass"
               onChange={changeCabinClass}
@@ -90,6 +80,16 @@ const OptionPopup = ({
               <option value="business">비즈니스석</option>
               <option value="first">일등석</option>
             </S.SelectCabinClass>
+          ) : (
+            <S.RequestRequiredNotice>
+              <p style={{ fontWeight: '700' }}>
+                검색하신 노선은 일반석 가격만 보여 드릴 수 있습니다.
+              </p>
+              <p>
+                비즈니스석 및 일등석 옵션을 보려면 정확한 날짜 및 도착지 도시
+                이름을 알려주세요.
+              </p>
+            </S.RequestRequiredNotice>
           )}
           <S.CategoryTitle>성인</S.CategoryTitle>
           <S.CountArea>
@@ -101,7 +101,11 @@ const OptionPopup = ({
               <RemoveRoundedIcon fontSize="large" />
             </S.CountButton>
             <S.CountNum>{adults}</S.CountNum>
-            <S.CountButton type="button" onClick={plusAdult}>
+            <S.CountButton
+              type="button"
+              disabled={allCount === 16 ? true : false}
+              onClick={plusAdult}
+            >
               <AddRoundedIcon fontSize="large" />
             </S.CountButton>
             <S.AgeRangText>만 16세 이상</S.AgeRangText>
@@ -116,7 +120,11 @@ const OptionPopup = ({
               <RemoveRoundedIcon fontSize="large" />
             </S.CountButton>
             <S.CountNum>{children}</S.CountNum>
-            <S.CountButton type="button" onClick={plusChild}>
+            <S.CountButton
+              type="button"
+              disabled={allCount === 16 ? true : false}
+              onClick={plusChild}
+            >
               <AddRoundedIcon fontSize="large" />
             </S.CountButton>
             <S.AgeRangText>만 16세 미만</S.AgeRangText>
@@ -131,7 +139,11 @@ const OptionPopup = ({
               <RemoveRoundedIcon fontSize="large" />
             </S.CountButton>
             <S.CountNum>{infants}</S.CountNum>
-            <S.CountButton type="button" onClick={plusInfants}>
+            <S.CountButton
+              type="button"
+              disabled={allCount === 16 ? true : false}
+              onClick={plusInfants}
+            >
               <AddRoundedIcon fontSize="large" />
             </S.CountButton>
             <S.AgeRangText>만 24개월 미만</S.AgeRangText>

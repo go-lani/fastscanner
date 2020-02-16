@@ -26,7 +26,7 @@ const colors = {
 };
 
 const images = {
-  plane: '/images/plane.png',
+  plane: '/images/plane(1).png',
 };
 
 const sizeStyle = css`

@@ -9,11 +9,9 @@ import {
 
 export default connect(
   state => ({
-    originPlace: state.search.originPlace,
+    way: state.search.way,
     destinationPlace: state.search.destinationPlace,
     inboundDate: state.search.inboundDate,
-    outboundDate: state.search.outboundDate,
-    cabinClass: state.search.cabinClass,
     adults: state.search.adults,
     children: state.search.children,
     infants: state.search.infants,
