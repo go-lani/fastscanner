@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 import SelectWayTab from './SelectWayTab';
@@ -43,17 +43,19 @@ const SearchArea = ({
     setDestinationInputValue(value);
   }
 
+  function resetSearchList() {
+    searchOrigin('');
+    searchDestination('');
+  }
+
   function searchSubmit() {
     const originCode = originPlace.slice(0, -4).toLowerCase();
-
     const destinationCode =
       destinationPlace && destinationPlace.slice(0, -4).toLowerCase();
-
     const outboundCode = outboundDate
       .split('-')
       .join('')
       .slice(-6);
-
     const inboundCode =
       inboundDate &&
       inboundDate
@@ -70,13 +72,7 @@ const SearchArea = ({
       preferdirects: stops ? false : true,
     });
 
-    function resetSearchList() {
-      searchOrigin('');
-      searchDestination('');
-    }
-
     if (way === 'round') {
-      console.log(destinationInputValue);
       if (!originInputValue) return alert('출발지를 선택해주세요.');
       if (!destinationInputValue) return alert('도착지를 선택해주세요.');
       if (!inboundDate) return alert('입국날짜를 선택해주세요.');
@@ -84,7 +80,6 @@ const SearchArea = ({
       history.push(
         `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/${inboundCode}/?${params}`,
       );
-      resetSearchList();
     } else {
       if (!originInputValue) return alert('출발지를 선택해주세요.');
       if (!destinationInputValue) return alert('도착지를 선택해주세요.');
@@ -92,9 +87,12 @@ const SearchArea = ({
       history.push(
         `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
       );
-      resetSearchList();
     }
   }
+
+  useEffect(() => {
+    resetSearchList();
+  }, [resetSearchList]);
 
   const checkNonstops = e => {
     selectStops(e.target.checked ? 0 : 1);
