@@ -135,14 +135,23 @@ export const OptionPopupWrapper = styled.div`
   display: none;
   position: absolute;
   top: 70px;
-  right: 0;
-  width: 370px;
+  right: 50%;
+  min-width: 320px;
+  width: 100%;
+  z-index: 3;
+  transform: translateX(50%);
+
+  ${media.desktop`
+    right: 0;
+    width: auto;
+    transform: none;
+  `}
+
   ${props =>
     props.isOpen &&
     css`
       display: block;
     `}
-  z-index:3;
 `;
 
 export const StyledOptionPopup = styled.div`
