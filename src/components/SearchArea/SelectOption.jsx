@@ -29,9 +29,7 @@ const SelectOption = ({ cabinClass, adults, children, infants }) => {
         <S.FieldTitle as="p">좌석등급 / 승객</S.FieldTitle>
         <S.OptionButton onClick={popupOpen} type="button">
           <S.OptionValue>
-            <span>
-              {adults + children + infants} 승객, {cabinClassName}
-            </span>
+            {adults + children + infants} 승객, {cabinClassName}
             <ArrowDropDownOutlinedIcon />
           </S.OptionValue>
         </S.OptionButton>
