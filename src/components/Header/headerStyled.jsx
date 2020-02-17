@@ -8,15 +8,14 @@ export const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   align-self: flex-start;
-  width: 100vw;
-  min-width: 320px;
+  width: ${({ isView }) => (isView ? 'auto' : '100vw')};
   padding: ${({ isView }) => (isView ? '0 20px' : '0')};
   background: ${({ isView }) => (isView ? 'rgba(0,0,0,.3)' : 'transparent')};
 
   ${media.mobile`
     flex-direction: column;
     align-items: flex-start;
-    padding: 20px;
+    padding: ${({ isView }) => (isView ? '20px' : '20px 0')};
   `}
 `;
 
@@ -101,21 +100,21 @@ const fadeIn = keyframes`
   }
 
   to {
-    background-color: rgba(73, 80, 87, 0.7);
+    background-color: rgba(0, 0, 0, 0.4);
     opacity: 1;
   }
 `;
 
 export const Modal = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffffff;
+  padding: 20px;
 
   ${props =>
     props.status &&
@@ -128,25 +127,38 @@ export const Modal = styled.div`
 
 export const ModalContents = styled.div`
   position: relative;
-  padding: 0 24px 24px 24px;
-  background: white;
-  width: 100%;
-  height: 100%;
-  max-width: 1032px;
-  height: 755px;
+  min-width: 320px;
+  max-width: 1000px;
+  padding: 24px;
+  background: #fff;
   border-radius: 12px;
 `;
 export const ModalSection = styled.section`
   width: 100%;
-  margin-top: 64px;
-  padding-top: 24px;
-  border-top: 1px solid #0288d1;
+
+  & > div {
+    margin: 0 0 50px;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+`;
+
+export const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 20px;
+  padding: 0 0 20px;
+  border-bottom: 2px solid #0288d1;
+`;
+
+export const ModalTitle = styled.p`
+  font-weight: 700;
+  font-size: 2.5rem;
 `;
 
 export const ModalButton = styled.button`
-  position: absolute;
-  top: 24px;
-  right: 24px;
   width: 30px;
   height: 30px;
   border-style: none;
@@ -159,21 +171,31 @@ export const ModalButton = styled.button`
   }
 `;
 
-export const ModalSectionTitle = styled.h2`
+export const ModalSectionTitle = styled.p`
+  font-weight: 700;
   font-size: 2.2rem;
   margin-bottom: 24px;
-  font-weight: 700;
+`;
+
+export const ModalContentScroll = styled.div`
+  overflow-x: scroll;
+
+  ${media.desktop`
+    overflow-x: hidden;
+  `}
 `;
 
 export const ModalContentUl = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  width: 1000px;
-  margin-bottom: 24px;
+  display: inline-flex;
+
+  ${media.desktop`
+    display: flex;
+    flex-wrap: wrap;
+  `}
 `;
 
 export const ModalContentsLi = styled.li`
-  width: 197px;
+  width: 190px;
   padding: 8px;
 
   p {

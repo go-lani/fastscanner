@@ -135,14 +135,23 @@ export const OptionPopupWrapper = styled.div`
   display: none;
   position: absolute;
   top: 70px;
-  right: 0;
-  width: 370px;
+  right: 50%;
+  min-width: 320px;
+  width: 100%;
+  z-index: 3;
+  transform: translateX(50%);
+
+  ${media.desktop`
+    right: 0;
+    width: auto;
+    transform: none;
+  `}
+
   ${props =>
     props.isOpen &&
     css`
       display: block;
     `}
-  z-index:3;
 `;
 
 export const StyledOptionPopup = styled.div`
@@ -266,9 +275,21 @@ export const OptionButton = styled.button`
 `;
 
 export const OptionValue = styled.span`
-  display: flex;
-  justify-content: space-between;
+  display: block;
+  position: relative;
   width: 100%;
+  padding: 0 15px 0 0;
+  text-align: left;
+
+  svg {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  ${media.desktop`
+    width: 200px;
+  `}
 `;
 
 export const Popup = styled.div`
@@ -390,7 +411,7 @@ export const SearchCategoryTitle = styled.p`
   display: block;
   padding: 20px;
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 1.6rem;
   color: #222;
   border-bottom: 2px solid #dedede;
   word-break: keep-all;
@@ -422,16 +443,29 @@ export const AirportListItem = styled.li`
   button {
     display: block;
     width: 100%;
-    padding: 20px;
+    padding: 5px 10px 5px 40px;
     border: none;
     text-align: left;
-    background: transparent;
+    background-color: #fff;
+    background-image: url('/images/flight-lightgray.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    background-size: 20px;
     color: #0288d1;
     transition: all 0.3s;
 
     &:hover {
-      background: #0288d1;
+      background-color: #0288d1;
+      background-image: url('/images/flight-white.png');
       color: #fff;
+    }
+
+    span {
+      display: block;
+
+      &:last-child {
+        font-size: 1.2rem;
+      }
     }
   }
 `;
@@ -490,6 +524,12 @@ export const DateText = styled.span`
     &:after {
       content: '-';
       margin: 5px;
+    }
+  }
+
+  &:only-child {
+    &:after {
+      display: none;
     }
   }
 `;

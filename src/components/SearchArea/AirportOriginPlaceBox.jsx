@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as S from './SearchAreaStyled';
 import uuid from 'uuid';
-import { debounce } from 'lodash';
 
 const AirportOriginPlaceBox = ({
   id,
@@ -24,23 +23,31 @@ const AirportOriginPlaceBox = ({
     else setVisible(false);
   }, [originSearchList]);
 
-  const _handleChange = debounce(value => {
-    searchOrigin(value);
-  }, 300);
-
   function handledChange(e) {
     const value = e.target.value.trim();
-    _handleChange(value);
+    searchOrigin(value);
     originInputCheck(value);
   }
 
   function handledClick(PlaceId, PlaceName) {
+    if (originName === `${PlaceName}(${PlaceId})`) {
+      originInput.current.value = originName;
+      setVisible(false);
+      return;
+    }
     selectOrigin({ PlaceName, PlaceId });
     setVisible(false);
   }
 
   function hide() {
     const { PlaceName, PlaceId } = originSearchList[0];
+
+    if (originName === `${PlaceName}(${PlaceId})`) {
+      originInput.current.value = originName;
+      setVisible(false);
+      return;
+    }
+
     selectOrigin({ PlaceName, PlaceId });
     setVisible(false);
   }
@@ -69,7 +76,8 @@ const AirportOriginPlaceBox = ({
                     type="button"
                     onClick={() => handledClick(list.PlaceId, list.PlaceName)}
                   >
-                    {`${list.PlaceName}(${list.PlaceId})`}
+                    <span>{`${list.PlaceName}(${list.PlaceId})`}</span>
+                    <span>{list.CountryName}</span>
                   </button>
                 </S.AirportListItem>
               ))}

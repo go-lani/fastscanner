@@ -65,15 +65,16 @@ const StyledCheckbox = styled.input`
   }
 `;
 
-const CheckBox = ({ label, id, isDisable, size, onClick }) => {
+const CheckBox = ({ label, id, size, onChange, stops }) => {
+  console.log('checkbox render', !stops);
   return (
     <span>
       <StyledCheckbox
         type="checkbox"
         id={id}
-        disabled={isDisable}
+        checked={!stops}
         size={size}
-        onClick={onClick}
+        onChange={onChange}
       />
       <StyledLabel htmlFor={id} isDisable size={size}>
         {label}

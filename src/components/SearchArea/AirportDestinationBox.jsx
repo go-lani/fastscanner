@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as S from './SearchAreaStyled';
 import uuid from 'uuid';
-import { debounce } from 'lodash';
 
 const AirportDestinationBox = ({
   id,
@@ -24,23 +23,31 @@ const AirportDestinationBox = ({
     else setVisible(false);
   }, [destinationSearchList]);
 
-  const _handleChange = debounce(value => {
-    searchDestination(value);
-    destinationInputCheck(value);
-  }, 300);
-
   function handledChange(e) {
     const value = e.target.value.trim();
-    _handleChange(value);
+    searchDestination(value);
+    destinationInputCheck(value);
   }
 
   function handledClick(PlaceId, PlaceName) {
+    if (destinationName === `${PlaceName}(${PlaceId})`) {
+      destinationInput.current.value = destinationName;
+      setVisible(false);
+      return;
+    }
     selectDestination({ PlaceName, PlaceId });
     setVisible(false);
   }
 
   function hide() {
     const { PlaceName, PlaceId } = destinationSearchList[0];
+
+    if (destinationName === `${PlaceName}(${PlaceId})`) {
+      destinationInput.current.value = destinationName;
+      setVisible(false);
+      return;
+    }
+
     selectDestination({ PlaceName, PlaceId });
     setVisible(false);
   }
@@ -60,7 +67,7 @@ const AirportDestinationBox = ({
         <>
           <S.SearchPlaceDim onClick={hide} visible={visible} />
           <S.AirportListArea visible={visible}>
-            <S.SearchCategoryTitle>출발지를 선택해주세요</S.SearchCategoryTitle>
+            <S.SearchCategoryTitle>도착지를 선택해주세요</S.SearchCategoryTitle>
             <S.AirportList>
               {destinationSearchList.map(list => (
                 <S.AirportListItem key={uuid.v4()}>
@@ -68,7 +75,8 @@ const AirportDestinationBox = ({
                     type="button"
                     onClick={() => handledClick(list.PlaceId, list.PlaceName)}
                   >
-                    {`${list.PlaceName}(${list.PlaceId})`}
+                    <span>{`${list.PlaceName}(${list.PlaceId})`}</span>
+                    <span>{list.CountryName}</span>
                   </button>
                 </S.AirportListItem>
               ))}

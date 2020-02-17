@@ -21,9 +21,12 @@ const CurrencyModal = ({
     <div>
       <S.Modal status={status} onClick={click}>
         <S.ModalContents ref={modalContainer}>
-          <S.ModalButton onClick={closeClick}>
-            <CloseIcon style={{ width: '2.0em', height: '2.0em' }} />
-          </S.ModalButton>
+          <S.ModalHeader>
+            <S.ModalTitle>통화 설정</S.ModalTitle>
+            <S.ModalButton onClick={closeClick}>
+              <CloseIcon style={{ width: '2.0em', height: '2.0em' }} />
+            </S.ModalButton>
+          </S.ModalHeader>
           <CurrencyModalContents
             selectCurrnecy={selectCurrnecy}
             setSelectCurrency={setSelectCurrency}

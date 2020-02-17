@@ -12,22 +12,23 @@ const DateRangeWrapper = styled.div``;
 
 const SelectDate = ({
   way,
-  outboundDate,
-  inboundDate,
   selectOutboundDate,
   selectInboundDate,
   momentOutDate,
   momentInDate,
   selectMomentOutboundDate,
-  selectMoemntInboundDate,
+  selectMomentInboundDate,
 }) => {
   const [focusedInput, setFocusedInput] = useState(null);
 
   useEffect(() => {
     moment.locale('ko', koLocale);
-    if (momentOutDate) return;
-    selectMomentOutboundDate(moment());
-  }, [momentOutDate, selectMomentOutboundDate]);
+  }, []);
+
+  useEffect(() => {
+    selectOutboundDate(moment(momentOutDate).format('YYYY-MM-DD'));
+    selectMomentOutboundDate(momentOutDate);
+  }, [momentOutDate, selectMomentOutboundDate, selectOutboundDate]);
 
   useEffect(() => {
     if (way === 'oneway') {
@@ -65,9 +66,21 @@ const SelectDate = ({
       selectMomentOutboundDate(startDate);
       selectOutboundDate(startDate.format('YYYY-MM-DD'));
     } else if (startDate && endDate) {
-      selectMoemntInboundDate(endDate);
+      selectMomentInboundDate(endDate);
     }
   };
+
+  // const setStartDate = startDate => {
+  //   selectOutboundDate(moment(startDate).format('YYYY-MM-DD'));
+  //   selectMomentOutboundDate(startDate);
+  // };
+
+  // const setEndDate = endDate => {
+  //   if (!endDate) return;
+
+  //   selectInboundDate(moment(endDate).format('YYYY-MM-DD'));
+  //   selectMomentInboundDate(endDate);
+  // };
 
   return (
     <fieldset className="option-field date">
@@ -89,9 +102,7 @@ const SelectDate = ({
             setDate(startDate, endDate);
           }}
           focusedInput={focusedInput}
-          onFocusChange={focusedInput => {
-            setFocusedInput(focusedInput);
-          }}
+          onFocusChange={focusedInput => setFocusedInput(focusedInput)}
           disabled={way === 'oneway' ? 'endDate' : null}
           numberOfMonths={1}
           required={true}

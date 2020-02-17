@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 import SelectWayTab from './SelectWayTab';
@@ -31,7 +31,9 @@ const SearchArea = ({
   searchDestination,
 }) => {
   const [originInputValue, setOriginInputValue] = useState(originPlace);
-  const [destinationInputValue, setDestinationInputValue] = useState();
+  const [destinationInputValue, setDestinationInputValue] = useState(
+    destinationPlace,
+  );
 
   function originInputCheck(value) {
     setOriginInputValue(value);
@@ -43,15 +45,12 @@ const SearchArea = ({
 
   function searchSubmit() {
     const originCode = originPlace.slice(0, -4).toLowerCase();
-
     const destinationCode =
       destinationPlace && destinationPlace.slice(0, -4).toLowerCase();
-
     const outboundCode = outboundDate
       .split('-')
       .join('')
       .slice(-6);
-
     const inboundCode =
       inboundDate &&
       inboundDate
@@ -68,11 +67,6 @@ const SearchArea = ({
       preferdirects: stops ? false : true,
     });
 
-    function resetSearchList() {
-      searchOrigin('');
-      searchDestination('');
-    }
-
     if (way === 'round') {
       if (!originInputValue) return alert('출발지를 선택해주세요.');
       if (!destinationInputValue) return alert('도착지를 선택해주세요.');
@@ -81,7 +75,6 @@ const SearchArea = ({
       history.push(
         `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/${inboundCode}/?${params}`,
       );
-      resetSearchList();
     } else {
       if (!originInputValue) return alert('출발지를 선택해주세요.');
       if (!destinationInputValue) return alert('도착지를 선택해주세요.');
@@ -89,9 +82,13 @@ const SearchArea = ({
       history.push(
         `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
       );
-      resetSearchList();
     }
   }
+
+  useEffect(() => {
+    searchOrigin('');
+    searchDestination('');
+  }, [searchOrigin, searchDestination]);
 
   const checkNonstops = e => {
     selectStops(e.target.checked ? 0 : 1);
@@ -114,9 +111,9 @@ const SearchArea = ({
           <CheckBox
             label="직항"
             id="nonstop"
-            isDisable={false}
             size="large"
-            onClick={checkNonstops}
+            onChange={checkNonstops}
+            stops={stops}
           />
           <Button
             type="button"

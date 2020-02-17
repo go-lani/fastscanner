@@ -1,37 +1,145 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { withRouter } from 'react-router-dom';
+import qs from 'query-string';
 import A11yTitle from '../Common/A11yTitle';
 import * as S from './SearchAreaStyled';
 import SearchAreaContainer from '../../container/SearchAreaContainer';
+import moment from 'moment';
+import koLocale from 'moment/locale/ko';
 
-const SearchAreaHeader = React.forwardRef(({ fixed }, ref) => {
-  const originAirport = useSelector(state => state.search.originPlace);
+const SearchAreaHeader = ({
+  way,
+  location,
+  originName,
+  destinationName,
+  getConfigure,
+  selectStops,
+  outboundDate,
+  inboundDate,
+  adults,
+  children,
+  infants,
+  cabinClass,
+}) => {
+  useEffect(() => {}, []);
+
   const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    const path = location.pathname
+      .slice(1, -1)
+      .split('/')
+      .slice(2);
+    //   location.pathname
+    //   inboundDate: '2020-02-19',
+    //   originPlace: 'ICN-sky',
+    //   destinationPlace: 'CJU-sky',
+    //   outboundDate: '2020-02-10',
+
+    const query = qs.parse(location.search);
+    const {
+      cabinclass: $cabinclass,
+      adults: $adults,
+      children: $children,
+      infants: $infants,
+      preferdirects,
+      rtn,
+    } = query;
+
+    // 직항 & 경유 초기세팅
+    if (preferdirects === 'true') selectStops(0);
+    else selectStops(1);
+
+    if (+rtn) {
+      const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
+      // 2020-02-16
+      const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
+      const momentOutBound = moment(moment(`20${outboundDate}`));
+      const inBound = moment(`20${inboundDate}`).format('YYYY-MM-DD');
+      const momentInBound = moment(moment(`20${inboundDate}`));
+
+      // 초기세팅
+      getConfigure({
+        way: 'round',
+        originPlace,
+        destinationPlace,
+        outboundDate: outBound,
+        momentOutDate: momentOutBound,
+        inboundDate: inBound,
+        momentInDate: momentInBound,
+        adults: +$adults,
+        children: +$children,
+        infants: +$infants,
+        cabinclass: $cabinclass,
+      });
+
+      console.log(
+        '왕복',
+        originPlace,
+        destinationPlace,
+        outboundDate,
+        inboundDate,
+      );
+    } else {
+      const [originPlace, destinationPlace, outboundDate] = path;
+      const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
+      const momentOutBound = moment(moment(`20${outboundDate}`));
+
+      console.log('편도', originPlace, destinationPlace, outboundDate);
+
+      // 초기세팅
+      getConfigure({
+        way: 'oneway',
+        originPlace,
+        destinationPlace,
+        outboundDate: outBound,
+        momentOutDate: momentOutBound,
+        adults: +$adults,
+        children: +$children,
+        infants: +$infants,
+        cabinclass: $cabinclass,
+      });
+    }
+  }, [getConfigure, location.pathname, location.search, selectStops]);
+
   const showSearchForm = () => {
     setIsOpen(!isOpen);
   };
   return (
     <>
-      <S.SearchHeaderWrapper ref={ref}>
+      <S.SearchHeaderWrapper>
         <S.FlightInfoSection onClick={showSearchForm}>
           <A11yTitle>항공권 입력 정보</A11yTitle>
           <S.AirportInfoBox>
-            <S.AirportName>{originAirport}</S.AirportName>
+            <S.AirportName>{originName}</S.AirportName>
             <S.FlightIcon
               src="/images/flight-white.png"
               alt="출발지에서 도착지로 이동"
             />
-            <S.AirportName>파리샤를드골 (CDG)</S.AirportName>
+            <S.AirportName>{destinationName}</S.AirportName>
           </S.AirportInfoBox>
           <S.OptionArea isOpen={isOpen}>
             <S.DateOpionInfoBox>
-              <S.DateText>2020년 02월 12일 (수)</S.DateText>
-              <S.DateText>2020년 02월 19일 (수)</S.DateText>
+              <S.DateText>{moment(outboundDate).format('LL')}</S.DateText>
+              {inboundDate && (
+                <S.DateText>{moment(inboundDate).format('LL')}</S.DateText>
+              )}
             </S.DateOpionInfoBox>
             <S.DateOpionInfoBox>
-              <S.OptionText>1 성인</S.OptionText>
-              <S.OptionText>일반석</S.OptionText>
-              <S.OptionText>왕복</S.OptionText>
+              <S.OptionText>
+                {adults && `성인 ${adults}`}
+                {children !== 0 && `소아 ${children}`}
+                {infants !== 0 && `유아 ${infants}`}
+              </S.OptionText>
+              <S.OptionText>
+                {cabinClass !== 'economy'
+                  ? cabinClass !== 'premiumeconomy'
+                    ? cabinClass !== 'business'
+                      ? '일등석'
+                      : '비즈니스석'
+                    : '프리미엄 일반석'
+                  : '일반석'}
+              </S.OptionText>
+              <S.OptionText>{way === 'round' ? '왕복' : '편도'}</S.OptionText>
             </S.DateOpionInfoBox>
           </S.OptionArea>
         </S.FlightInfoSection>
@@ -46,6 +154,6 @@ const SearchAreaHeader = React.forwardRef(({ fixed }, ref) => {
       </S.SearchHeaderWrapper>
     </>
   );
-});
+};
 
-export default SearchAreaHeader;
+export default withRouter(SearchAreaHeader);

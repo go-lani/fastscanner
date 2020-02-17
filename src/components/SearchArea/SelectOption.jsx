@@ -10,7 +10,7 @@ const SelectOption = ({ cabinClass, adults, children, infants }) => {
 
   const dimRef = createRef();
 
-  const cabinClassName = () => {
+  const cabinClassName = (() => {
     return cabinClass === 'economy'
       ? '일반석'
       : cabinClass === 'premiumeconomy'
@@ -18,7 +18,7 @@ const SelectOption = ({ cabinClass, adults, children, infants }) => {
       : cabinClass === 'business'
       ? '비즈니스석'
       : '일등석';
-  };
+  })();
 
   const click = e => {
     if (dimRef.current.contains(e.target)) setIsOpen(false);
@@ -29,14 +29,11 @@ const SelectOption = ({ cabinClass, adults, children, infants }) => {
         <S.FieldTitle as="p">좌석등급 / 승객</S.FieldTitle>
         <S.OptionButton onClick={popupOpen} type="button">
           <S.OptionValue>
-            <span>
-              {adults + children + infants} 승객, {cabinClassName()}
-            </span>
+            {adults + children + infants} 승객, {cabinClassName}
             <ArrowDropDownOutlinedIcon />
           </S.OptionValue>
         </S.OptionButton>
         <OptionPopupContainer isOpen={isOpen} hidePopup={popupClose} />
-
         <S.Dim ref={dimRef} isOpen={isOpen} onClick={click} />
       </div>
     </>

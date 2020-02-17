@@ -1,4 +1,5 @@
 import React from 'react';
+import uuid from 'uuid';
 import * as S from './headerStyled';
 import { currency } from './data';
 
@@ -24,22 +25,26 @@ const CurrencyModalContents = ({
   return (
     <>
       <S.ModalSection>
-        <S.ModalSectionTitle>통화를 선택하세요</S.ModalSectionTitle>
-        <ul style={{ display: 'flex', flexWrap: 'wrap', width: '1000px' }}>
-          {sortCurrency.map((item, i) => (
-            <S.ModalContentsLi key={i}>
-              <S.ModalContentsButton
-                onClick={() => clickLang(item)}
-                status={selectCurrnecy.currencyId === item.currencyId}
-              >
-                <p>{item.currencyName}</p>
-                <p>
-                  {item.currencyId} - {item.currency}
-                </p>
-              </S.ModalContentsButton>
-            </S.ModalContentsLi>
-          ))}
-        </ul>
+        <div>
+          <S.ModalSectionTitle>통화를 선택하세요</S.ModalSectionTitle>
+          <S.ModalContentScroll>
+            <S.ModalContentUl>
+              {sortCurrency.map(item => (
+                <S.ModalContentsLi key={uuid.v4()}>
+                  <S.ModalContentsButton
+                    onClick={() => clickLang(item)}
+                    status={selectCurrnecy.currencyId === item.currencyId}
+                  >
+                    <p>{item.currencyName}</p>
+                    <p>
+                      {item.currencyId} - {item.currency}
+                    </p>
+                  </S.ModalContentsButton>
+                </S.ModalContentsLi>
+              ))}
+            </S.ModalContentUl>
+          </S.ModalContentScroll>
+        </div>
       </S.ModalSection>
     </>
   );
