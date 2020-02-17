@@ -12,22 +12,22 @@ const DateRangeWrapper = styled.div``;
 
 const SelectDate = ({
   way,
-  outboundDate,
-  inboundDate,
   selectOutboundDate,
   selectInboundDate,
   momentOutDate,
   momentInDate,
   selectMomentOutboundDate,
-  selectMoemntInboundDate,
+  selectMomentInboundDate,
 }) => {
   const [focusedInput, setFocusedInput] = useState(null);
 
   useEffect(() => {
     moment.locale('ko', koLocale);
-    if (momentOutDate) return;
-    selectMomentOutboundDate(moment());
-    selectOutboundDate(moment().format('YYYY-MM-DD'));
+  }, []);
+
+  useEffect(() => {
+    selectOutboundDate(moment(momentOutDate).format('YYYY-MM-DD'));
+    selectMomentOutboundDate(momentOutDate);
   }, [momentOutDate, selectMomentOutboundDate, selectOutboundDate]);
 
   useEffect(() => {
@@ -39,16 +39,15 @@ const SelectDate = ({
   }, [momentInDate, selectInboundDate, way]);
 
   const setStartDate = startDate => {
-    if (startDate.format('YYYY-MM-DD') === momentOutDate.format('YYYY-MM-DD'))
-      return;
+    selectOutboundDate(moment(startDate).format('YYYY-MM-DD'));
     selectMomentOutboundDate(startDate);
-    selectOutboundDate(startDate.format('YYYY-MM-DD'));
   };
 
   const setEndDate = endDate => {
     if (!endDate) return;
-    selectMoemntInboundDate(endDate);
-    selectInboundDate(endDate.format('YYYY-MM-DD'));
+
+    selectInboundDate(moment(endDate).format('YYYY-MM-DD'));
+    selectMomentInboundDate(endDate);
   };
 
   return (

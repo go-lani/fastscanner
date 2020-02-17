@@ -4,14 +4,25 @@ import qs from 'query-string';
 import A11yTitle from '../Common/A11yTitle';
 import * as S from './SearchAreaStyled';
 import SearchAreaContainer from '../../container/SearchAreaContainer';
+import moment from 'moment';
+import koLocale from 'moment/locale/ko';
 
 const SearchAreaHeader = ({
+  way,
   location,
   originName,
   destinationName,
-  getPlace,
+  getConfigure,
   selectStops,
+  outboundDate,
+  inboundDate,
+  adults,
+  children,
+  infants,
+  cabinClass,
 }) => {
+  useEffect(() => {}, []);
+
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     const path = location.pathname
@@ -26,10 +37,10 @@ const SearchAreaHeader = ({
 
     const query = qs.parse(location.search);
     const {
-      cabinclass: cabinClass,
-      children,
-      infants,
-      adults,
+      cabinclass: $cabinclass,
+      adults: $adults,
+      children: $children,
+      infants: $infants,
       preferdirects,
       rtn,
     } = query;
@@ -40,9 +51,26 @@ const SearchAreaHeader = ({
 
     if (+rtn) {
       const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
+      // 2020-02-16
+      const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
+      const momentOutBound = moment(moment(`20${outboundDate}`));
+      const inBound = moment(`20${inboundDate}`).format('YYYY-MM-DD');
+      const momentInBound = moment(moment(`20${inboundDate}`));
 
-      // 출발지 & 도착지 초기세팅
-      getPlace({ originPlace, destinationPlace });
+      // 초기세팅
+      getConfigure({
+        way: 'round',
+        originPlace,
+        destinationPlace,
+        outboundDate: outBound,
+        momentOutDate: momentOutBound,
+        inboundDate: inBound,
+        momentInDate: momentInBound,
+        adults: +$adults,
+        children: +$children,
+        infants: +$infants,
+        cabinclass: $cabinclass,
+      });
 
       console.log(
         '왕복',
@@ -53,9 +81,25 @@ const SearchAreaHeader = ({
       );
     } else {
       const [originPlace, destinationPlace, outboundDate] = path;
+      const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
+      const momentOutBound = moment(moment(`20${outboundDate}`));
+
       console.log('편도', originPlace, destinationPlace, outboundDate);
+
+      // 초기세팅
+      getConfigure({
+        way: 'oneway',
+        originPlace,
+        destinationPlace,
+        outboundDate: outBound,
+        momentOutDate: momentOutBound,
+        adults: +$adults,
+        children: +$children,
+        infants: +$infants,
+        cabinclass: $cabinclass,
+      });
     }
-  }, [getPlace, location.pathname, location.search, selectStops]);
+  }, [getConfigure, location.pathname, location.search, selectStops]);
 
   const showSearchForm = () => {
     setIsOpen(!isOpen);
@@ -75,13 +119,27 @@ const SearchAreaHeader = ({
           </S.AirportInfoBox>
           <S.OptionArea isOpen={isOpen}>
             <S.DateOpionInfoBox>
-              <S.DateText>2020년 02월 12일 (수)</S.DateText>
-              <S.DateText>2020년 02월 19일 (수)</S.DateText>
+              <S.DateText>{moment(outboundDate).format('LL')}</S.DateText>
+              {inboundDate && (
+                <S.DateText>{moment(inboundDate).format('LL')}</S.DateText>
+              )}
             </S.DateOpionInfoBox>
             <S.DateOpionInfoBox>
-              <S.OptionText>1 성인</S.OptionText>
-              <S.OptionText>일반석</S.OptionText>
-              <S.OptionText>왕복</S.OptionText>
+              <S.OptionText>
+                {adults && `성인 ${adults}`}
+                {children !== 0 && `소아 ${children}`}
+                {infants !== 0 && `유아 ${infants}`}
+              </S.OptionText>
+              <S.OptionText>
+                {cabinClass !== 'economy'
+                  ? cabinClass !== 'premiumeconomy'
+                    ? cabinClass !== 'business'
+                      ? '일등석'
+                      : '비즈니스석'
+                    : '프리미엄 일반석'
+                  : '일반석'}
+              </S.OptionText>
+              <S.OptionText>{way === 'round' ? '왕복' : '편도'}</S.OptionText>
             </S.DateOpionInfoBox>
           </S.OptionArea>
         </S.FlightInfoSection>
