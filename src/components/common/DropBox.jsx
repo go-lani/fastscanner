@@ -61,7 +61,6 @@ const slideDown = keyframes`
 `;
 
 const StyledDropBoxList = styled.ul`
-  overflow: hidden;
   padding: 0;
   height: 0;
   transition: all 0.3s;

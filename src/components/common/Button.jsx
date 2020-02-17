@@ -49,6 +49,7 @@ const StyledButton = styled.button`
   display: inline-block;
   padding: 8px 16px;
   border-radius: 4px;
+  border: none;
 
   color: #fff;
 
