@@ -46,7 +46,7 @@ const StyledLabel = styled.label`
   ${props =>
     props.isDisable &&
     css`
-      color: '#666';
+      color: #666;
     `};
 `;
 

@@ -103,7 +103,7 @@ const ResearchArea = ({
   };
   return (
     <>
-      <S.SearchHeaderWrapper>
+      <S.ResearchArea>
         <S.FlightInfoSection onClick={showSearchForm}>
           <A11yTitle>항공권 입력 정보</A11yTitle>
           <S.AirportInfoBox>
@@ -148,7 +148,7 @@ const ResearchArea = ({
             isOpen={isOpen}
           />
         </S.DownButton>
-      </S.SearchHeaderWrapper>
+      </S.ResearchArea>
     </>
   );
 };

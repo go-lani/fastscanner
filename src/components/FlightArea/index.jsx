@@ -4,11 +4,15 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import FilterArea from './FilterArea';
 import ListArea from './ListArea';
-import FlightList from './ListArea/FlightList';
+import media from '../../libs/MediaQuery';
 
 const FlightLayout = styled.div`
   display: flex;
   justify-content: space-between;
+
+  ${media.tablet`
+    flex-direction: column;
+  `}
 `;
 
 const FlightArea = ({ location, getFlightData }) => {
@@ -63,10 +67,8 @@ const FlightArea = ({ location, getFlightData }) => {
   }, [getFlightData, location.pathname, location.search]);
   return (
     <FlightLayout>
-      <FilterArea></FilterArea>
-      <ListArea>
-        <FlightList />
-      </ListArea>
+      <FilterArea />
+      <ListArea />
     </FlightLayout>
   );
 };

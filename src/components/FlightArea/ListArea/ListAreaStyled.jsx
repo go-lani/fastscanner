@@ -1,34 +1,65 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import media from '../../../libs/MediaQuery';
 
 export const ListLayout = styled.section`
-  flex-basis: 70vw;
+  flex-basis: 80vw;
   min-height: 100vh;
   background: #fff;
-  padding: 20px;
+  padding: 20px 4% 20px 20px;
 `;
 
-export const FlightList = styled.li`
+// Flight Category Tab
+export const CategoryTab = styled.ul``;
+
+export const FlightList = styled.ul``;
+
+// Flight 리스트
+export const FlightItem = styled.li`
   display: flex;
-  padding: 10px 20px;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
   border: 1px solid #e5e5e5;
-  border-radius: 5px;
+  border-radius: 10px;
+  transition: all 0.3s;
+
   &:hover {
-    border: 1px solid #0288d1;
+    box-shadow: 0 0 10px 5px #eee;
   }
 
   & + & {
     margin-top: 20px;
   }
+
+  ${media.desktop`
+    flex-direction: row;
+    padding: 20px 0;
+  `}
 `;
 
 export const FlightInfo = styled.div`
-  width: 75%;
-  margin: auto 0;
-  border-right: 1px solid #ededed;
+  width: 100%;
+  padding: 30px 40px;
+
+  ${media.desktop`
+    padding: 20px 40px;
+    border-right: 1px solid #ededed;
+  `}
 `;
 
 export const FlightOutbound = styled.div`
   display: flex;
+  flex-direction: column;
+
+  & + & {
+    margin: 30px 0 0;
+    padding: 30px 0 0;
+    border-top: 1px dotted #ccc;
+  }
+
+  ${media.desktop`
+    flex-direction: row;
+  `}
 `;
 
 export const FlightInbound = styled.div`
@@ -38,133 +69,146 @@ export const FlightInbound = styled.div`
 
 export const AirlineInfo = styled.div`
   display: flex;
-  flex-direction: column;
-  /* max-width: 3rem; */
-  margin: auto 0;
-  /* padding: 10px; */
-  text-align: center;
+  align-items: center;
+  flex-basis: 20%;
+
+  ${media.desktop`
+    margin: 0 40px 0 0;
+  `}
 
   img {
-    width: 30px;
-    /* width: 100%; */
+    display: inline-block;
+    width: auto;
+    height: 30px;
+    margin: 0 20px 0 0;
   }
 
   span {
-    margin-top: 10px;
+    display: inline-block;
+    font-size: 1.4rem;
   }
 `;
 
 export const FlyInfo = styled.div`
   display: flex;
-  width: 90%;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 30px 0 0;
+
+  ${media.desktop`
+    margin: 0;
+  `}
 `;
 
 export const DepartureInfo = styled.div`
-  width: 32%;
-  margin: auto 0;
-  padding: 0 20px;
   text-align: right;
+`;
+
+export const DepartureTime = styled.p`
   font-size: 1.8rem;
+  font-weight: 600;
+`;
 
-  p {
-    display: block;
-    font-weight: 700;
+export const DeparturePlace = styled.p`
+  font-size: 1.5rem;
+  margin: 5px 0 0;
+`;
+
+const fly = keyframes`
+  to {
+    transform: translateX(40px);
   }
-
-  span {
-    display: block;
-    font-size: 1.5rem;
-  }
-
-  p + span {
-    padding-top: 5px;
+  from {
+    transform: translateX(-49px);
   }
 `;
 
 export const FlightTimeInfo = styled.div`
   display: flex;
-  width: 36%;
-  margin: auto 0;
-  padding: 0 10px;
+  align-items: center;
+  position: relative;
+  margin: 0 20px;
   font-size: 1.2rem;
   text-align: center;
-  position: relative;
+`;
+
+export const ImgOuter = styled.div`
+  overflow: hidden;
+  padding: 0 12px;
 
   img {
-    padding: 10px;
+    width: auto;
+    height: 32px;
+    animation: ${fly} 3s infinite ease-in-out;
   }
 `;
 
 export const TimeContainer = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
+  width: 100%;
+  margin: 0 10px 0 0;
 `;
 
-export const StopsInfo = styled.ul`
+export const StopsInfo = styled.div`
   display: flex;
   justify-content: center;
-  background: #68697f;
   width: 100%;
-  height: 0.3rem;
+  min-width: 100px;
+  height: 3px;
   margin: 10px 0;
   border-radius: 5px;
+  background: #68697f;
 
-  li {
+  i {
     position: relative;
-    background: red;
     top: -1px;
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    margin: 0 10px;
+    margin: 0 5px;
+    background: red;
     box-shadow: 0 0 0 0.3rem #fff;
   }
 `;
 
 export const ArriveInfo = styled.div`
-  width: 32%;
-  margin: auto 0;
-  padding: 0 20px;
-  text-align: left;
   font-size: 1.8rem;
+  text-align: left;
+`;
 
-  p {
-    display: block;
-    font-weight: 700;
-  }
+export const ArriveTime = styled.p`
+  font-weight: 600;
+  font-size: 1.8rem;
+`;
 
-  span {
-    display: block;
-    font-size: 1.5rem;
-  }
-
-  p + span {
-    padding-top: 5px;
-  }
+export const ArrivePlace = styled.p`
+  margin: 5px 0 0;
+  font-size: 1.5rem;
 `;
 
 export const FlightPrice = styled.div`
-  width: 25%;
-  margin: auto;
-  padding: 20px;
+  width: 100%;
+  padding: 20px 40px;
+  border-top: 1px solid #ccc;
   text-align: center;
 
-  span {
-    display: block;
+  p {
     margin-bottom: 10px;
     font-size: 1.4rem;
   }
 
-  p {
-    font-size: 2.6rem;
+  em {
+    display: block;
     margin-bottom: 10px;
     font-weight: 700;
+    font-size: 2.2rem;
   }
 
-  button > span {
-    display: inline;
-  }
+  ${media.desktop`
+    width: 40%;
+    border-top: none;
+  `}
 `;

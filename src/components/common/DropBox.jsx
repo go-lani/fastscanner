@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 
-const StyledDropBoxContainer = styled.div`
+const StyledDropBoxContainer = styled.li`
   width: 100%;
   margin-bottom: 20px;
   &:last-child {
@@ -9,7 +9,7 @@ const StyledDropBoxContainer = styled.div`
   }
 `;
 
-const StyledDropBoxTop = styled.button`
+const StyledDropBoxButton = styled.button`
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -18,6 +18,8 @@ const StyledDropBoxTop = styled.button`
   border-bottom: 1px solid #dedede;
   background-color: transparent;
   padding: 10px 0;
+  text-align: left;
+  word-break: keep-all;
 `;
 
 const StyledDropBoxTitle = styled.span`
@@ -40,49 +42,42 @@ const StyledArrow = styled.span`
 
 const slideUp = keyframes`
   0% {
-    max-height: 150px;
+    padding: 10px 0;
+    height: auto;
   }
   100% {
+    padding: 0;
     height: 0;
-    overflow: hidden;
   }
 `;
 
 const slideDown = keyframes`
   0% {
+    padding: 0;
     height: 0;
-    overflow: hidden;
   }
   100% {
-    max-height: 150px;
   }
 `;
 
-const StyledDropBoxBottom = styled.div`
-  align-items: center;
-  height: 100px;
+const StyledDropBoxList = styled.ul`
+  overflow: hidden;
+  padding: 0;
+  height: 0;
+  transition: all 0.3s;
+
   ${({ isOpen }) =>
     isOpen &&
     css`
-      animation-name: ${slideDown};
-      animation-duration: 0.4s;
-      animation-fill-mode: both;
+      padding: 10px 0;
+      height: auto;
     `}
-  ${({ isOpen }) =>
-    !isOpen &&
-    css`
-      animation-name: ${slideUp};
-      animation-duration: 0.4s;
-      animation-fill-mode: both;
-    `}
+  li + li {
+    margin-top: 0;
+  }
 `;
 
-const StyledContentBox = styled.div`
-  padding: 10px 0;
-`;
-
-const DropBox = props => {
-  const contentBox = useRef();
+const DropBox = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [isClicked, setIsClicked] = useState(false);
 
@@ -90,15 +85,14 @@ const DropBox = props => {
     setIsOpen(!isOpen);
     setIsClicked(!isClicked);
   };
+
   return (
     <StyledDropBoxContainer>
-      <StyledDropBoxTop onClick={dropState}>
-        <StyledDropBoxTitle>경유</StyledDropBoxTitle>
+      <StyledDropBoxButton onClick={dropState}>
+        <StyledDropBoxTitle>{title}</StyledDropBoxTitle>
         <StyledArrow isClicked={isClicked}></StyledArrow>
-      </StyledDropBoxTop>
-      <StyledDropBoxBottom isOpen={isOpen}>
-        <StyledContentBox ref={contentBox}>{props.children}</StyledContentBox>
-      </StyledDropBoxBottom>
+      </StyledDropBoxButton>
+      <StyledDropBoxList isOpen={isOpen}>{children}</StyledDropBoxList>
     </StyledDropBoxContainer>
   );
 };

@@ -471,15 +471,16 @@ export const AirportListItem = styled.li`
 `;
 
 // ResearchArea
-export const SearchHeaderWrapper = styled.div`
+export const ResearchArea = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  padding: 20px;
-  background-color: rgba(0, 0, 0, 0.3);
   position: sticky;
   top: 0;
+  z-index: 10;
+  width: 100%;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
 `;
 
 export const FlightInfoSection = styled.section`
