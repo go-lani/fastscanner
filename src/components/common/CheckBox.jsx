@@ -36,6 +36,10 @@ const boxSizeStyle = css`
   `}
 `;
 
+const StyledCheckBoxWrapper = styled.div`
+  margin: 10px 0;
+`;
+
 const StyledLabel = styled.label`
   ${fontSizeStyle};
   padding-left: 5px;
@@ -54,32 +58,29 @@ const StyledCheckbox = styled.input`
   appearance: none;
   outline: none;
   box-shadow: none;
-  background-image: url('/images/uncheck.png');
+  background-image: url('/images/checkbox.png');
+  background-position-y: center;
   cursor: pointer;
   :checked {
-    background-image: url('/images/check.png');
+    background-image: url('/images/checkbox.png');
+    background-position-y: top;
   }
   :disabled {
     cursor: not-allowed;
-    background-image: url('/images/checkdisable.png');
+    background-image: url('/images/checkbox.png');
+    background-position-y: bottom;
   }
 `;
 
 const CheckBox = ({ label, id, size, onChange, stops }) => {
   console.log('checkbox render', !stops);
   return (
-    <span>
-      <StyledCheckbox
-        type="checkbox"
-        id={id}
-        checked={!stops}
-        size={size}
-        onChange={onChange}
-      />
+    <StyledCheckBoxWrapper>
+      <StyledCheckbox type="checkbox" id={id} size={size} onChange={onChange} />
       <StyledLabel htmlFor={id} isDisable size={size}>
         {label}
       </StyledLabel>
-    </span>
+    </StyledCheckBoxWrapper>
   );
 };
 
