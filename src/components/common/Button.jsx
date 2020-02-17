@@ -59,8 +59,10 @@ const StyledButton = styled.button`
   /* 공통 */
   display: inline-block;
   padding: 8px 16px;
-  border: 0;
+  border: 1px solid transparent;
   border-radius: 4px;
+
+  color: #fff;
 
   /* 크기 */
   ${sizeStyle}

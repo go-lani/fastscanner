@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import FilterArea from './FilterArea';
 import ListArea from './ListArea';
+import FlightList from './ListArea/FlightList';
 
 const FlightLayout = styled.div`
   display: flex;
@@ -63,7 +64,9 @@ const FlightArea = ({ location, getFlightData }) => {
   return (
     <FlightLayout>
       <FilterArea></FilterArea>
-      <ListArea></ListArea>
+      <ListArea>
+        <FlightList />
+      </ListArea>
     </FlightLayout>
   );
 };

@@ -38,17 +38,49 @@ const SelectDate = ({
     }
   }, [momentInDate, selectInboundDate, way]);
 
-  const setStartDate = startDate => {
-    selectOutboundDate(moment(startDate).format('YYYY-MM-DD'));
-    selectMomentOutboundDate(startDate);
+  // const setStartDate = startDate => {
+  //   console.log('4');
+  //   if (startDate.format('YYYY-MM-DD') === momentOutDate.format('YYYY-MM-DD'))
+  //     return;
+  //   console.log('4');
+  //   selectMomentOutboundDate(startDate);
+  //   selectOutboundDate(startDate.format('YYYY-MM-DD'));
+  //   console.log('5');
+  // };
+
+  // const setEndDate = endDate => {
+  //   console.log('6');
+  //   if (!endDate) return;
+  //   console.log('7');
+  //   selectMoemntInboundDate(endDate);
+  //   console.log('8');
+  // };
+
+  const setDate = (startDate, endDate) => {
+    if (startDate && !endDate) {
+      if (
+        startDate.format('YYYY-MM-DD') === momentOutDate.format('YYYY-MM-DD')
+      ) {
+        return selectOutboundDate(startDate.format('YYYY-MM-DD'));
+      }
+      selectMomentOutboundDate(startDate);
+      selectOutboundDate(startDate.format('YYYY-MM-DD'));
+    } else if (startDate && endDate) {
+      selectMomentInboundDate(endDate);
+    }
   };
 
-  const setEndDate = endDate => {
-    if (!endDate) return;
+  // const setStartDate = startDate => {
+  //   selectOutboundDate(moment(startDate).format('YYYY-MM-DD'));
+  //   selectMomentOutboundDate(startDate);
+  // };
 
-    selectInboundDate(moment(endDate).format('YYYY-MM-DD'));
-    selectMomentInboundDate(endDate);
-  };
+  // const setEndDate = endDate => {
+  //   if (!endDate) return;
+
+  //   selectInboundDate(moment(endDate).format('YYYY-MM-DD'));
+  //   selectMomentInboundDate(endDate);
+  // };
 
   return (
     <fieldset className="option-field date">
@@ -65,8 +97,9 @@ const SelectDate = ({
           endDate={way === 'round' ? momentInDate : null}
           endDatePlaceholderText={way === 'oneway' ? '(편도)' : '입국날짜'}
           onDatesChange={({ startDate, endDate }) => {
-            setStartDate(startDate);
-            setEndDate(endDate);
+            // setStartDate(startDate);
+            // setEndDate(endDate);
+            setDate(startDate, endDate);
           }}
           focusedInput={focusedInput}
           onFocusChange={focusedInput => setFocusedInput(focusedInput)}
