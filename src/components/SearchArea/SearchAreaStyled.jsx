@@ -470,7 +470,7 @@ export const AirportListItem = styled.li`
   }
 `;
 
-// SearchAreaHeader
+// ResearchArea
 export const SearchHeaderWrapper = styled.div`
   display: flex;
   flex-direction: column;

@@ -5,9 +5,8 @@ import A11yTitle from '../Common/A11yTitle';
 import * as S from './SearchAreaStyled';
 import SearchAreaContainer from '../../container/SearchAreaContainer';
 import moment from 'moment';
-import koLocale from 'moment/locale/ko';
 
-const SearchAreaHeader = ({
+const ResearchArea = ({
   way,
   location,
   originName,
@@ -21,8 +20,6 @@ const SearchAreaHeader = ({
   infants,
   cabinClass,
 }) => {
-  useEffect(() => {}, []);
-
   const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     const path = location.pathname
@@ -156,4 +153,4 @@ const SearchAreaHeader = ({
   );
 };
 
-export default withRouter(SearchAreaHeader);
+export default withRouter(ResearchArea);

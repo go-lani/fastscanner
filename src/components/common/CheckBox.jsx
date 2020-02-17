@@ -72,11 +72,16 @@ const StyledCheckbox = styled.input`
   }
 `;
 
-const CheckBox = ({ label, id, size, onChange, stops }) => {
-  console.log('checkbox render', !stops);
+const CheckBox = ({ label, id, size, onChange, checked }) => {
   return (
     <StyledCheckBoxWrapper>
-      <StyledCheckbox type="checkbox" id={id} size={size} onChange={onChange} />
+      <StyledCheckbox
+        type="checkbox"
+        id={id}
+        size={size}
+        checked={checked}
+        onChange={onChange}
+      />
       <StyledLabel htmlFor={id} isDisable size={size}>
         {label}
       </StyledLabel>
