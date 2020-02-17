@@ -42,10 +42,7 @@ const FilterArea = React.memo(() => {
             <CheckBox size="medium" label="직항" id="nonstopp" />
           </S.DropItem>
           <S.DropItem>
-            <CheckBox size="medium" label="1번 경유" id="nonstopp2" />
-          </S.DropItem>
-          <S.DropItem>
-            <CheckBox size="medium" label="2번 이상 경유 " id="nonstopp3" />
+            <CheckBox size="medium" label="경유" id="nonstopp2" />
           </S.DropItem>
         </DropBox>
         <DropBox title="출발 시간대 설정">
