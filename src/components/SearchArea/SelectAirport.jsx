@@ -2,8 +2,7 @@ import React from 'react';
 import SwapHorizRoundedIcon from '@material-ui/icons/SwapHorizRounded';
 import A11yTitle from '../Common/A11yTitle';
 import * as S from './SearchAreaStyled';
-import AirportOriginPlaceBox from './AirportOriginPlaceBox';
-import AirportDestinationBox from './AirportDestinationBox';
+import AirportPlaceBox from './AirportPlaceBox';
 
 const SelectAirport = ({
   originSearchList,
@@ -27,14 +26,15 @@ const SelectAirport = ({
       <A11yTitle as="label" htmlFor="airport-depature">
         출발지
       </A11yTitle>
-      <AirportOriginPlaceBox
+      <AirportPlaceBox
         id="airport-depature"
+        title="출발지를 선택해주세요"
         placeholder="출발지 선택"
-        originSearchList={originSearchList}
-        searchOrigin={searchOrigin}
-        selectOrigin={selectOrigin}
-        originName={originName}
-        originInputCheck={originInputCheck}
+        searchList={originSearchList}
+        searchPlace={searchOrigin}
+        selectPlace={selectOrigin}
+        placeName={originName}
+        placeInputCheck={originInputCheck}
       />
       <S.AirportChangeButton type="button" onClick={changeAirport}>
         <SwapHorizRoundedIcon style={{ color: '#666' }} fontSize="large" />
@@ -42,14 +42,15 @@ const SelectAirport = ({
       <A11yTitle as="label" htmlFor="airport-arrived">
         도착지
       </A11yTitle>
-      <AirportDestinationBox
+      <AirportPlaceBox
+        title="도착지를 선택해주세요"
         id="airport-arrived"
         placeholder="도착지 선택"
-        destinationSearchList={destinationSearchList}
-        searchDestination={searchDestination}
-        selectDestination={selectDestination}
-        destinationName={destinationName}
-        destinationInputCheck={destinationInputCheck}
+        searchList={destinationSearchList}
+        searchPlace={searchDestination}
+        selectPlace={selectDestination}
+        placeName={destinationName}
+        placeInputCheck={destinationInputCheck}
       />
     </fieldset>
   );

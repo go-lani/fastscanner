@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 
 export const FilterAreaLayout = styled.section`

@@ -3,22 +3,14 @@ import * as S from './FilterAreaStyled';
 import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
 import A11yTitle from '../../Common/A11yTitle';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import useTime from '../../../hooks/useTime';
-
-const useStyles = makeStyles({
-  root: {
-    width: 300,
-  },
-});
 
 function valuetext(value) {
   return `${Math.floor(value[0] / 2)}시 ${value[1] / 2 ? '30' : '00'}분`;
 }
 
 const FilterArea = React.memo(() => {
-  const classes = useStyles();
   const [outboundTime, setOutboundTime] = useState([0, 48]);
   const [inboundTime, setInboundTime] = useState([0, 48]);
   const [outboundStartTime, outboundEndTime] = useTime(outboundTime);
@@ -31,8 +23,6 @@ const FilterArea = React.memo(() => {
   const handleChangeInbound = (event, newValue) => {
     setInboundTime(newValue);
   };
-
-  console.log(outboundTime, inboundTime);
 
   return (
     <S.FilterAreaLayout>

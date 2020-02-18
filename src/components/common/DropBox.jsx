@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import React, { useState } from 'react';
+import styled, { css } from 'styled-components';
 
 const StyledDropBoxContainer = styled.li`
   width: 100%;
@@ -38,26 +38,6 @@ const StyledArrow = styled.span`
     css`
       transform: rotate(180deg);
     `}
-`;
-
-const slideUp = keyframes`
-  0% {
-    padding: 10px 0;
-    height: auto;
-  }
-  100% {
-    padding: 0;
-    height: 0;
-  }
-`;
-
-const slideDown = keyframes`
-  0% {
-    padding: 0;
-    height: 0;
-  }
-  100% {
-  }
 `;
 
 const StyledDropBoxList = styled.ul`

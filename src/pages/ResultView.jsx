@@ -1,4 +1,4 @@
-import React, { useState, createRef, useEffect } from 'react';
+import React from 'react';
 import FlightAreaContainer from '../container/FlightAreaContainer';
 import ResearchAreaContainer from '../container/ResearchAreaContainer';
 import Header from '../components/Header';

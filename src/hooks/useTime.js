@@ -1,17 +1,12 @@
 import { useState, useEffect } from 'react';
 
 const useTime = value => {
-  const [time, setTime] = useState(value);
-  const [result, setResult] = useState([]);
+  const [time, setTime] = useState([]);
 
   useEffect(() => {
-    setTime(value);
-  }, [value]);
-
-  useEffect(() => {
-    const result = time.reduce((pre, cur, idx) => {
-      const hour = Math.floor(time[idx] / 2);
-      const minute = time[idx] % 2 ? '30' : '00';
+    const result = value.reduce((pre, cur, idx) => {
+      const hour = Math.floor(value[idx] / 2);
+      const minute = value[idx] % 2 ? '30' : '00';
       const resultTime =
         hour < 10 ? `0${hour}시 ${minute}분` : `${hour}시 ${minute}분`;
       pre.push(resultTime);
@@ -19,11 +14,10 @@ const useTime = value => {
       return pre;
     }, []);
 
-    setResult(result);
-    // setTime(result);
-  }, [time]);
+    setTime(result);
+  }, [value]);
 
-  return [...result];
+  return time;
 };
 
 export default useTime;
