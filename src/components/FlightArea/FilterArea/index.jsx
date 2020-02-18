@@ -4,7 +4,6 @@ import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
 import A11yTitle from '../../Common/A11yTitle';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
 import useTime from '../../../hooks/useTime';
 
@@ -33,6 +32,8 @@ const FilterArea = React.memo(() => {
     setInboundTime(newValue);
   };
 
+  console.log(outboundTime, inboundTime);
+
   return (
     <S.FilterAreaLayout>
       <A11yTitle>항공권 설정</A11yTitle>
@@ -49,7 +50,7 @@ const FilterArea = React.memo(() => {
           <S.DropItem>
             <Typography gutterBottom>가는날 출발시간</Typography>
             <p>{`${outboundStartTime} - ${outboundEndTime}`}</p>
-            <Slider
+            <S.RangeSlider
               value={outboundTime}
               onChange={handleChangeOutbound}
               aria-labelledby="range-slider"
@@ -61,7 +62,7 @@ const FilterArea = React.memo(() => {
           <S.DropItem>
             <Typography gutterBottom>오는날 출발시간</Typography>
             <p>{`${inboundStartTime} - ${inboundEndTime}`}</p>
-            <Slider
+            <S.RangeSlider
               value={inboundTime}
               onChange={handleChangeInbound}
               aria-labelledby="range-slider"
