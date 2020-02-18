@@ -42,9 +42,10 @@ const StyledCheckBoxWrapper = styled.div`
 
 const StyledLabel = styled.label`
   ${fontSizeStyle};
+  color: ${({ labelColor }) => labelColor || 'inherit'};
   padding-left: 5px;
-  ${props =>
-    props.isDisable &&
+  ${({ isDisable }) =>
+    isDisable &&
     css`
       color: #666;
     `};
@@ -72,7 +73,15 @@ const StyledCheckbox = styled.input`
   }
 `;
 
-const CheckBox = ({ label, id, size, onChange, checked }) => {
+const CheckBox = ({
+  label,
+  id,
+  size,
+  onChange,
+  checked,
+  isDisable,
+  labelColor,
+}) => {
   return (
     <StyledCheckBoxWrapper>
       <StyledCheckbox
@@ -81,8 +90,14 @@ const CheckBox = ({ label, id, size, onChange, checked }) => {
         size={size}
         checked={checked}
         onChange={onChange}
+        disabled={isDisable || false}
       />
-      <StyledLabel htmlFor={id} isDisable size={size}>
+      <StyledLabel
+        htmlFor={id}
+        size={size}
+        labelColor={labelColor}
+        isDisable={isDisable || false}
+      >
         {label}
       </StyledLabel>
     </StyledCheckBoxWrapper>
