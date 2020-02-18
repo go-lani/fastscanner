@@ -3,7 +3,6 @@ import * as S from './FilterAreaStyled';
 import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
 import A11yTitle from '../../Common/A11yTitle';
-import Typography from '@material-ui/core/Typography';
 import useTime from '../../../hooks/useTime';
 
 function valuetext(value) {
@@ -13,6 +12,7 @@ function valuetext(value) {
 const FilterArea = React.memo(() => {
   const [outboundTime, setOutboundTime] = useState([0, 48]);
   const [inboundTime, setInboundTime] = useState([0, 48]);
+  const [dutaionTime, setDurationTime] = useState([1000]);
   const [outboundStartTime, outboundEndTime] = useTime(outboundTime);
   const [inboundStartTime, inboundEndTime] = useTime(inboundTime);
 
@@ -22,6 +22,10 @@ const FilterArea = React.memo(() => {
 
   const handleChangeInbound = (event, newValue) => {
     setInboundTime(newValue);
+  };
+
+  const handleChangeDuration = (event, newValue) => {
+    setDurationTime(newValue);
   };
 
   return (
@@ -36,10 +40,12 @@ const FilterArea = React.memo(() => {
             <CheckBox size="medium" label="경유" id="nonstopp2" />
           </S.DropItem>
         </DropBox>
-        <DropBox title="출발 시간대 설정">
+        <DropBox title="출발 시간대 설정" range={true}>
           <S.DropItem>
-            <Typography gutterBottom>가는날 출발시간</Typography>
-            <p>{`${outboundStartTime} - ${outboundEndTime}`}</p>
+            <S.DropTitleBox>
+              <S.DropTitle>가는날 출발시간</S.DropTitle>
+              <p>{`${outboundStartTime} - ${outboundEndTime}`}</p>
+            </S.DropTitleBox>
             <S.RangeSlider
               value={outboundTime}
               onChange={handleChangeOutbound}
@@ -50,8 +56,10 @@ const FilterArea = React.memo(() => {
             />
           </S.DropItem>
           <S.DropItem>
-            <Typography gutterBottom>오는날 출발시간</Typography>
-            <p>{`${inboundStartTime} - ${inboundEndTime}`}</p>
+            <S.DropTitleBox>
+              <S.DropTitle>오는날 출발시간</S.DropTitle>
+              <p>{`${inboundStartTime} - ${inboundEndTime}`}</p>
+            </S.DropTitleBox>
             <S.RangeSlider
               value={inboundTime}
               onChange={handleChangeInbound}
@@ -62,10 +70,18 @@ const FilterArea = React.memo(() => {
             />
           </S.DropItem>
         </DropBox>
-        <DropBox title="총 소요시간 설정">
-          <CheckBox size="medium" label="직항" id="nonstopp4" />
-          <CheckBox size="medium" label="1번 경유" id="nonstopp5" />
-          <CheckBox size="medium" label="2번 이상 경유 " id="nonstopp6" />
+        <DropBox title="총 소요시간 설정" range={true}>
+          <S.DropItem>
+            <S.DropTitleBox>
+              <S.DropTitle>총 소요시간</S.DropTitle>
+            </S.DropTitleBox>
+            <S.RangeSlider
+              value={dutaionTime}
+              onChange={handleChangeDuration}
+              min={0}
+              max={1000}
+            />
+          </S.DropItem>
         </DropBox>
       </S.DropBoxList>
     </S.FilterAreaLayout>

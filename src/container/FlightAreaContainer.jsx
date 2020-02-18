@@ -1,12 +1,17 @@
 import { connect } from 'react-redux';
 import FlightArea from '../components/FlightArea';
-import { getFlightDataSaga } from '../redux/modules/flight';
+import { createSessionSaga, getLiveSearchSaga } from '../redux/modules/flight';
 
 export default connect(
-  state => ({}),
+  state => ({
+    session: state.flight.session,
+  }),
   dispatch => ({
-    getFlightData: requestBody => {
-      dispatch(getFlightDataSaga(requestBody));
+    createSession: requestBody => {
+      dispatch(createSessionSaga(requestBody));
+    },
+    getLiveSearch: () => {
+      dispatch(getLiveSearchSaga());
     },
   }),
 )(FlightArea);

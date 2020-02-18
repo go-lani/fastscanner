@@ -3,8 +3,8 @@ import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import FilterArea from './FilterArea';
-import ListArea from './ListArea';
 import media from '../../libs/MediaQuery';
+import ListAreaContainer from '../../container/ListAreaContainer';
 
 const FlightLayout = styled.div`
   display: flex;
@@ -15,7 +15,7 @@ const FlightLayout = styled.div`
   `}
 `;
 
-const FlightArea = ({ location, getFlightData }) => {
+const FlightArea = ({ location, session, createSession, getLiveSearch }) => {
   useEffect(() => {
     const path = location.pathname
       .slice(1, -1)
@@ -52,11 +52,12 @@ const FlightArea = ({ location, getFlightData }) => {
         currency: 'KRW',
         locale: 'ko-KR',
         originPlace: 'ICN-sky',
-        destinationPlace: 'CJU-sky',
+        destinationPlace: 'DPS-sky',
         outboundDate: '2020-02-20',
         adults: 1,
       };
-      getFlightData(requestBody);
+
+      createSession(requestBody);
     } else {
       const [originPlace, destinationPlace, outboundDate] = path;
       // console.log('편도 originPlace', originPlace);
@@ -64,11 +65,18 @@ const FlightArea = ({ location, getFlightData }) => {
       // console.log('편도 outboundDate', outboundDate);
       // requestbody 객체를 만들어 dispatch 해야됨
     }
-  }, [getFlightData, location.pathname, location.search]);
+  }, [createSession, location.pathname, location.search]);
+
+  useEffect(() => {
+    if (session) {
+      getLiveSearch();
+    }
+  }, [getLiveSearch, session]);
+
   return (
     <FlightLayout>
       <FilterArea />
-      <ListArea />
+      <ListAreaContainer />
     </FlightLayout>
   );
 };

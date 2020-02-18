@@ -33,6 +33,7 @@ const StyledArrow = styled.span`
   background-size: 10px;
   width: 10px;
   height: 10px;
+
   ${({ isClicked }) =>
     !isClicked &&
     css`
@@ -41,22 +42,24 @@ const StyledArrow = styled.span`
 `;
 
 const StyledDropBoxList = styled.ul`
-  padding: 0;
+  overflow: hidden;
+  padding: 0 15px;
   height: 0;
   transition: all 0.3s;
 
-  ${({ isOpen }) =>
+  ${({ isOpen, range }) =>
     isOpen &&
     css`
-      padding: 10px 0;
+      padding: ${range ? '15px' : '15px 0'};
       height: auto;
     `}
+
   li + li {
-    margin-top: 0;
+    margin-top: 10px;
   }
 `;
 
-const DropBox = ({ title, children }) => {
+const DropBox = ({ title, range, children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [isClicked, setIsClicked] = useState(false);
 
@@ -71,7 +74,9 @@ const DropBox = ({ title, children }) => {
         <StyledDropBoxTitle>{title}</StyledDropBoxTitle>
         <StyledArrow isClicked={isClicked}></StyledArrow>
       </StyledDropBoxButton>
-      <StyledDropBoxList isOpen={isOpen}>{children}</StyledDropBoxList>
+      <StyledDropBoxList isOpen={isOpen} range={range}>
+        {children}
+      </StyledDropBoxList>
     </StyledDropBoxContainer>
   );
 };

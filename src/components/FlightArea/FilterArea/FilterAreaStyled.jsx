@@ -10,7 +10,25 @@ export const FilterAreaLayout = styled.section`
 
 export const DropBoxList = styled.ul``;
 
-export const DropItem = styled.li``;
+export const DropItem = styled.li`
+  & + & {
+    margin: 15px 0 0;
+  }
+`;
+
+export const DropTitleBox = styled.div`
+  margin: 0 -15px 10px;
+
+  p {
+    font-size: 1.2rem;
+  }
+`;
+
+export const DropTitle = styled.p`
+  margin: 0 0 5px;
+  font-weight: 700;
+  font-size: 1.4rem;
+`;
 
 export const RangeSlider = withStyles({
   root: {

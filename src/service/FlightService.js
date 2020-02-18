@@ -3,7 +3,6 @@ import qs from 'query-string';
 
 export default class FlightService {
   static createSession = async requestBody => {
-    console.log('service', requestBody);
     return await axios.post(
       'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/pricing/v1.0',
       qs.stringify(requestBody),
@@ -16,15 +15,20 @@ export default class FlightService {
       },
     );
   };
-  // static getFlightData = async value => {
-  //   return await axios.get(
-  //     `https://www.skyscanner.co.kr/g/autosuggest-flights/KR/ko-KR/${value}`,
-  //     {
-  //       headers: {
-  //         isDestination: true,
-  //         enable_general_search_v2: true,
-  //       },
-  //     },
-  //   );
-  // };
+  static getLiveData = async ({ session, headers, params }) => {
+    const a = new Promise(async (resolve, reject) => {
+      setTimeout(async () => {
+        const { data } = await axios.get(
+          `https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/pricing/uk2/v1.0/${session}`,
+          {
+            headers,
+            params,
+          },
+        );
+        resolve(data);
+      }, 1000);
+    });
+
+    return a;
+  };
 }
