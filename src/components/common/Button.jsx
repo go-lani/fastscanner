@@ -1,21 +1,21 @@
 import React from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const sizes = {
   small: {
-    lineHeight: '24px',
+    lineHeight: '21px',
     fontSize: '1.6rem',
     fontWeight: 400,
   },
   medium: {
-    lineHeight: '27px',
+    lineHeight: '26px',
     fontSize: '1.8rem',
-    fontWeight: 700,
+    fontWeight: 600,
   },
   large: {
-    lineHeight: '30px',
+    lineHeight: '29px',
     fontSize: '2.0rem',
-    fontWeight: 900,
+    fontWeight: 700,
   },
 };
 
@@ -44,23 +44,14 @@ const colorStyle = css`
   `}
 `;
 
-// const colorChange = keyframes`
-//   from {
-//     background: #0288d1;
-//   }
-
-//   to {
-//     background: #fff;
-//     color: #0288d1
-//   }
-// `;
-
 const StyledButton = styled.button`
   /* 공통 */
   display: inline-block;
   padding: 8px 16px;
-  border: 0;
   border-radius: 4px;
+  border: none;
+
+  color: #fff;
 
   /* 크기 */
   ${sizeStyle}

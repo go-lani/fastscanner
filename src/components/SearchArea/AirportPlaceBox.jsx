@@ -2,74 +2,76 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as S from './SearchAreaStyled';
 import uuid from 'uuid';
 
-const AirportDestinationBox = ({
+const AirportPlaceBox = ({
+  title,
   id,
   placeholder,
-  destinationSearchList,
-  searchDestination,
-  selectDestination,
-  destinationName,
-  destinationInputCheck,
+  searchList,
+  searchPlace,
+  selectPlace,
+  placeName,
+  placeInputCheck,
 }) => {
   const [visible, setVisible] = useState(false);
-  const destinationInput = useRef();
+  const originInput = useRef();
 
   useEffect(() => {
-    destinationInput.current.value = destinationName;
-  }, [destinationInput, destinationName]);
+    originInput.current.value = placeName;
+  }, [originInput, placeName]);
 
   useEffect(() => {
-    if (destinationSearchList.length) setVisible(true);
+    if (searchList.length) setVisible(true);
     else setVisible(false);
-  }, [destinationSearchList]);
+  }, [searchList]);
 
   function handledChange(e) {
     const value = e.target.value.trim();
-    searchDestination(value);
-    destinationInputCheck(value);
+    searchPlace(value);
+    placeInputCheck(value);
   }
 
   function handledClick(PlaceId, PlaceName) {
-    if (destinationName === `${PlaceName}(${PlaceId})`) {
-      destinationInput.current.value = destinationName;
+    if (placeName === `${PlaceName}(${PlaceId})`) {
+      originInput.current.value = placeName;
       setVisible(false);
       return;
     }
-    selectDestination({ PlaceName, PlaceId });
+    selectPlace({ PlaceName, PlaceId });
     setVisible(false);
   }
 
   function hide() {
-    const { PlaceName, PlaceId } = destinationSearchList[0];
+    const { PlaceName, PlaceId } = searchList[0];
 
-    if (destinationName === `${PlaceName}(${PlaceId})`) {
-      destinationInput.current.value = destinationName;
+    if (placeName === `${PlaceName}(${PlaceId})`) {
+      originInput.current.value = placeName;
       setVisible(false);
       return;
     }
 
-    selectDestination({ PlaceName, PlaceId });
+    selectPlace({ PlaceName, PlaceId });
     setVisible(false);
   }
 
   return (
     <S.AirportInputBox>
       <S.AirportInput
-        ref={destinationInput}
+        ref={originInput}
         type="text"
         id={id}
-        defaultValue={destinationName}
+        defaultValue={placeName}
         placeholder={placeholder}
         autoComplete="off"
         onChange={handledChange}
       />
-      {destinationSearchList && visible && (
+
+      {searchList && (
         <>
           <S.SearchPlaceDim onClick={hide} visible={visible} />
           <S.AirportListArea visible={visible}>
-            <S.SearchCategoryTitle>도착지를 선택해주세요</S.SearchCategoryTitle>
+            <S.SearchCategoryTitle>{title}</S.SearchCategoryTitle>
             <S.AirportList>
-              {destinationSearchList.map(list => (
+              {searchList.map(list => (
                 <S.AirportListItem key={uuid.v4()}>
                   <button
                     type="button"
@@ -88,4 +90,4 @@ const AirportDestinationBox = ({
   );
 };
 
-export default AirportDestinationBox;
+export default AirportPlaceBox;

@@ -1,6 +1,6 @@
-import React, { useState, createRef, useEffect } from 'react';
+import React from 'react';
 import FlightAreaContainer from '../container/FlightAreaContainer';
-import SearchAreaHeaderContainer from '../container/SearchAreaHeaderContainer';
+import ResearchAreaContainer from '../container/ResearchAreaContainer';
 import Header from '../components/Header';
 import styled from 'styled-components';
 
@@ -14,7 +14,7 @@ const ResultView = () => {
   return (
     <SubLayout>
       <Header isView={true} />
-      <SearchAreaHeaderContainer />
+      <ResearchAreaContainer />
       <FlightAreaContainer />
     </SubLayout>
   );

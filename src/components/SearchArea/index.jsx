@@ -113,7 +113,7 @@ const SearchArea = ({
             id="nonstop"
             size="large"
             onChange={checkNonstops}
-            stops={stops}
+            checked={!stops}
           />
           <Button
             type="button"

@@ -4,10 +4,15 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import FilterArea from './FilterArea';
 import ListArea from './ListArea';
+import media from '../../libs/MediaQuery';
 
 const FlightLayout = styled.div`
   display: flex;
   justify-content: space-between;
+
+  ${media.tablet`
+    flex-direction: column;
+  `}
 `;
 
 const FlightArea = ({ location, getFlightData }) => {
@@ -39,7 +44,7 @@ const FlightArea = ({ location, getFlightData }) => {
       // requestbody 객체를 만들어 dispatch 해야됨
 
       const requestBody = {
-        inboundDate: '2020-02-19',
+        inboundDate: '2020-02-29',
         cabinClass: 'economy',
         children: 0,
         infants: 0,
@@ -48,10 +53,10 @@ const FlightArea = ({ location, getFlightData }) => {
         locale: 'ko-KR',
         originPlace: 'ICN-sky',
         destinationPlace: 'CJU-sky',
-        outboundDate: '2020-02-15',
+        outboundDate: '2020-02-20',
         adults: 1,
       };
-      // getFlightData(requestBody);
+      getFlightData(requestBody);
     } else {
       const [originPlace, destinationPlace, outboundDate] = path;
       // console.log('편도 originPlace', originPlace);
@@ -62,8 +67,8 @@ const FlightArea = ({ location, getFlightData }) => {
   }, [getFlightData, location.pathname, location.search]);
   return (
     <FlightLayout>
-      <FilterArea></FilterArea>
-      <ListArea></ListArea>
+      <FilterArea />
+      <ListArea />
     </FlightLayout>
   );
 };

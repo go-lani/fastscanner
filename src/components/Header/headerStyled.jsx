@@ -10,7 +10,7 @@ export const Header = styled.header`
   align-self: flex-start;
   width: ${({ isView }) => (isView ? 'auto' : '100vw')};
   padding: ${({ isView }) => (isView ? '0 20px' : '0')};
-  background: ${({ isView }) => (isView ? 'rgba(0,0,0,.3)' : 'transparent')};
+  background: ${({ isView }) => (isView ? 'rgba(0,0,0,.6)' : 'transparent')};
 
   ${media.mobile`
     flex-direction: column;

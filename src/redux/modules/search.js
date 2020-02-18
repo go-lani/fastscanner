@@ -1,6 +1,7 @@
 import { put, call, select, takeLatest } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
 import SearchService from '../../service/SearchService';
+import moment from 'moment';
 
 const options = {
   prefix: 'fastscanner/SearchArea',
@@ -29,20 +30,23 @@ function* selectWaySaga({ payload }) {
   }
 }
 
-// 출발지 & 도착지
-export const getPlaceSaga = createAction('GET_PLACE_SAGA');
-export const setOriginSearchSaga = createAction('SET_ORIGIN_SEARCH_SAGA');
-export const setOriginSelectSaga = createAction('SET_ORIGIN_SELECT_SAGA');
-export const setDestinationSearchSaga = createAction(
-  'SET_DESTINATION_SEARCH_SAGA',
-);
-export const setDestinationSelectSaga = createAction(
-  'SET_DESTINATION_SELECT_SAGA',
-);
-export const setChangePlaceSaga = createAction('CHANGE_PLACE_SAGA');
+// 초기세팅
+export const getConfigureSaga = createAction('GET_CONFIGURE_SAGA');
 
-function* loadPlaceSaga({
-  payload: { originPlace: origin, destinationPlace: destination },
+function* loadConfigureSaga({
+  payload: {
+    way,
+    originPlace: origin,
+    destinationPlace: destination,
+    outboundDate,
+    momentOutDate,
+    inboundDate,
+    momentInDate,
+    adults,
+    children,
+    infants,
+    cabinclass,
+  },
 }) {
   try {
     yield put(pending());
@@ -63,16 +67,36 @@ function* loadPlaceSaga({
 
     yield put(
       success({
+        way,
         originPlace: `${originPlaceId}-sky`,
         originName: `${originPlaceName}(${originPlaceId})`,
         destinationPlace: `${destinationPlaceId}-sky`,
         destinationName: `${destinationPlaceName}(${destinationPlaceId})`,
+        outboundDate,
+        momentOutDate,
+        inboundDate,
+        momentInDate,
+        adults,
+        children,
+        infants,
+        cabinClass: cabinclass,
       }),
     );
   } catch (error) {
     yield put(fail(error));
   }
 }
+
+// 출발지 & 도착지
+export const setOriginSearchSaga = createAction('SET_ORIGIN_SEARCH_SAGA');
+export const setOriginSelectSaga = createAction('SET_ORIGIN_SELECT_SAGA');
+export const setDestinationSearchSaga = createAction(
+  'SET_DESTINATION_SEARCH_SAGA',
+);
+export const setDestinationSelectSaga = createAction(
+  'SET_DESTINATION_SELECT_SAGA',
+);
+export const setChangePlaceSaga = createAction('CHANGE_PLACE_SAGA');
 
 function* searchOriginSaga({ payload }) {
   const prevOriginSearch = yield select(state => state.search.originSearch);
@@ -277,7 +301,7 @@ export function* searchSaga() {
   yield takeLatest('SET_INFANTS_SAGA', selectInfantsSaga);
   yield takeLatest('SET_OUTDATE_SAGA', selectOutDateSaga);
   yield takeLatest('SET_INDATE_SAGA', selectInDateSaga);
-  yield takeLatest('GET_PLACE_SAGA', loadPlaceSaga);
+  yield takeLatest('GET_CONFIGURE_SAGA', loadConfigureSaga);
   yield takeLatest('SET_ORIGIN_SEARCH_SAGA', searchOriginSaga);
   yield takeLatest('SET_ORIGIN_SELECT_SAGA', selectOriginSaga);
   yield takeLatest('SET_DESTINATION_SEARCH_SAGA', searchDestinationSaga);
@@ -295,7 +319,7 @@ const initialState = {
   locale: 'ko-KR',
   originPlace: 'ICN-sky',
   destinationPlace: null,
-  outboundDate: '',
+  outboundDate: moment().format('YYYY-MM-DD'),
   inboundDate: '',
   adults: 1,
   cabinClass: 'economy',
@@ -309,7 +333,7 @@ const initialState = {
   originName: '인천국제공항(ICN)',
   destinationSearch: [],
   destinationName: null,
-  momentOutDate: '',
+  momentOutDate: moment(),
   momentInDate: '',
 };
 
