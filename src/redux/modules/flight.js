@@ -35,6 +35,7 @@ export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 
 function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
+  const data = yield select(state => state.flight.data);
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'x-rapidapi-key': process.env.REACT_APP_SKYSCANNER_API_KEY,
@@ -58,6 +59,25 @@ function* getLiveSearch({ payload }) {
       });
 
       return name;
+    });
+  }
+
+  function getAirLine(carriers, info) {
+    return info.Carriers.map(carrierId => {
+      const airline = {
+        name: null,
+        imgUrl: null,
+      };
+      carriers.forEach(carrier => {
+        if (carrier.Id === carrierId) {
+          airline.name = carrier.Name;
+          airline.imgUrl = carrier.ImageUrl;
+        }
+
+        return airline;
+      });
+
+      return airline;
     });
   }
 
@@ -87,20 +107,16 @@ function* getLiveSearch({ payload }) {
         console.log('COMPLETED', res);
         // console.log(agentLength, compoleteLength);
         const ListItem = [];
-        res.Itineraries.forEach(itinerary => {
-          const item = {
-            Outbound: null,
-            Inbound: null,
-            price: Math.floor(itinerary.PricingOptions[0].Price),
-            agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
-            amount: itinerary.PricingOptions.length,
-          };
 
+        res.Itineraries.forEach(itinerary => {
           // 출국 정보
           const outBoundInfo = getInfo(res.Legs, itinerary.OutboundLegId);
 
           // 출국 경유지 정보
           const outBoundStops = getStops(res.Places, outBoundInfo);
+
+          // 출국 항공기 정보
+          const outBoundAirlines = getAirLine(res.Carriers, outBoundInfo);
 
           // 입국 정보
           const inBoundInfo = getInfo(res.Legs, itinerary.InboundLegId);
@@ -108,17 +124,27 @@ function* getLiveSearch({ payload }) {
           // 입국 경유지 정보
           const inBoundStops = getStops(res.Places, inBoundInfo);
 
-          item.Outbound = outBoundInfo;
-          item.Outbound.StopsName = outBoundStops;
-          item.Inbound = inBoundInfo;
-          item.Inbound.StopsName = inBoundStops;
+          // 입국 항공기 정보
+          const inBoundAirlines = getAirLine(res.Carriers, inBoundInfo);
 
-          ListItem.push(item);
+          ListItem.push({
+            Outbound: {
+              ...outBoundInfo,
+              StopsName: outBoundStops,
+              AirlinesName: outBoundAirlines,
+            },
+            Inbound: {
+              ...inBoundInfo,
+              StopsName: inBoundStops,
+              AirlinesName: inBoundAirlines,
+            },
+            price: Math.floor(itinerary.PricingOptions[0].Price),
+            agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
+            amount: itinerary.PricingOptions.length,
+          });
         });
 
-        console.log(ListItem);
-        // console.log(res.Itineraries);
-        yield put(success());
+        yield put(success({ data: [...data, ...ListItem] }));
         return;
       }
     }
