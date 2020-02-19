@@ -35,6 +35,10 @@ const SearchArea = ({
     destinationPlace,
   );
 
+  useEffect(() => {
+    setDestinationInputValue(destinationPlace);
+  }, [destinationPlace]);
+
   function originInputCheck(value) {
     setOriginInputValue(value);
   }

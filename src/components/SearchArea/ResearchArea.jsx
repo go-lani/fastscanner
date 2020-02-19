@@ -26,11 +26,6 @@ const ResearchArea = ({
       .slice(1, -1)
       .split('/')
       .slice(2);
-    //   location.pathname
-    //   inboundDate: '2020-02-19',
-    //   originPlace: 'ICN-sky',
-    //   destinationPlace: 'CJU-sky',
-    //   outboundDate: '2020-02-10',
 
     const query = qs.parse(location.search);
     const {
@@ -48,7 +43,6 @@ const ResearchArea = ({
 
     if (+rtn) {
       const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
-      // 2020-02-16
       const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
       const momentOutBound = moment(moment(`20${outboundDate}`));
       const inBound = moment(`20${inboundDate}`).format('YYYY-MM-DD');
@@ -80,8 +74,6 @@ const ResearchArea = ({
       const [originPlace, destinationPlace, outboundDate] = path;
       const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
       const momentOutBound = moment(moment(`20${outboundDate}`));
-
-      console.log('편도', originPlace, destinationPlace, outboundDate);
 
       // 초기세팅
       getConfigure({

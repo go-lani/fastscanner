@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import moment from 'moment';
 import FilterArea from './FilterArea';
 import media from '../../libs/MediaQuery';
 import ListAreaContainer from '../../container/ListAreaContainer';
@@ -18,55 +19,35 @@ const FlightLayout = styled.div`
 
 const FlightArea = ({ location, session, createSession, getLiveSearch }) => {
   const [filterAreaState, setFilterAreaState] = useState(false);
+
   useEffect(() => {
     const path = location.pathname
       .slice(1, -1)
       .split('/')
       .slice(2);
-    //   location.pathname
-    //   inboundDate: '2020-02-19',
-    //   originPlace: 'ICN-sky',
-    //   destinationPlace: 'CJU-sky',
-    //   outboundDate: '2020-02-10',
 
     const query = qs.parse(location.search);
     const { cabinclass: cabinClass, children, infants, adults } = query;
-    // console.log('분해', cabinClass, children, infants, adults);
 
-    //   고정
-    //   country: 'KR',
-    //   currency: 'KRW',
-    //   locale: 'ko-KR',
+    const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
+    const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
+    const inBound = moment(`20${inboundDate}`).format('YYYY-MM-DD');
 
-    // console.log(query);
+    const requestBody = {
+      cabinClass: cabinClass,
+      children: +children,
+      infants: +infants,
+      country: 'KR',
+      currency: 'KRW',
+      locale: 'ko-KR',
+      originPlace: `${originPlace}-sky`,
+      destinationPlace: `${destinationPlace}-sky`,
+      outboundDate: outBound,
+      adults: +adults,
+      inboundDate: `${+query.rtn ? inBound : ''}`,
+    };
 
-    if (+query.rtn) {
-      const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
-
-      // requestbody 객체를 만들어 dispatch 해야됨
-
-      const requestBody = {
-        inboundDate: '2020-02-29',
-        cabinClass: 'economy',
-        children: 0,
-        infants: 0,
-        country: 'KR',
-        currency: 'KRW',
-        locale: 'ko-KR',
-        originPlace: 'ICN-sky',
-        destinationPlace: 'GVA-sky',
-        outboundDate: '2020-02-20',
-        adults: 1,
-      };
-
-      createSession(requestBody);
-    } else {
-      const [originPlace, destinationPlace, outboundDate] = path;
-      // console.log('편도 originPlace', originPlace);
-      // console.log('편도 destinationPlace', destinationPlace);
-      // console.log('편도 outboundDate', outboundDate);
-      // requestbody 객체를 만들어 dispatch 해야됨
-    }
+    createSession(requestBody);
   }, [createSession, location.pathname, location.search]);
 
   useEffect(() => {
