@@ -4,11 +4,15 @@ import * as S from './ListAreaStyled';
 import FlightItem from './FlightItem';
 import A11yTitle from '../../Common/A11yTitle';
 
-const ListArea = ({ progress }) => {
+const ListArea = ({ progress, setFilterAreaState }) => {
+  const openFilterArea = () => {
+    setFilterAreaState(true);
+  };
   return (
     <S.ListLayout>
       <A11yTitle>항공권 검색 결과</A11yTitle>
       <LinearProgress variant="determinate" value={progress} />
+      <S.FilterButton onClick={openFilterArea}>필터(조건)</S.FilterButton>
       <S.CategoryTab>
         <li>
           <button>최저가</button>
