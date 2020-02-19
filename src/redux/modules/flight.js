@@ -21,7 +21,7 @@ export const createSessionSaga = createAction('GET_SESSION_SAGA');
 
 function* createSession({ payload }) {
   try {
-    yield put(pending());
+    yield put(pending(0));
     const res = yield call(FlightService.createSession, payload);
     const sessionId = res.headers.location.split('/').pop();
     yield put(success({ session: sessionId }));
@@ -46,7 +46,7 @@ function* getLiveSearch({ payload }) {
   };
 
   try {
-    yield put(pending());
+    yield put(pending(0));
 
     while (true) {
       const res = yield call(FlightService.getLiveData, {

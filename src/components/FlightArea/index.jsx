@@ -52,7 +52,7 @@ const FlightArea = ({ location, session, createSession, getLiveSearch }) => {
         currency: 'KRW',
         locale: 'ko-KR',
         originPlace: 'ICN-sky',
-        destinationPlace: 'DPS-sky',
+        destinationPlace: 'GVA-sky',
         outboundDate: '2020-02-20',
         adults: 1,
       };
