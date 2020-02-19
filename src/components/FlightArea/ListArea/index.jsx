@@ -1,20 +1,18 @@
 import React from 'react';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { LinearProgress } from '@material-ui/core';
 import * as S from './ListAreaStyled';
 import FlightItem from './FlightItem';
 import A11yTitle from '../../Common/A11yTitle';
 
-const ListArea = ({ progress }) => {
-  console.log(progress);
+const ListArea = ({ progress, setFilterAreaState }) => {
+  const openFilterArea = () => {
+    setFilterAreaState(true);
+  };
   return (
     <S.ListLayout>
       <A11yTitle>항공권 검색 결과</A11yTitle>
       <LinearProgress variant="determinate" value={progress} />
-      <LinearProgress
-        variant="determinate"
-        value={progress}
-        color="secondary"
-      />
+      <S.FilterButton onClick={openFilterArea}>필터(조건)</S.FilterButton>
       <S.CategoryTab>
         <li>
           <button>최저가</button>

@@ -8,6 +8,23 @@ export const ListLayout = styled.section`
   padding: 20px 4% 20px 20px;
 `;
 
+export const FilterButton = styled.button`
+  display: block;
+  padding: 10px 20px;
+  color: #0288d1;
+  font-size: 1.6rem;
+  font-weight: 700;
+  border: 2px solid #eee;
+  border-radius: 5px;
+  &:hover {
+    border: 2px solid #0288d1;
+  }
+
+  ${media.desktop`
+    display: none;
+  `}
+`;
+
 // Flight Category Tab
 export const CategoryTab = styled.ul``;
 

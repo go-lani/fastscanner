@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
@@ -8,14 +8,16 @@ import ListAreaContainer from '../../container/ListAreaContainer';
 
 const FlightLayout = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
 
-  ${media.tablet`
-    flex-direction: column;
+  ${media.desktop`
+    flex-direction: row;
+    justify-content: space-between;
   `}
 `;
 
 const FlightArea = ({ location, session, createSession, getLiveSearch }) => {
+  const [filterAreaState, setFilterAreaState] = useState(false);
   useEffect(() => {
     const path = location.pathname
       .slice(1, -1)
@@ -52,7 +54,7 @@ const FlightArea = ({ location, session, createSession, getLiveSearch }) => {
         currency: 'KRW',
         locale: 'ko-KR',
         originPlace: 'ICN-sky',
-        destinationPlace: 'DPS-sky',
+        destinationPlace: 'GVA-sky',
         outboundDate: '2020-02-20',
         adults: 1,
       };
@@ -75,8 +77,11 @@ const FlightArea = ({ location, session, createSession, getLiveSearch }) => {
 
   return (
     <FlightLayout>
-      <FilterArea />
-      <ListAreaContainer />
+      <FilterArea
+        filterAreaState={filterAreaState}
+        setFilterAreaState={setFilterAreaState}
+      />
+      <ListAreaContainer setFilterAreaState={setFilterAreaState} />
     </FlightLayout>
   );
 };
