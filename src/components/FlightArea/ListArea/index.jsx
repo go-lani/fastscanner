@@ -1,10 +1,11 @@
 import React from 'react';
 import { LinearProgress } from '@material-ui/core';
+import uuid from 'uuid';
 import * as S from './ListAreaStyled';
 import FlightItem from './FlightItem';
 import A11yTitle from '../../Common/A11yTitle';
 
-const ListArea = ({ progress, setFilterAreaState }) => {
+const ListArea = ({ datas, progress, setFilterAreaState }) => {
   const openFilterArea = () => {
     setFilterAreaState(true);
   };
@@ -25,8 +26,8 @@ const ListArea = ({ progress, setFilterAreaState }) => {
         </li>
       </S.CategoryTab>
       <S.FlightList>
-        {/* map */}
-        <FlightItem />
+        {datas && datas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
+        {!datas && '해당하는 결과가 없습니다.'}
       </S.FlightList>
     </S.ListLayout>
   );

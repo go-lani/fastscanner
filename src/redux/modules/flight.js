@@ -35,13 +35,14 @@ export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 
 function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
-  const data = yield select(state => state.flight.data);
+  const datas = yield select(state => state.flight.datas);
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'x-rapidapi-key': process.env.REACT_APP_SKYSCANNER_API_KEY,
   };
   const params = {
     sortType: 'price',
+    sortOrder: 'asc',
     pageIndex: '1',
     pageSize: '10',
   };
@@ -131,12 +132,12 @@ function* getLiveSearch({ payload }) {
             Outbound: {
               ...outBoundInfo,
               StopsName: outBoundStops,
-              AirlinesName: outBoundAirlines,
+              AirlinesInfo: outBoundAirlines,
             },
             Inbound: {
               ...inBoundInfo,
               StopsName: inBoundStops,
-              AirlinesName: inBoundAirlines,
+              AirlinesInfo: inBoundAirlines,
             },
             price: Math.floor(itinerary.PricingOptions[0].Price),
             agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
@@ -144,7 +145,7 @@ function* getLiveSearch({ payload }) {
           });
         });
 
-        yield put(success({ data: [...data, ...ListItem] }));
+        yield put(success({ datas: [...datas, ...ListItem] }));
         return;
       }
     }
@@ -162,7 +163,7 @@ export function* flightSaga() {
 
 const initialState = {
   session: null,
-  data: [],
+  datas: [],
   loading: false,
   error: null,
   progress: 0,
