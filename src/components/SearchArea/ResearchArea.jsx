@@ -62,14 +62,6 @@ const ResearchArea = ({
         infants: +$infants,
         cabinclass: $cabinclass,
       });
-
-      console.log(
-        '왕복',
-        originPlace,
-        destinationPlace,
-        outboundDate,
-        inboundDate,
-      );
     } else {
       const [originPlace, destinationPlace, outboundDate] = path;
       const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');

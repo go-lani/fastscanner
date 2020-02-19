@@ -45,6 +45,22 @@ function* getLiveSearch({ payload }) {
     pageSize: '10',
   };
 
+  function getInfo(legs, id) {
+    return legs.filter(leg => leg.Id === id)[0];
+  }
+
+  function getStops(places, info) {
+    return info.Stops.map(stop => {
+      let name = null;
+      places.forEach(place => {
+        if (place.Id === stop) name = place.Name;
+        return name;
+      });
+
+      return name;
+    });
+  }
+
   try {
     yield put(pending(0));
 
@@ -55,7 +71,7 @@ function* getLiveSearch({ payload }) {
         params,
       });
 
-      console.log('while', res);
+      // console.log('while', res);
 
       const agentLength = res.Agents.length;
       const compoleteLength = res.Agents.filter(
@@ -64,14 +80,45 @@ function* getLiveSearch({ payload }) {
 
       yield put(pending(Math.floor((compoleteLength / agentLength) * 100)));
 
-      console.log('PENDING', res);
+      // console.log('PENDING', res);
 
       if (res.Status === 'UpdatesComplete') {
-        console.log('COMPLETED');
+        // console.log('COMPLETED');
         console.log('COMPLETED', res);
-        console.log(agentLength, compoleteLength);
+        // console.log(agentLength, compoleteLength);
+        const ListItem = [];
+        res.Itineraries.forEach(itinerary => {
+          const item = {
+            Outbound: null,
+            Inbound: null,
+            price: Math.floor(itinerary.PricingOptions[0].Price),
+            agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
+            amount: itinerary.PricingOptions.length,
+          };
+
+          // 출국 정보
+          const outBoundInfo = getInfo(res.Legs, itinerary.OutboundLegId);
+
+          // 출국 경유지 정보
+          const outBoundStops = getStops(res.Places, outBoundInfo);
+
+          // 입국 정보
+          const inBoundInfo = getInfo(res.Legs, itinerary.InboundLegId);
+
+          // 입국 경유지 정보
+          const inBoundStops = getStops(res.Places, inBoundInfo);
+
+          item.Outbound = outBoundInfo;
+          item.Outbound.StopsName = outBoundStops;
+          item.Inbound = inBoundInfo;
+          item.Inbound.StopsName = inBoundStops;
+
+          ListItem.push(item);
+        });
+
+        console.log(ListItem);
+        // console.log(res.Itineraries);
         yield put(success());
-        // setCompleted(100);
         return;
       }
     }
