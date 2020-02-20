@@ -13,7 +13,7 @@ export const FilterOverlay = styled.div`
     z-index: ${({ filterAreaState }) => (filterAreaState ? '250' : '-10')};
     width: 100%;
     height: 100%;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     transition: opacity .2s ease;
@@ -28,7 +28,8 @@ export const FilterAreaLayout = styled.section`
   ${media.tablet`
     transform: ${({ filterAreaState }) =>
       filterAreaState ? 'translate(0)' : 'translate(100%)'};
-    position: absolute;
+    position: fixed;
+    overflow-y: auto;
     right: 0;
     top: 0;
     width: 100%;
@@ -43,7 +44,8 @@ export const FilterAreaLayout = styled.section`
   ${media.mobile`
     transform: ${({ filterAreaState }) =>
       filterAreaState ? 'translate(0)' : 'translate(100%)'};
-    position: absolute;
+    position: fixed;
+    overflow-y: auto;
     left: 0;
     right: 0;
     top: 0;
