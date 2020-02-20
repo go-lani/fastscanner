@@ -44,10 +44,12 @@ function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
   const datas = yield select(state => state.flight.datas);
   const pageIndex = yield select(state => state.flight.pageIndex);
+
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'x-rapidapi-key': process.env.REACT_APP_SKYSCANNER_API_KEY,
   };
+
   const params = {
     sortType: 'price',
     sortOrder: 'asc',
@@ -91,7 +93,7 @@ function* getLiveSearch({ payload }) {
   }
 
   try {
-    if (!session) return;
+    if (!session || pageIndex === 'lastIndex') return yield put(success());
     yield put(pending(0));
 
     while (true) {
@@ -149,14 +151,26 @@ function* getLiveSearch({ payload }) {
                   AirlinesInfo: inBoundAirlines,
                 }
               : null,
-            price: Math.floor(itinerary.PricingOptions[0].Price),
+            price: Math.floor(itinerary.PricingOptions[0].Price)
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
             agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
             amount: itinerary.PricingOptions.length,
           });
         });
 
-        yield put(success({ datas: [...datas, ...ListItem] }));
-        yield put(success({ pageIndex: pageIndex + 1 }));
+        const newDatas = [...datas, ...ListItem];
+
+        if (datas.length !== newDatas.length) {
+          yield put(
+            success({
+              datas: [...datas, ...ListItem],
+              pageIndex: pageIndex + 1,
+            }),
+          );
+        } else {
+          yield put(success({ pageIndex: 'lastIndex' }));
+        }
         return;
       }
     }

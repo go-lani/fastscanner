@@ -48,11 +48,11 @@ const ListArea = ({
         {loading && !pageIndex && loaderRender}
         <InfiniteScroller
           loadMore={() => getLiveSearch()}
-          hasMore={!!pageIndex}
+          hasMore={!!pageIndex && pageIndex !== 'lastIndex'}
           loader={<div key={uuid.v4()}> loading....</div>}
         >
           {datas && datas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
-          {!datas && '해당하는 결과가 없습니다.'}
+          {datas && !datas.length && '해당하는 결과가 없습니다.'}
         </InfiniteScroller>
       </S.FlightList>
     </S.ListLayout>
