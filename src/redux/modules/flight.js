@@ -35,15 +35,52 @@ export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 
 function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
+  const datas = yield select(state => state.flight.datas);
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'x-rapidapi-key': process.env.REACT_APP_SKYSCANNER_API_KEY,
   };
   const params = {
     sortType: 'price',
+    sortOrder: 'asc',
     pageIndex: '1',
     pageSize: '10',
   };
+
+  function getInfo(legs, id) {
+    return legs.filter(leg => leg.Id === id)[0];
+  }
+
+  function getStops(places, info) {
+    return info.Stops.map(stop => {
+      let name = null;
+      places.forEach(place => {
+        if (place.Id === stop) name = place.Name;
+        return name;
+      });
+
+      return name;
+    });
+  }
+
+  function getAirLine(carriers, info) {
+    return info.Carriers.map(carrierId => {
+      const airline = {
+        name: null,
+        imgUrl: null,
+      };
+      carriers.forEach(carrier => {
+        if (carrier.Id === carrierId) {
+          airline.name = carrier.Name;
+          airline.imgUrl = carrier.ImageUrl;
+        }
+
+        return airline;
+      });
+
+      return airline;
+    });
+  }
 
   try {
     yield put(pending(0));
@@ -55,7 +92,7 @@ function* getLiveSearch({ payload }) {
         params,
       });
 
-      console.log('while', res);
+      // console.log('while', res);
 
       const agentLength = res.Agents.length;
       const compoleteLength = res.Agents.filter(
@@ -64,14 +101,51 @@ function* getLiveSearch({ payload }) {
 
       yield put(pending(Math.floor((compoleteLength / agentLength) * 100)));
 
-      console.log('PENDING', res);
+      // console.log('PENDING', res);
 
       if (res.Status === 'UpdatesComplete') {
-        console.log('COMPLETED');
+        // console.log('COMPLETED');
         console.log('COMPLETED', res);
-        console.log(agentLength, compoleteLength);
-        yield put(success());
-        // setCompleted(100);
+        // console.log(agentLength, compoleteLength);
+        const ListItem = [];
+
+        res.Itineraries.forEach(itinerary => {
+          // 출국 정보
+          const outBoundInfo = getInfo(res.Legs, itinerary.OutboundLegId);
+
+          // 출국 경유지 정보
+          const outBoundStops = getStops(res.Places, outBoundInfo);
+
+          // 출국 항공기 정보
+          const outBoundAirlines = getAirLine(res.Carriers, outBoundInfo);
+
+          // 입국 정보
+          const inBoundInfo = getInfo(res.Legs, itinerary.InboundLegId);
+
+          // 입국 경유지 정보
+          const inBoundStops = getStops(res.Places, inBoundInfo);
+
+          // 입국 항공기 정보
+          const inBoundAirlines = getAirLine(res.Carriers, inBoundInfo);
+
+          ListItem.push({
+            Outbound: {
+              ...outBoundInfo,
+              StopsName: outBoundStops,
+              AirlinesInfo: outBoundAirlines,
+            },
+            Inbound: {
+              ...inBoundInfo,
+              StopsName: inBoundStops,
+              AirlinesInfo: inBoundAirlines,
+            },
+            price: Math.floor(itinerary.PricingOptions[0].Price),
+            agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
+            amount: itinerary.PricingOptions.length,
+          });
+        });
+
+        yield put(success({ datas: [...datas, ...ListItem] }));
         return;
       }
     }
@@ -89,7 +163,7 @@ export function* flightSaga() {
 
 const initialState = {
   session: null,
-  data: [],
+  datas: [],
   loading: false,
   error: null,
   progress: 0,
