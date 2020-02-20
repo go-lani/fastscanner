@@ -13,7 +13,7 @@ const FilterArea = React.memo(
   ({ filterModalVisible, setFilterModalVisible }) => {
     const [outboundTime, setOutboundTime] = useState([0, 48]);
     const [inboundTime, setInboundTime] = useState([0, 48]);
-    const [dutaionTime, setDurationTime] = useState([1000]);
+    const [durationTime, setDurationTime] = useState(1000);
     const [outboundStartTime, outboundEndTime] = useTime(outboundTime);
     const [inboundStartTime, inboundEndTime] = useTime(inboundTime);
 
@@ -92,7 +92,7 @@ const FilterArea = React.memo(
                   <S.DropTitle>총 소요시간</S.DropTitle>
                 </S.DropTitleBox>
                 <S.RangeSlider
-                  value={dutaionTime}
+                  value={durationTime}
                   onChange={handleChangeDuration}
                   min={0}
                   max={1000}
