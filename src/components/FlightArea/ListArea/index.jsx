@@ -6,7 +6,6 @@ import A11yTitle from '../../Common/A11yTitle';
 import Loader from './Loader';
 import * as S from './ListAreaStyled';
 import InfiniteScroller from 'react-infinite-scroller';
-import ContentLoader from 'react-content-loader';
 
 const loaderRender = (() => {
   const loaderGroup = [];
