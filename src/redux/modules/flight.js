@@ -20,10 +20,17 @@ const { success, pending, fail } = createActions(
 export const createSessionSaga = createAction('GET_SESSION_SAGA');
 
 function* createSession({ payload }) {
+  const prevSessionId = yield select(state => state.flight.session);
+  // const datas = yield select(state => state.flight.datas);
   try {
     yield put(pending(0));
     const res = yield call(FlightService.createSession, payload);
     const sessionId = res.headers.location.split('/').pop();
+
+    if (prevSessionId !== sessionId) {
+      yield put(success({ datas: [] }));
+      yield put(success({ pageIndex: 0 }));
+    }
     yield put(success({ session: sessionId }));
   } catch (error) {
     yield put(fail(error));
@@ -35,6 +42,8 @@ export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 
 function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
+  const datas = yield select(state => state.flight.datas);
+  const pageIndex = yield select(state => state.flight.pageIndex);
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'x-rapidapi-key': process.env.REACT_APP_SKYSCANNER_API_KEY,
@@ -42,8 +51,8 @@ function* getLiveSearch({ payload }) {
   const params = {
     sortType: 'price',
     sortOrder: 'asc',
-    pageIndex: '0',
-    pageSize: '50',
+    pageIndex: `${pageIndex}`,
+    pageSize: '10',
   };
 
   function getInfo(legs, id) {
@@ -82,6 +91,7 @@ function* getLiveSearch({ payload }) {
   }
 
   try {
+    if (!session) return;
     yield put(pending(0));
 
     while (true) {
@@ -145,7 +155,8 @@ function* getLiveSearch({ payload }) {
           });
         });
 
-        yield put(success({ datas: ListItem }));
+        yield put(success({ datas: [...datas, ...ListItem] }));
+        yield put(success({ pageIndex: pageIndex + 1 }));
         return;
       }
     }
@@ -161,10 +172,10 @@ export function* flightSaga() {
 
 const initialState = {
   session: null,
-  datas: [],
   loading: false,
   error: null,
   progress: 0,
+  pageIndex: 0,
 };
 
 const flight = handleActions(
