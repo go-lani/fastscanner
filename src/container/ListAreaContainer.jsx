@@ -7,6 +7,7 @@ export default connect(
     progress: state.flight.progress,
     datas: state.flight.datas,
     pageIndex: state.flight.pageIndex,
+    loading: state.flight.loading,
   }),
   dispatch => ({
     getLiveSearch: () => {

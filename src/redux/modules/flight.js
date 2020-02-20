@@ -101,8 +101,6 @@ function* getLiveSearch({ payload }) {
         params,
       });
 
-      // console.log('while', res);
-
       const agentLength = res.Agents.length;
       const compoleteLength = res.Agents.filter(
         agent => agent.Status === 'UpdatesComplete',
@@ -110,12 +108,7 @@ function* getLiveSearch({ payload }) {
 
       yield put(pending(Math.floor((compoleteLength / agentLength) * 100)));
 
-      // console.log('PENDING', res);
-
       if (res.Status === 'UpdatesComplete') {
-        // console.log('COMPLETED');
-        console.log('COMPLETED', res);
-        // console.log(agentLength, compoleteLength);
         const ListItem = [];
 
         res.Itineraries.forEach(itinerary => {
@@ -167,11 +160,8 @@ function* getLiveSearch({ payload }) {
         return;
       }
     }
-
-    // 가공
   } catch (error) {
     yield put(fail(error));
-    console.log(error);
   }
 }
 
