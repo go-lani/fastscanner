@@ -21,7 +21,6 @@ export const createSessionSaga = createAction('GET_SESSION_SAGA');
 
 function* createSession({ payload }) {
   const prevSessionId = yield select(state => state.flight.session);
-  // const datas = yield select(state => state.flight.datas);
   try {
     yield put(pending(0));
     const res = yield call(FlightService.createSession, payload);
@@ -63,13 +62,20 @@ function* getLiveSearch({ payload }) {
 
   function getStops(places, info) {
     return info.Stops.map(stop => {
-      let name = null;
-      places.forEach(place => {
-        if (place.Id === stop) name = place.Name;
-        return name;
-      });
+      const stopInfo = {};
 
-      return name;
+      const { Name: name, ParentId: countryId } = places.find(
+        place => place.Id === stop,
+      );
+
+      const { Name: countryName } = places.find(
+        place => place.Id === countryId,
+      );
+
+      stopInfo.name = name;
+      stopInfo.countryName = countryName;
+
+      return stopInfo;
     });
   }
 
@@ -79,14 +85,13 @@ function* getLiveSearch({ payload }) {
         name: null,
         imgUrl: null,
       };
-      carriers.forEach(carrier => {
-        if (carrier.Id === carrierId) {
-          airline.name = carrier.Name;
-          airline.imgUrl = carrier.ImageUrl;
-        }
 
-        return airline;
-      });
+      const { Name, ImageUrl } = carriers.find(
+        carrier => carrier.Id === carrierId,
+      );
+
+      airline.name = Name;
+      airline.imgUrl = ImageUrl;
 
       return airline;
     });
