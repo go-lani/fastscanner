@@ -28,7 +28,7 @@ export const FilterAreaLayout = styled.section`
 
   ${media.tablet`
     transform: ${({ filterModalVisible }) =>
-      filterModalVisible ? 'translate(0)' : 'translate(100%)'};
+      filterModalVisible ? 'translate(0)' : 'translate(200%)'};
     position: fixed;
     overflow-y: auto;
     padding: 0px 30px;
@@ -46,7 +46,7 @@ export const FilterAreaLayout = styled.section`
 
   ${media.mobile`
     transform: ${({ filterModalVisible }) =>
-      filterModalVisible ? 'translate(0)' : 'translate(100%)'};
+      filterModalVisible ? 'translate(0)' : 'translate(200%)'};
     position: fixed;
     overflow-y: auto;
     padding: 0px 30px;

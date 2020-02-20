@@ -17,6 +17,7 @@
     "react-dates": "^21.8.0",
     "react-dom": "^16.12.0",
     "react-error-boundary": "^1.2.5",
+    "react-infinite-scroller": "^1.2.4",
     "react-redux": "^7.1.3",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",

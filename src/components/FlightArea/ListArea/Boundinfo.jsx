@@ -22,7 +22,7 @@ const Boundinfo = ({
         {AirlinesInfo && (
           <>
             {AirlinesInfo.map(info => (
-              <S.AirlineList>
+              <S.AirlineList key={uuid.v4()}>
                 <img src={info.imgUrl} alt={info.name} />
               </S.AirlineList>
             ))}
