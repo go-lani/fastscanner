@@ -8,7 +8,6 @@ const FlightItem = ({ Outbound, Inbound, price, agentUrl, amount }) => {
     <>
       <S.FlightItem>
         <S.FlightInfo>
-          {/* 바운드 info container에 legId를 던져서 container에서 legId를 검색 */}
           <Boundinfo title="출국정보" info={Outbound} />
           <Boundinfo title="입국정보" info={Inbound} />
         </S.FlightInfo>
@@ -25,13 +24,6 @@ const FlightItem = ({ Outbound, Inbound, price, agentUrl, amount }) => {
             style={{ color: '#fff' }}
             target="_blank"
           />
-          {/* <Button
-            type="button"
-            text="예약하기"
-            size="small"
-            color="blue"
-            image="plane"
-          /> */}
         </S.FlightPrice>
       </S.FlightItem>
     </>

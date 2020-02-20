@@ -56,17 +56,20 @@ export const FlightItem = styled.li`
 
 export const FlightInfo = styled.div`
   width: 100%;
-  padding: 30px 40px;
+  padding: 20px;
+
+  ${media.tablet`
+    padding: 30px;
+  `}
 
   ${media.desktop`
-    padding: 20px 40px;
+    padding: 20px 30px;
     border-right: 1px solid #ededed;
   `}
 `;
 
-export const FlightOutbound = styled.div`
+export const FlightBound = styled.div`
   display: flex;
-  flex-direction: column;
 
   & + & {
     margin: 30px 0 0;
@@ -74,8 +77,12 @@ export const FlightOutbound = styled.div`
     border-top: 1px dotted #ccc;
   }
 
-  ${media.desktop`
-    flex-direction: row;
+  ${media.mobile`
+    flex-direction: column;
+    & + & {
+      margin: 20px 0 0;
+      padding: 20px 0 0;
+    }
   `}
 `;
 
@@ -84,25 +91,39 @@ export const FlightInbound = styled.div`
   margin-top: 10px;
 `;
 
-export const AirlineInfo = styled.div`
+export const AirlineInfo = styled.ul`
   display: flex;
   align-items: center;
-  flex-basis: 20%;
+  flex-wrap: wrap;
+  flex-basis: 10%;
+  margin: 0 10px 0 0;
+
+  ${media.mobile`
+    margin: 0;
+  `}
+`;
+
+export const AirlineList = styled.li`
+  display: block;
+  width: auto;
+  min-width: 60px;
+  height: 35px;
+  margin: 0;
+
+  ${media.mobile`
+    display: inline-block;
+
+    & + & {
+      margin: 0 0 0 20px;
+    }
+  `}
 
   ${media.desktop`
-    margin: 0 40px 0 0;
+    height: 40px;
   `}
 
   img {
-    display: inline-block;
-    width: auto;
-    height: 30px;
-    margin: 0 20px 0 0;
-  }
-
-  span {
-    display: inline-block;
-    font-size: 1.4rem;
+    height: 100%;
   }
 `;
 
@@ -111,19 +132,26 @@ export const FlyInfo = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin: 30px 0 0;
+  margin: 0;
 
-  ${media.desktop`
-    margin: 0;
+  ${media.mobile`
+    margin: 30px 0 0;
   `}
 `;
 
 export const DepartureInfo = styled.div`
   text-align: right;
+  word-break: keep-all;
+`;
+
+export const DepartureDate = styled.p`
+  font-size: 1.4rem;
+  font-weight: 600;
 `;
 
 export const DepartureTime = styled.p`
-  font-size: 1.8rem;
+  margin: 5px 0 0;
+  font-size: 1.6rem;
   font-weight: 600;
 `;
 
@@ -151,6 +179,7 @@ export const FlightTimeInfo = styled.div`
 `;
 
 export const ImgOuter = styled.div`
+  display: block;
   overflow: hidden;
   padding: 0 12px;
 
@@ -159,6 +188,10 @@ export const ImgOuter = styled.div`
     height: 32px;
     animation: ${fly} 3s infinite ease-in-out;
   }
+
+  ${media.mobile`
+    display: none;
+  `}
 `;
 
 export const TimeContainer = styled.div`
@@ -194,11 +227,18 @@ export const StopsInfo = styled.div`
 export const ArriveInfo = styled.div`
   font-size: 1.8rem;
   text-align: left;
+  word-break: keep-all;
+`;
+
+export const ArriveDate = styled.p`
+  font-size: 1.4rem;
+  font-weight: 600;
 `;
 
 export const ArriveTime = styled.p`
+  margin: 5px 0 0;
+  font-size: 1.6rem;
   font-weight: 600;
-  font-size: 1.8rem;
 `;
 
 export const ArrivePlace = styled.p`
