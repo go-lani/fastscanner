@@ -80,7 +80,7 @@ const Button = ({ text, image, ...rest }) => {
     <>
       <StyledButton {...rest}>
         <Span>{text}</Span>
-        <img src={`${images[image]}`} alt={text} />
+        {image && <img src={`${images[image]}`} alt={text} />}
       </StyledButton>
     </>
   );

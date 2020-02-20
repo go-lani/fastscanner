@@ -45,7 +45,7 @@ const Boundinfo = ({
           <S.TimeContainer>
             <span>{`${Math.floor(Duration / 60)}시간${Duration % 60}분`}</span>
             <S.StopsInfo>
-              {StopsName.length
+              {StopsName && StopsName.length
                 ? StopsName.map(item => <i key={uuid.v4()} />)
                 : null}
             </S.StopsInfo>

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import media from '../../../libs/MediaQuery';

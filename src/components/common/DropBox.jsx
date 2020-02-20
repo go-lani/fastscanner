@@ -43,7 +43,9 @@ const StyledArrow = styled.span`
 
 const StyledDropBoxList = styled.ul`
   overflow: hidden;
-  padding: 0 15px;
+  ${({ range }) => css`
+    padding: ${range ? '0 15px' : '0'};
+  `}
   height: 0;
   transition: all 0.3s;
 

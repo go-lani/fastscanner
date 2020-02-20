@@ -35,6 +35,7 @@ export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 
 function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
+  const inboundDate = yield select(state => state.search.inboundDate);
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'x-rapidapi-key': process.env.REACT_APP_SKYSCANNER_API_KEY,
@@ -119,13 +120,19 @@ function* getLiveSearch({ payload }) {
           const outBoundAirlines = getAirLine(res.Carriers, outBoundInfo);
 
           // 입국 정보
-          const inBoundInfo = getInfo(res.Legs, itinerary.InboundLegId);
+          const inBoundInfo = itinerary.InboundLegId
+            ? getInfo(res.Legs, itinerary.InboundLegId)
+            : null;
 
           // 입국 경유지 정보
-          const inBoundStops = getStops(res.Places, inBoundInfo);
+          const inBoundStops = itinerary.InboundLegId
+            ? getStops(res.Places, inBoundInfo)
+            : null;
 
           // 입국 항공기 정보
-          const inBoundAirlines = getAirLine(res.Carriers, inBoundInfo);
+          const inBoundAirlines = itinerary.InboundLegId
+            ? getAirLine(res.Carriers, inBoundInfo)
+            : null;
 
           ListItem.push({
             Outbound: {
@@ -133,11 +140,13 @@ function* getLiveSearch({ payload }) {
               StopsName: outBoundStops,
               AirlinesInfo: outBoundAirlines,
             },
-            Inbound: {
-              ...inBoundInfo,
-              StopsName: inBoundStops,
-              AirlinesInfo: inBoundAirlines,
-            },
+            Inbound: itinerary.InboundLegId
+              ? {
+                  ...inBoundInfo,
+                  StopsName: inBoundStops,
+                  AirlinesInfo: inBoundAirlines,
+                }
+              : null,
             price: Math.floor(itinerary.PricingOptions[0].Price),
             agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
             amount: itinerary.PricingOptions.length,
@@ -152,6 +161,7 @@ function* getLiveSearch({ payload }) {
     // 가공
   } catch (error) {
     yield put(fail(error));
+    console.log(error);
   }
 }
 
