@@ -9,7 +9,7 @@ import useDevice from './hooks/useDevice';
 const ErrorFallbackComponent = ({ error }) => <div>{error.message}</div>;
 
 function App() {
-  const width = useDevice();
+  useDevice();
   return (
     <ErrorBoundary ErrorFallbackComponent={ErrorFallbackComponent}>
       <BrowserRouter>
