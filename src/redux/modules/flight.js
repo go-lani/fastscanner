@@ -118,14 +118,20 @@ function* getLiveSearch({ payload }) {
           // 출국 항공기 정보
           const outBoundAirlines = getAirLine(res.Carriers, outBoundInfo);
 
-          // 입국 정보
-          const inBoundInfo = getInfo(res.Legs, itinerary.InboundLegId);
+          let inBoundInfo = null;
+          let inBoundStops = null;
+          let inBoundAirlines = null;
 
-          // 입국 경유지 정보
-          const inBoundStops = getStops(res.Places, inBoundInfo);
+          if (itinerary.InboundLegId) {
+            // 입국 정보
+            inBoundInfo = getInfo(res.Legs, itinerary.InboundLegId);
 
-          // 입국 항공기 정보
-          const inBoundAirlines = getAirLine(res.Carriers, inBoundInfo);
+            // 입국 경유지 정보
+            inBoundStops = getStops(res.Places, inBoundInfo);
+
+            // 입국 항공기 정보
+            inBoundAirlines = getAirLine(res.Carriers, inBoundInfo);
+          }
 
           ListItem.push({
             Outbound: {

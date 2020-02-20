@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import media from '../../../libs/MediaQuery';
@@ -9,7 +9,7 @@ export const FilterOverlay = styled.div`
   ${media.tablet`
     display: block;
     opacity: ${({ filterAreaState }) => (filterAreaState ? '0.7' : '0')};
-    background-color: #999;
+    background-color: #000;
     z-index: ${({ filterAreaState }) => (filterAreaState ? '250' : '-10')};
     width: 100%;
     height: 100%;

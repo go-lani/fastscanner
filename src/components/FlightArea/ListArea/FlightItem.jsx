@@ -9,7 +9,7 @@ const FlightItem = ({ Outbound, Inbound, price, agentUrl, amount }) => {
       <S.FlightItem>
         <S.FlightInfo>
           <Boundinfo title="출국정보" info={Outbound} />
-          <Boundinfo title="입국정보" info={Inbound} />
+          {Inbound.Id && <Boundinfo title="입국정보" info={Inbound} />}
         </S.FlightInfo>
         <S.FlightPrice>
           <p>총 {amount}건 중 최저가</p>
