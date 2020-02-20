@@ -4,10 +4,12 @@ import ErrorBoundary from 'react-error-boundary';
 import Home from './pages/Home';
 import ResultView from './pages/ResultView';
 import NotFound from './pages/NotFound';
+import useDevice from './hooks/useDevice';
 
 const ErrorFallbackComponent = ({ error }) => <div>{error.message}</div>;
 
 function App() {
+  const width = useDevice();
   return (
     <ErrorBoundary ErrorFallbackComponent={ErrorFallbackComponent}>
       <BrowserRouter>
