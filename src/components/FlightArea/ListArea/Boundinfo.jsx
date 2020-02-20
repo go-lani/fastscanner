@@ -16,32 +16,30 @@ const Boundinfo = ({
     '-',
   )[0];
   return (
-    <S.FlightOutbound>
+    <S.FlightBound>
       <A11yTitle as="p">{title}</A11yTitle>
       <S.AirlineInfo>
-        {AirlinesInfo.length > 1 && (
-          <div>
-            {AirlinesInfo.map(info => (
-              <span key={uuid.v4()}>{info.name}</span>
-            ))}
-          </div>
-        )}
-        {AirlinesInfo.length === 1 && (
+        {AirlinesInfo && (
           <>
-            <img src={AirlinesInfo[0].imgUrl} alt={AirlinesInfo[0].name} />
-            <span>{AirlinesInfo[0].name}</span>
+            {AirlinesInfo.map(info => (
+              <S.AirlineList>
+                <img src={info.imgUrl} alt={info.name} />
+              </S.AirlineList>
+            ))}
           </>
         )}
       </S.AirlineInfo>
       <S.FlyInfo>
         <S.DepartureInfo>
-          <S.DepartureTime>
+          <S.DepartureDate>
             {moment(Departure).format('MMM Do')}
-          </S.DepartureTime>
+          </S.DepartureDate>
           <S.DepartureTime>
             {moment(Departure).format('a h:mm')}
           </S.DepartureTime>
-          <S.DeparturePlace>{departureName}</S.DeparturePlace>
+          <S.DeparturePlace>
+            {title === '출국정보' ? departureName : arrivalName}
+          </S.DeparturePlace>
         </S.DepartureInfo>
         <S.FlightTimeInfo>
           <S.TimeContainer>
@@ -62,12 +60,14 @@ const Boundinfo = ({
           </S.ImgOuter>
         </S.FlightTimeInfo>
         <S.ArriveInfo>
-          <S.ArriveTime>{moment(Arrival).format('MMM Do')}</S.ArriveTime>
+          <S.ArriveDate>{moment(Arrival).format('MMM Do')}</S.ArriveDate>
           <S.ArriveTime>{moment(Arrival).format('a h:mm')}</S.ArriveTime>
-          <S.ArrivePlace>{arrivalName}</S.ArrivePlace>
+          <S.ArrivePlace>
+            {title === '출국정보' ? arrivalName : departureName}
+          </S.ArrivePlace>
         </S.ArriveInfo>
       </S.FlyInfo>
-    </S.FlightOutbound>
+    </S.FlightBound>
   );
 };
 

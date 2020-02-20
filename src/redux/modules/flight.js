@@ -35,7 +35,6 @@ export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 
 function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
-  const datas = yield select(state => state.flight.datas);
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'x-rapidapi-key': process.env.REACT_APP_SKYSCANNER_API_KEY,
@@ -43,8 +42,8 @@ function* getLiveSearch({ payload }) {
   const params = {
     sortType: 'price',
     sortOrder: 'asc',
-    pageIndex: '1',
-    pageSize: '10',
+    pageIndex: '0',
+    pageSize: '50',
   };
 
   function getInfo(legs, id) {
@@ -145,7 +144,7 @@ function* getLiveSearch({ payload }) {
           });
         });
 
-        yield put(success({ datas: [...datas, ...ListItem] }));
+        yield put(success({ datas: ListItem }));
         return;
       }
     }
