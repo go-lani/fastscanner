@@ -35,7 +35,6 @@ export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 
 function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
-  const inboundDate = yield select(state => state.search.inboundDate);
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'x-rapidapi-key': process.env.REACT_APP_SKYSCANNER_API_KEY,
@@ -92,8 +91,6 @@ function* getLiveSearch({ payload }) {
         params,
       });
 
-      // console.log('while', res);
-
       const agentLength = res.Agents.length;
       const compoleteLength = res.Agents.filter(
         agent => agent.Status === 'UpdatesComplete',
@@ -101,12 +98,7 @@ function* getLiveSearch({ payload }) {
 
       yield put(pending(Math.floor((compoleteLength / agentLength) * 100)));
 
-      // console.log('PENDING', res);
-
       if (res.Status === 'UpdatesComplete') {
-        // console.log('COMPLETED');
-        console.log('COMPLETED', res);
-        // console.log(agentLength, compoleteLength);
         const ListItem = [];
 
         res.Itineraries.forEach(itinerary => {
@@ -157,11 +149,8 @@ function* getLiveSearch({ payload }) {
         return;
       }
     }
-
-    // 가공
   } catch (error) {
     yield put(fail(error));
-    console.log(error);
   }
 }
 

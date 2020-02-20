@@ -5,7 +5,7 @@ import * as S from './ListAreaStyled';
 import FlightItem from './FlightItem';
 import A11yTitle from '../../Common/A11yTitle';
 
-const ListArea = ({ datas, progress, setFilterModalVisible }) => {
+const ListArea = ({ datas, loading, progress, setFilterModalVisible }) => {
   const openFilterArea = () => {
     setFilterModalVisible(true);
   };
@@ -26,8 +26,10 @@ const ListArea = ({ datas, progress, setFilterModalVisible }) => {
         </li>
       </S.CategoryTab>
       <S.FlightList>
-        {datas && datas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
-        {!datas && '해당하는 결과가 없습니다.'}
+        {!loading &&
+          datas &&
+          datas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
+        {!loading && !datas && '해당하는 결과가 없습니다.'}
       </S.FlightList>
     </S.ListLayout>
   );
