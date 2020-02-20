@@ -8,9 +8,10 @@ export const FilterOverlay = styled.div`
 
   ${media.tablet`
     display: block;
-    opacity: ${({ filterAreaState }) => (filterAreaState ? '0.7' : '0')};
-    background-color: #999;
-    z-index: ${({ filterAreaState }) => (filterAreaState ? '250' : '-10')};
+    opacity: ${({ filterModalVisible }) => (filterModalVisible ? '0.6' : '0')};
+    background-color: #000;
+    z-index: ${({ filterModalVisible }) =>
+      filterModalVisible ? '250' : '-10'};
     width: 100%;
     height: 100%;
     position: fixed;
@@ -26,10 +27,11 @@ export const FilterAreaLayout = styled.section`
   padding: 20px 30px;
 
   ${media.tablet`
-    transform: ${({ filterAreaState }) =>
-      filterAreaState ? 'translate(0)' : 'translate(100%)'};
+    transform: ${({ filterModalVisible }) =>
+      filterModalVisible ? 'translate(0)' : 'translate(100%)'};
     position: fixed;
     overflow-y: auto;
+    padding: 0px 30px;
     right: 0;
     top: 0;
     width: 100%;
@@ -37,15 +39,17 @@ export const FilterAreaLayout = styled.section`
     height: 100%;
     z-index: 300;
     background-color: #fff;
-    box-shadow: ${({ filterAreaState }) =>
-      filterAreaState ? '5px 0 20px 5px #666' : 0};
+    box-shadow: ${({ filterModalVisible }) =>
+      filterModalVisible ? '5px 0 20px 5px #333' : 0};
     transition: transform .2s ease;
   `}
+
   ${media.mobile`
-    transform: ${({ filterAreaState }) =>
-      filterAreaState ? 'translate(0)' : 'translate(100%)'};
+    transform: ${({ filterModalVisible }) =>
+      filterModalVisible ? 'translate(0)' : 'translate(100%)'};
     position: fixed;
     overflow-y: auto;
+    padding: 0px 30px;
     left: 0;
     right: 0;
     top: 0;
@@ -60,11 +64,10 @@ export const FilterHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 10px 0 20px;
-  width: 100%;
-  height: 5rem;
   border-bottom: 2px solid #eee;
-  font-size: 1.6rem;
+  padding: 20px 30px;
+  margin: 0 -30px 10px -30px;
+  font-size: 1.8rem;
   font-weight: 700;
 
   ${media.desktop`
