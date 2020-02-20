@@ -36,14 +36,10 @@ const boxSizeStyle = css`
   `}
 `;
 
-const StyledCheckBoxWrapper = styled.div`
-  margin: 10px 0;
-`;
-
 const StyledLabel = styled.label`
   ${fontSizeStyle};
+  display: inline-block;
   color: ${({ labelColor }) => labelColor || 'inherit'};
-  padding-left: 5px;
   ${({ isDisable }) =>
     isDisable &&
     css`
@@ -61,6 +57,7 @@ const StyledCheckbox = styled.input`
   box-shadow: none;
   background-image: url('/images/checkbox.png');
   background-position-y: center;
+  margin-right: 5px;
   cursor: pointer;
   :checked {
     background-image: url('/images/checkbox.png');
@@ -83,7 +80,12 @@ const CheckBox = ({
   labelColor,
 }) => {
   return (
-    <StyledCheckBoxWrapper>
+    <StyledLabel
+      htmlFor={id}
+      size={size}
+      labelColor={labelColor}
+      isDisable={isDisable || false}
+    >
       <StyledCheckbox
         type="checkbox"
         id={id}
@@ -92,15 +94,8 @@ const CheckBox = ({
         onChange={onChange}
         disabled={isDisable || false}
       />
-      <StyledLabel
-        htmlFor={id}
-        size={size}
-        labelColor={labelColor}
-        isDisable={isDisable || false}
-      >
-        {label}
-      </StyledLabel>
-    </StyledCheckBoxWrapper>
+      {label}
+    </StyledLabel>
   );
 };
 

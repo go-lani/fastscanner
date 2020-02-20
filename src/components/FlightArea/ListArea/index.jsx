@@ -5,9 +5,9 @@ import * as S from './ListAreaStyled';
 import FlightItem from './FlightItem';
 import A11yTitle from '../../Common/A11yTitle';
 
-const ListArea = ({ datas, progress, setFilterAreaState }) => {
+const ListArea = ({ datas, progress, setFilterModalVisible }) => {
   const openFilterArea = () => {
-    setFilterAreaState(true);
+    setFilterModalVisible(true);
   };
   return (
     <S.ListLayout>
