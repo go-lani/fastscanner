@@ -4,11 +4,19 @@ import uuid from 'uuid';
 import * as S from './ListAreaStyled';
 import FlightItem from './FlightItem';
 import A11yTitle from '../../Common/A11yTitle';
+import InfiniteScroller from 'react-infinite-scroller';
 
-const ListArea = ({ datas, progress, setFilterModalVisible }) => {
+const ListArea = ({
+  datas,
+  progress,
+  setFilterModalVisible,
+  getLiveSearch,
+  pageIndex,
+}) => {
   const openFilterArea = () => {
     setFilterModalVisible(true);
   };
+
   return (
     <S.ListLayout>
       <A11yTitle>항공권 검색 결과</A11yTitle>
@@ -26,8 +34,14 @@ const ListArea = ({ datas, progress, setFilterModalVisible }) => {
         </li>
       </S.CategoryTab>
       <S.FlightList>
-        {datas && datas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
-        {!datas && '해당하는 결과가 없습니다.'}
+        <InfiniteScroller
+          loadMore={() => getLiveSearch()}
+          hasMore={!!pageIndex}
+          loader={<div key={uuid.v4()}> loading....</div>}
+        >
+          {datas && datas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
+          {!datas && '해당하는 결과가 없습니다.'}
+        </InfiniteScroller>
       </S.FlightList>
     </S.ListLayout>
   );

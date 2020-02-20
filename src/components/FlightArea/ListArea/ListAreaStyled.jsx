@@ -4,6 +4,7 @@ import media from '../../../libs/MediaQuery';
 export const ListLayout = styled.section`
   flex-basis: 80vw;
   min-height: 100vh;
+  height: auto;
   background: #fff;
   padding: 20px 4% 20px 20px;
 `;
