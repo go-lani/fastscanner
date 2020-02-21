@@ -51,6 +51,10 @@ const SearchArea = ({
     const originCode = originPlace.slice(0, -4).toLowerCase();
     const destinationCode =
       destinationPlace && destinationPlace.slice(0, -4).toLowerCase();
+
+    if (originCode === destinationCode)
+      return alert('출발지와 도착지가 같으면 검색이 불가능합니다.');
+
     const outboundCode = outboundDate
       .split('-')
       .join('')

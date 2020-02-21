@@ -43,7 +43,8 @@ const Boundinfo = ({
         </S.DepartureInfo>
         <S.FlightTimeInfo>
           <S.TimeContainer>
-            <span>{`${Math.floor(Duration / 60)}시간${Duration % 60}분`}</span>
+            <S.DurationText>{`${Math.floor(Duration / 60)}시간${Duration %
+              60}분`}</S.DurationText>
             <S.StopsInfo>
               {StopsInfo && StopsInfo.length
                 ? StopsInfo.map(item => <i key={uuid.v4()} />)
@@ -51,17 +52,19 @@ const Boundinfo = ({
             </S.StopsInfo>
             {StopsInfo.length ? (
               <>
-                <div>{StopsInfo.length}회 경유</div>
-                <div>
-                  {StopsInfo.map(stopInfo => (
-                    <div key={uuid.v4()}>
-                      {stopInfo.name}, {stopInfo.countryName}
-                    </div>
-                  ))}
-                </div>
+                <S.StopsDetail>
+                  <S.StopsText>{StopsInfo.length}회 경유</S.StopsText>
+                  <ul>
+                    {StopsInfo.map(stopInfo => (
+                      <li key={uuid.v4()}>
+                        {`${stopInfo.name}, ${stopInfo.countryName}`}
+                      </li>
+                    ))}
+                  </ul>
+                </S.StopsDetail>
               </>
             ) : (
-              <span>직항</span>
+              <S.StopsText>직항</S.StopsText>
             )}
           </S.TimeContainer>
           <S.ImgOuter>

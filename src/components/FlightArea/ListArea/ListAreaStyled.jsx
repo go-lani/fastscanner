@@ -194,11 +194,12 @@ export const ImgOuter = styled.div`
 `;
 
 export const TimeContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
   margin: 0 10px 0 0;
+`;
+
+export const DurationText = styled.p`
+  font-size: 1.3rem;
 `;
 
 export const StopsInfo = styled.div`
@@ -218,9 +219,54 @@ export const StopsInfo = styled.div`
     height: 5px;
     border-radius: 50%;
     margin: 0 5px;
-    background: red;
+    background: #ff0000;
     box-shadow: 0 0 0 0.3rem #fff;
   }
+`;
+
+export const StopsDetail = styled.div`
+  position: relative;
+  cursor: pointer;
+
+  ul {
+    display: none;
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 50%;
+    min-width: 100%;
+    padding: 10px;
+    transform: translateX(-50%);
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 5px #eee;
+
+    li {
+      padding: 0 0 0 25px;
+      white-space: nowrap;
+      font-weight: 500;
+      font-size: 1.3rem;
+      margin: 10px 0 0;
+      text-align: left;
+      background: url('/images/flight.png') left center no-repeat;
+      background-size: contain;
+      &:first-child {
+        margin: 0;
+      }
+    }
+  }
+
+  &:hover {
+    ul {
+      display: inline-block;
+    }
+  }
+`;
+
+export const StopsText = styled.p`
+  position: relative;
+  font-size: 1.2rem;
+  color: #ff0000;
 `;
 
 export const ArriveInfo = styled.div`

@@ -52,7 +52,7 @@ const ListArea = ({
           loader={<div key={uuid.v4()}> loading....</div>}
         >
           {datas && datas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
-          {datas && !datas.length && '해당하는 결과가 없습니다.'}
+          {datas && !loading && !datas.length && '해당하는 결과가 없습니다.'}
         </InfiniteScroller>
       </S.FlightList>
     </S.ListLayout>
