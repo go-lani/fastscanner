@@ -1,22 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as S from './FilterAreaStyled';
 import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
 import A11yTitle from '../../Common/A11yTitle';
 import useTime from '../../../hooks/useTime';
-import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 function valuetext(value) {
   return `${Math.floor(value[0] / 2)}시 ${value[1] / 2 ? '30' : '00'}분`;
 }
 
+function durationValueText(value) {
+  return `${Math.floor(value / 60)}시 ${value % 60}분`;
+}
+
 const FilterArea = React.memo(
-  ({ filterModalVisible, setFilterModalVisible, direct, via, selectWays }) => {
+  ({
+    filterModalVisible,
+    setFilterModalVisible,
+    originDatas,
+    changeFilterDatas,
+    direct,
+    via,
+    selectWays,
+  }) => {
     const [outboundTime, setOutboundTime] = useState([0, 48]);
     const [inboundTime, setInboundTime] = useState([0, 48]);
     const [durationTime, setDurationTime] = useState(1000);
-    const [outboundStartTime, outboundEndTime] = useTime(outboundTime);
-    const [inboundStartTime, inboundEndTime] = useTime(inboundTime);
+    const [minDuration, setMinDuration] = useState(null);
+    const [maxDuration, setMaxDuration] = useState(null);
+    const [
+      outboundStartTime,
+      outboundStartFormat,
+      outboundEndTime,
+      outboundEndFormat,
+    ] = useTime(outboundTime);
+    const [
+      inboundStartTime,
+      inboundStartFormat,
+      inboundEndTime,
+      inboundEndFormat,
+    ] = useTime(inboundTime);
+
+    useEffect(() => {
+      if (originDatas && originDatas.length) {
+        if (originDatas.map(originData => originData.Inbound)[0] !== null) {
+          const roundDurations = originDatas.map(
+            originData =>
+              originData.Outbound.Duration + originData.Inbound.Duration,
+          );
+          setMinDuration(Math.min(...roundDurations));
+          setMaxDuration(Math.max(...roundDurations));
+        } else {
+          const onewayDurations = originDatas.map(
+            originData => originData.Outbound.Duration,
+          );
+          setMinDuration(Math.min(...onewayDurations));
+          setMaxDuration(Math.max(...onewayDurations));
+        }
+      }
+    }, [maxDuration, originDatas]);
+
+    useEffect(() => {
+      setDurationTime(maxDuration);
+    }, [maxDuration]);
 
     // const stops = useSelector(state => state.search.stops);
 
@@ -32,6 +80,36 @@ const FilterArea = React.memo(
       setDurationTime(newValue);
     };
 
+    const handleChangeDurationDatas = (event, newValue) => {
+      if (originDatas.map(originData => originData.Inbound)[0] !== null) {
+        console.log(
+          originDatas.filter(
+            originData =>
+              originData.Outbound.Duration + originData.Inbound.Duration <=
+              newValue,
+          ),
+        );
+        changeFilterDatas(
+          originDatas.filter(
+            originData =>
+              originData.Outbound.Duration + originData.Inbound.Duration <=
+              newValue,
+          ),
+        );
+      } else {
+        console.log(
+          originDatas.filter(
+            originData => originData.Outbound.Duration <= newValue,
+          ),
+        );
+        changeFilterDatas(
+          originDatas.filter(
+            originData => originData.Outbound.Duration <= newValue,
+          ),
+        );
+      }
+    };
+
     const closeFilterArea = () => {
       setFilterModalVisible(false);
     };
@@ -39,6 +117,30 @@ const FilterArea = React.memo(
     const setWays = e => {
       selectWays(e.target.id, e.target.checked);
     };
+
+    useEffect(() => {
+      if (originDatas && originDatas.length) {
+        const selectOutboundStartTime = outboundStartFormat.split(':').join('');
+        const selectOutboundEndTime = outboundEndFormat.split(':').join('');
+
+        const filterData = originDatas.filter(data => {
+          return selectOutboundStartTime <
+            moment(data.Outbound.Departure)
+              .format('kk:mm')
+              .split(':')
+              .join('') &&
+            selectOutboundEndTime >
+              +moment(data.Outbound.Departure)
+                .format('kk:mm')
+                .split(':')
+                .join('')
+            ? data
+            : null;
+        });
+        // console.log('filterData', filterData);
+      }
+      // console.log('originDatas', originDatas);
+    }, [originDatas, outboundEndFormat, outboundStartFormat]);
 
     return (
       <>
@@ -79,6 +181,7 @@ const FilterArea = React.memo(
               <S.DropItem>
                 <S.DropTitleBox>
                   <S.DropTitle>가는날 출발시간</S.DropTitle>
+                  <p>{`${outboundStartFormat} - ${outboundEndFormat}`}</p>
                   <p>{`${outboundStartTime} - ${outboundEndTime}`}</p>
                 </S.DropTitleBox>
                 <S.RangeSlider
@@ -93,6 +196,7 @@ const FilterArea = React.memo(
               <S.DropItem>
                 <S.DropTitleBox>
                   <S.DropTitle>오는날 출발시간</S.DropTitle>
+                  <p>{`${inboundStartFormat} - ${inboundEndFormat}`}</p>
                   <p>{`${inboundStartTime} - ${inboundEndTime}`}</p>
                 </S.DropTitleBox>
                 <S.RangeSlider
@@ -109,12 +213,19 @@ const FilterArea = React.memo(
               <S.DropItem>
                 <S.DropTitleBox>
                   <S.DropTitle>총 소요시간</S.DropTitle>
+                  <p>{`${Math.floor(minDuration / 60)}시간 ${minDuration %
+                    60}분 - ${Math.floor(
+                    durationTime / 60,
+                  )}시간 ${durationTime % 60}분`}</p>
                 </S.DropTitleBox>
                 <S.RangeSlider
-                  value={durationTime}
+                  value={durationTime || 1000}
+                  getAriaValueText={durationValueText}
                   onChange={handleChangeDuration}
-                  min={0}
-                  max={1000}
+                  onChangeCommitted={handleChangeDurationDatas}
+                  step={60}
+                  min={minDuration || 0}
+                  max={maxDuration || 1000}
                 />
               </S.DropItem>
             </DropBox>

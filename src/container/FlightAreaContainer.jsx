@@ -4,6 +4,7 @@ import {
   createSessionSaga,
   getLiveSearchSaga,
   setFilterWaySaga,
+  filterLiveSearchSaga,
 } from '../redux/modules/flight';
 
 export default connect(
@@ -11,6 +12,7 @@ export default connect(
     session: state.flight.session,
     direct: state.flight.filter.direct,
     via: state.flight.filter.via,
+    originDatas: state.flight.originDatas,
   }),
 
   dispatch => ({
@@ -24,6 +26,9 @@ export default connect(
     selectWays: (id, status) => {
       console.log(id, status);
       dispatch(setFilterWaySaga({ id, status }));
+    },
+    changeFilterDatas: filterDatas => {
+      dispatch(filterLiveSearchSaga(filterDatas));
     },
   }),
 )(FlightArea);

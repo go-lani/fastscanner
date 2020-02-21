@@ -22,6 +22,8 @@ const FlightArea = ({
   session,
   createSession,
   getLiveSearch,
+  originDatas,
+  changeFilterDatas,
   direct,
   via,
   selectWays,
@@ -69,6 +71,8 @@ const FlightArea = ({
       <FilterArea
         filterModalVisible={filterModalVisible}
         setFilterModalVisible={setFilterModalVisible}
+        originDatas={originDatas}
+        changeFilterDatas={changeFilterDatas}
         selectWays={selectWays}
         direct={direct}
         via={via}
