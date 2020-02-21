@@ -65,7 +65,6 @@ const OptionPopup = ({
   return (
     <>
       <S.OptionPopupWrapper isOpen={isOpen}>
-        <S.Triangle />
         <S.OptionPopup>
           <S.CategoryTitle>좌석 등급</S.CategoryTitle>
           {selectClass() ? (
