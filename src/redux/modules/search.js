@@ -287,7 +287,7 @@ export const setStopsSelectSaga = createAction('SET_STOPS_SELECT_SAGA');
 function* selectStopsSaga({ payload }) {
   try {
     yield put(pending());
-    yield put(success({ stops: payload }));
+    yield put(success({ nonStops: payload }));
   } catch (error) {
     yield put(fail(error));
   }
@@ -325,7 +325,7 @@ const initialState = {
   cabinClass: 'economy',
   children: 0,
   infants: 0,
-  stops: false,
+  nonStops: false,
   loading: false,
   error: null,
   way: 'round',

@@ -21,7 +21,7 @@ export const createSessionSaga = createAction('GET_SESSION_SAGA');
 
 function* createSession({ payload }) {
   const prevSessionId = yield select(state => state.flight.session);
-  const stops = yield select(state => state.search.stops);
+  const nonStops = yield select(state => state.search.nonStops);
 
   try {
     yield put(
@@ -33,7 +33,7 @@ function* createSession({ payload }) {
         },
         filter: {
           direct: true,
-          via: stops ? false : true,
+          via: nonStops ? false : true,
         },
       }),
     );
@@ -270,7 +270,7 @@ export const filterLiveSearchSaga = createAction('FILTER_LIVERSEARCH_SAGA');
 
 function* filterLiveSearch({ payload }) {
   const originDatas = yield select(state => state.flight.originDatas);
-  const stops = yield select(state => state.flight.stops);
+  const nonStops = yield select(state => state.flight.nonStops);
   try {
     yield put(pending());
     yield put(success({ filterDatas: payload }));

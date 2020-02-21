@@ -66,8 +66,6 @@ const FilterArea = React.memo(
       setDurationTime(maxDuration);
     }, [maxDuration]);
 
-    // const stops = useSelector(state => state.search.stops);
-
     const handleChangeOutbound = (event, newValue) => {
       setOutboundTime(newValue);
     };

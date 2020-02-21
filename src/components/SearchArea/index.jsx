@@ -24,7 +24,7 @@ const SearchArea = ({
   adults,
   children,
   infants,
-  stops,
+  nonStops,
   changeWay,
   selectStops,
   searchOrigin,
@@ -72,7 +72,7 @@ const SearchArea = ({
       cabinclass: cabinClass,
       infants: 0,
       rtn: way === 'round' ? 1 : 0,
-      preferdirects: stops,
+      preferdirects: nonStops,
     });
 
     if (way === 'round') {
@@ -121,7 +121,7 @@ const SearchArea = ({
             id="nonstop"
             size="large"
             onChange={checkNonstops}
-            checked={stops}
+            checked={nonStops}
           />
           <Button
             type="button"
