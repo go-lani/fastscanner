@@ -1,20 +1,37 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import media from '../../../libs/MediaQuery';
+import { lighten, withStyles } from '@material-ui/core/styles';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 export const ListLayout = styled.section`
   flex-basis: 80vw;
   background: #fff;
-  padding: 20px 4% 20px 20px;
+  padding: 10px 4% 20px 20px;
 `;
 
-export const FilterButton = styled.button`
-  display: block;
-  padding: 10px 20px;
+// Flight Category Tab
+export const TabUi = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0 15px 0;
+
+  ${media.desktop`
+  padding: 5px 0 10px 0;
+  `}
+`;
+
+export const CategoryTab = styled.ul`
+  display: flex;
+`;
+
+export const TabButton = styled.button`
+  /* padding: 10px;
   color: #0288d1;
   font-size: 1.6rem;
   font-weight: 700;
   border: 2px solid #eee;
   border-radius: 5px;
+
   &:hover {
     border: 2px solid #0288d1;
   }
@@ -22,14 +39,68 @@ export const FilterButton = styled.button`
   ${media.desktop`
     display: none;
   `}
+
+  ${media.mobile`
+    font-size: 1.2rem;
+    font-weight: 700;
+    word-break: keep-all;
+    `} */
 `;
 
-// Flight Category Tab
-export const CategoryTab = styled.ul``;
+export const FilterButton = styled.button`
+  /* display: block; */
+  padding: 10px 20px;
+  color: #0288d1;
+  font-size: 1.6rem;
+  font-weight: 700;
+  border: 2px solid #eee;
+  border-radius: 5px;
 
-export const FlightList = styled.ul``;
+  &:hover {
+    border: 2px solid #0288d1;
+  }
+
+  ${media.desktop`
+    display: none;
+  `}
+
+  ${media.mobile`
+    padding: 10px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    word-break: keep-all;
+  `}
+`;
+
+// progress
+export const ProgressBox = styled.div`
+  ${props =>
+    props.loading
+      ? css`
+          opacity: 0;
+        `
+      : css`
+          opacity: 1;
+        `}
+
+  transition: opacity 1s ease-out;
+`;
+
+export const Progress = withStyles({
+  root: {
+    height: 6,
+    borderRadius: 20,
+    backgroundColor: lighten('#ededed', 0),
+  },
+  bar: {
+    borderRadius: 20,
+    backgroundColor: '#0288d1',
+  },
+})(LinearProgress);
 
 // Flight 리스트
+export const FlightList = styled.ul``;
+
 export const FlightItem = styled.li`
   display: flex;
   justify-content: space-between;

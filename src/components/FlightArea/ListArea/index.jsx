@@ -1,6 +1,5 @@
 import React from 'react';
 import uuid from 'uuid';
-import { LinearProgress } from '@material-ui/core';
 import FlightItem from './FlightItem';
 import A11yTitle from '../../Common/A11yTitle';
 import Loader from './Loader';
@@ -28,23 +27,27 @@ const ListArea = ({
   const openFilterArea = () => {
     setFilterModalVisible(true);
   };
-
+  console.log(typeof progress);
   return (
     <S.ListLayout>
       <A11yTitle>항공권 검색 결과</A11yTitle>
-      <LinearProgress variant="determinate" value={progress} />
-      <S.FilterButton onClick={openFilterArea}>필터(조건)</S.FilterButton>
-      <S.CategoryTab>
-        <li>
-          <button>최저가</button>
-        </li>
-        <li>
-          <button>최단여행시간</button>
-        </li>
-        <li>
-          <button>추천순</button>
-        </li>
-      </S.CategoryTab>
+      <S.ProgressBox loading={pageIndex}>
+        <S.Progress variant="determinate" value={progress} />
+      </S.ProgressBox>
+      <S.TabUi>
+        <S.CategoryTab>
+          <li>
+            <S.FilterButton>최저가</S.FilterButton>
+          </li>
+          <li>
+            <S.FilterButton>최단 여행시간</S.FilterButton>
+          </li>
+          <li>
+            <S.FilterButton>추천순</S.FilterButton>
+          </li>
+        </S.CategoryTab>
+        <S.FilterButton onClick={openFilterArea}>필터 (조건)</S.FilterButton>
+      </S.TabUi>
       <S.FlightList>
         {loading && !pageIndex && loaderRender}
         <InfiniteScroller
