@@ -4,18 +4,21 @@ import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
 import A11yTitle from '../../Common/A11yTitle';
 import useTime from '../../../hooks/useTime';
+import { useEffect } from 'react';
 
 function valuetext(value) {
   return `${Math.floor(value[0] / 2)}시 ${value[1] / 2 ? '30' : '00'}분`;
 }
 
 const FilterArea = React.memo(
-  ({ filterModalVisible, setFilterModalVisible }) => {
+  ({ filterModalVisible, setFilterModalVisible, direct, via, selectWays }) => {
     const [outboundTime, setOutboundTime] = useState([0, 48]);
     const [inboundTime, setInboundTime] = useState([0, 48]);
     const [durationTime, setDurationTime] = useState(1000);
     const [outboundStartTime, outboundEndTime] = useTime(outboundTime);
     const [inboundStartTime, inboundEndTime] = useTime(inboundTime);
+
+    // const stops = useSelector(state => state.search.stops);
 
     const handleChangeOutbound = (event, newValue) => {
       setOutboundTime(newValue);
@@ -31,6 +34,10 @@ const FilterArea = React.memo(
 
     const closeFilterArea = () => {
       setFilterModalVisible(false);
+    };
+
+    const setWays = e => {
+      selectWays(e.target.id, e.target.checked);
     };
 
     return (
@@ -50,10 +57,22 @@ const FilterArea = React.memo(
           <S.DropBoxList>
             <DropBox title="경유">
               <S.DropItem>
-                <CheckBox size="medium" label="직항" id="nonstopp" />
+                <CheckBox
+                  size="medium"
+                  label="직항"
+                  id="direct"
+                  checked={direct}
+                  onChange={setWays}
+                />
               </S.DropItem>
               <S.DropItem>
-                <CheckBox size="medium" label="경유" id="nonstopp2" />
+                <CheckBox
+                  size="medium"
+                  label="경유"
+                  id="via"
+                  checked={via}
+                  onChange={setWays}
+                />
               </S.DropItem>
             </DropBox>
             <DropBox title="출발 시간대 설정" range={true}>

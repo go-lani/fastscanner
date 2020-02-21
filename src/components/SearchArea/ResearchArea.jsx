@@ -38,8 +38,8 @@ const ResearchArea = ({
     } = query;
 
     // 직항 & 경유 초기세팅
-    if (preferdirects === 'true') selectStops(0);
-    else selectStops(1);
+    if (preferdirects === 'true') selectStops(true);
+    else selectStops(false);
 
     if (+rtn) {
       const [originPlace, destinationPlace, outboundDate, inboundDate] = path;

@@ -21,6 +21,8 @@ export const createSessionSaga = createAction('GET_SESSION_SAGA');
 
 function* createSession({ payload }) {
   const prevSessionId = yield select(state => state.flight.session);
+  const stops = yield select(state => state.search.stops);
+
   try {
     yield put(
       pending({
@@ -29,14 +31,18 @@ function* createSession({ payload }) {
           all: 0,
           complete: 0,
         },
+        filter: {
+          direct: true,
+          via: stops ? false : true,
+        },
       }),
     );
     const res = yield call(FlightService.createSession, payload);
     const sessionId = res.headers.location.split('/').pop();
 
     if (prevSessionId !== sessionId) {
-      yield put(success({ originDatas: [] }));
-      yield put(success({ pageIndex: 0 }));
+      yield put(success({ originDatas: [], pageIndex: 0 }));
+      // yield put(success({ pageIndex: 0 }));
     }
     yield put(success({ session: sessionId }));
   } catch (error) {
@@ -229,6 +235,37 @@ function* renderLiveSearch({ payload }) {
 }
 
 // 필터 데이터
+
+export const setFilterWaySaga = createAction('SET_FILTERWAY_SAGA');
+
+function* setFilterWay({ payload }) {
+  const filter = yield select(state => state.flight.filter);
+  try {
+    yield put(pending());
+    if (payload.id === 'direct') {
+      yield put(
+        success({
+          filter: {
+            ...filter,
+            direct: payload.status,
+          },
+        }),
+      );
+    } else {
+      yield put(
+        success({
+          filter: {
+            ...filter,
+            via: payload.status,
+          },
+        }),
+      );
+    }
+  } catch (error) {
+    yield put(fail(error));
+  }
+}
+
 export const filterLiveSearchSaga = createAction('FILTER_LIVERSEARCH_SAGA');
 
 function* filterLiveSearch({ payload }) {
@@ -240,6 +277,7 @@ export function* flightSaga() {
   yield takeLatest('GET_LIVESEARCH_SAGA', getLiveSearch);
   yield takeLatest('RENDER_LIVESEARCH_SAGA', renderLiveSearch);
   yield takeLatest('FILTER_LIVESEARCH_SAGA', filterLiveSearch);
+  yield takeLatest('SET_FILTERWAY_SAGA', setFilterWay);
 }
 
 const initialState = {
@@ -252,6 +290,10 @@ const initialState = {
     complete: 0,
   },
   pageIndex: 0,
+  filter: {
+    direct: 0,
+    via: 0,
+  },
 };
 
 const flight = handleActions(

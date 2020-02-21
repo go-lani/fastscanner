@@ -325,7 +325,7 @@ const initialState = {
   cabinClass: 'economy',
   children: 0,
   infants: 0,
-  stops: 1,
+  stops: false,
   loading: false,
   error: null,
   way: 'round',
