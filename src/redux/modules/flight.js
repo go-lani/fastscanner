@@ -22,7 +22,15 @@ export const createSessionSaga = createAction('GET_SESSION_SAGA');
 function* createSession({ payload }) {
   const prevSessionId = yield select(state => state.flight.session);
   try {
-    yield put(pending(0));
+    yield put(
+      pending({
+        progress: {
+          per: 0,
+          all: 0,
+          complete: 0,
+        },
+      }),
+    );
     const res = yield call(FlightService.createSession, payload);
     const sessionId = res.headers.location.split('/').pop();
 
@@ -53,7 +61,7 @@ function* getLiveSearch({ payload }) {
     sortType: 'price',
     sortOrder: 'asc',
     pageIndex: `${pageIndex}`,
-    pageSize: '5',
+    pageSize: '999',
   };
 
   function getInfo(legs, id) {
@@ -100,7 +108,15 @@ function* getLiveSearch({ payload }) {
 
   try {
     if (!session || pageIndex === 'lastIndex') return yield put(success());
-    yield put(pending(0));
+    yield put(
+      pending({
+        progress: {
+          per: 0,
+          all: 0,
+          complete: 0,
+        },
+      }),
+    );
 
     while (true) {
       const res = yield call(FlightService.getLiveData, {
@@ -110,11 +126,19 @@ function* getLiveSearch({ payload }) {
       });
 
       const agentLength = res.Agents.length;
-      const compoleteLength = res.Agents.filter(
+      const completeLength = res.Agents.filter(
         agent => agent.Status === 'UpdatesComplete',
       ).length;
 
-      yield put(pending(Math.floor((compoleteLength / agentLength) * 100)));
+      yield put(
+        pending({
+          progress: {
+            per: Math.floor((completeLength / agentLength) * 100),
+            all: agentLength,
+            complete: completeLength,
+          },
+        }),
+      );
 
       if (res.Status === 'UpdatesComplete') {
         const ListItem = [];
@@ -194,7 +218,11 @@ const initialState = {
   session: null,
   loading: false,
   error: null,
-  progress: 0,
+  progress: {
+    per: 0,
+    all: 0,
+    complete: 0,
+  },
   pageIndex: 0,
 };
 
@@ -202,9 +230,9 @@ const flight = handleActions(
   {
     PENDING: (state, action) => ({
       ...state,
+      ...action.payload,
       loading: true,
       error: null,
-      progress: action.payload,
     }),
     SUCCESS: (state, action) => {
       return {

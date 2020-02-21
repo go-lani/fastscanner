@@ -6,6 +6,7 @@ import Loader from './Loader';
 import * as S from './ListAreaStyled';
 import InfiniteScroller from 'react-infinite-scroller';
 import Loading from './Loading';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const loaderRender = (() => {
   const loaderGroup = [];
@@ -27,12 +28,17 @@ const ListArea = ({
   const openFilterArea = () => {
     setFilterModalVisible(true);
   };
-  console.log(typeof progress);
   return (
     <S.ListLayout>
       <A11yTitle>항공권 검색 결과</A11yTitle>
       <S.ProgressBox loading={pageIndex}>
-        <S.Progress variant="determinate" value={progress} />
+        <S.ProgressTextBox>
+          <CircularProgress disableShrink size={20} />
+          <S.ProgressText>
+            ({progress.all}개의 항공사중 {progress.complete}개 확인)
+          </S.ProgressText>
+        </S.ProgressTextBox>
+        <S.Progress variant="determinate" value={progress.per} />
       </S.ProgressBox>
       <S.TabUi>
         <S.CategoryTab>
@@ -50,14 +56,14 @@ const ListArea = ({
       </S.TabUi>
       <S.FlightList>
         {loading && !pageIndex && loaderRender}
-        <InfiniteScroller
+        {/* <InfiniteScroller
           loadMore={() => getLiveSearch()}
           hasMore={!!pageIndex && pageIndex !== 'lastIndex'}
           loader={<Loading key={uuid.v4()} />}
         >
           {datas && datas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
           {datas && !loading && !datas.length && '해당하는 결과가 없습니다.'}
-        </InfiniteScroller>
+        </InfiniteScroller> */}
       </S.FlightList>
     </S.ListLayout>
   );

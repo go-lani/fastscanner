@@ -86,6 +86,31 @@ export const ProgressBox = styled.div`
   transition: opacity 1s ease-out;
 `;
 
+const twincle = keyframes`
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+`;
+
+export const ProgressTextBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0 0 10px;
+`;
+
+export const ProgressText = styled.p`
+  margin: 0 0 0 10px;
+  font-size: 1.4rem;
+  animation: ${twincle} infinite 2s linear;
+`;
+
 export const Progress = withStyles({
   root: {
     height: 6,
