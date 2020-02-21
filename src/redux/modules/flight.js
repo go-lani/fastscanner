@@ -220,7 +220,7 @@ function* renderLiveSearch({ payload }) {
     yield put(
       success({
         renderDatas: [...renderDatas, ...newDatas],
-        pageIndex: !newDatas.length < 5 ? pageIndex + 1 : 'lastIndex`',
+        pageIndex: !newDatas.length < 5 ? pageIndex + 1 : 'lastIndex',
       }),
     );
   } catch (error) {
@@ -233,13 +233,19 @@ export const filterLiveSearchSaga = createAction('FILTER_LIVERSEARCH_SAGA');
 
 function* filterLiveSearch({ payload }) {
   const stops = yield select(state => state.flight.stops);
+  try {
+    yield put(pending());
+    yield put(success({ filterDatas: payload }));
+  } catch (error) {
+    yield put(fail(error));
+  }
 }
 
 export function* flightSaga() {
   yield takeLatest('GET_SESSION_SAGA', createSession);
   yield takeLatest('GET_LIVESEARCH_SAGA', getLiveSearch);
   yield takeLatest('RENDER_LIVESEARCH_SAGA', renderLiveSearch);
-  yield takeLatest('FILTER_LIVESEARCH_SAGA', filterLiveSearch);
+  yield takeLatest('FILTER_LIVERSEARCH_SAGA', filterLiveSearch);
 }
 
 const initialState = {

@@ -17,7 +17,14 @@ const FlightLayout = styled.div`
   `}
 `;
 
-const FlightArea = ({ location, session, createSession, getLiveSearch }) => {
+const FlightArea = ({
+  location,
+  session,
+  createSession,
+  getLiveSearch,
+  originDatas,
+  changeFilterDatas,
+}) => {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
 
   useEffect(() => {
@@ -61,6 +68,8 @@ const FlightArea = ({ location, session, createSession, getLiveSearch }) => {
       <FilterArea
         filterModalVisible={filterModalVisible}
         setFilterModalVisible={setFilterModalVisible}
+        originDatas={originDatas}
+        changeFilterDatas={changeFilterDatas}
       />
       <ListAreaContainer setFilterModalVisible={setFilterModalVisible} />
     </FlightLayout>
