@@ -74,6 +74,9 @@ const FilterArea = React.memo(
 
     const handleChangeDuration = (event, newValue) => {
       setDurationTime(newValue);
+    };
+
+    const handleChangeDurationDatas = (event, newValue) => {
       if (originDatas.map(originData => originData.Inbound)[0] !== null) {
         console.log(
           originDatas.filter(
@@ -199,6 +202,7 @@ const FilterArea = React.memo(
                   value={durationTime || 1000}
                   getAriaValueText={durationValueText}
                   onChange={handleChangeDuration}
+                  onChangeCommitted={handleChangeDurationDatas}
                   step={60}
                   min={minDuration || 0}
                   max={maxDuration || 1000}
