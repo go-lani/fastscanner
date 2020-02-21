@@ -6,7 +6,6 @@ import A11yTitle from '../../Common/A11yTitle';
 import useTime from '../../../hooks/useTime';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
-import { debounce } from 'loadsh';
 
 function valuetext(value) {
   return `${Math.floor(value[0] / 2)}시 ${value[1] / 2 ? '30' : '00'}분`;
@@ -64,14 +63,10 @@ const FilterArea = React.memo(
       setDurationTime(maxDuration);
     }, [maxDuration]);
 
-    const handleChangeOutbound = debounce(
-      (event, newValue) => {
-        setOutboundTime(newValue);
-        console.log('aaaa');
-      },
-      0,
-      'later',
-    );
+    const handleChangeOutbound = (event, newValue) => {
+      setOutboundTime(newValue);
+      test();
+    };
 
     const handleChangeInbound = (event, newValue) => {
       setInboundTime(newValue);
