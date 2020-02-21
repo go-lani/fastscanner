@@ -220,7 +220,7 @@ function* renderLiveSearch({ payload }) {
     yield put(
       success({
         renderDatas: [...renderDatas, ...newDatas],
-        pageIndex: !newDatas.length < 5 ? pageIndex + 1 : 'lastIndex`',
+        pageIndex: !newDatas.length < 5 ? pageIndex + 1 : 'lastIndex',
       }),
     );
   } catch (error) {
@@ -232,6 +232,7 @@ function* renderLiveSearch({ payload }) {
 export const filterLiveSearchSaga = createAction('FILTER_LIVERSEARCH_SAGA');
 
 function* filterLiveSearch({ payload }) {
+  const originDatas = yield select(state => state.flight.originDatas);
   const stops = yield select(state => state.flight.stops);
 }
 

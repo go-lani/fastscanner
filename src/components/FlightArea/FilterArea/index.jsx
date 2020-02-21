@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as S from './FilterAreaStyled';
 import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
 import A11yTitle from '../../Common/A11yTitle';
 import useTime from '../../../hooks/useTime';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
+import { debounce } from 'loadsh';
 
 function valuetext(value) {
   return `${Math.floor(value[0] / 2)}시 ${value[1] / 2 ? '30' : '00'}분`;
@@ -11,15 +14,31 @@ function valuetext(value) {
 
 const FilterArea = React.memo(
   ({ filterModalVisible, setFilterModalVisible }) => {
+    const originDatas = useSelector(state => state.flight.originDatas);
     const [outboundTime, setOutboundTime] = useState([0, 48]);
     const [inboundTime, setInboundTime] = useState([0, 48]);
     const [durationTime, setDurationTime] = useState(1000);
-    const [outboundStartTime, outboundEndTime] = useTime(outboundTime);
-    const [inboundStartTime, inboundEndTime] = useTime(inboundTime);
+    const [
+      outboundStartTime,
+      outboundStartFormat,
+      outboundEndTime,
+      outboundEndFormat,
+    ] = useTime(outboundTime);
+    const [
+      inboundStartTime,
+      inboundStartFormat,
+      inboundEndTime,
+      inboundEndFormat,
+    ] = useTime(inboundTime);
 
-    const handleChangeOutbound = (event, newValue) => {
-      setOutboundTime(newValue);
-    };
+    const handleChangeOutbound = debounce(
+      (event, newValue) => {
+        setOutboundTime(newValue);
+        console.log('aaaa');
+      },
+      0,
+      'later',
+    );
 
     const handleChangeInbound = (event, newValue) => {
       setInboundTime(newValue);
@@ -32,6 +51,30 @@ const FilterArea = React.memo(
     const closeFilterArea = () => {
       setFilterModalVisible(false);
     };
+
+    useEffect(() => {
+      if (originDatas && originDatas.length) {
+        const selectOutboundStartTime = outboundStartFormat.split(':').join('');
+        const selectOutboundEndTime = outboundEndFormat.split(':').join('');
+
+        const filterData = originDatas.filter(data => {
+          return selectOutboundStartTime <
+            moment(data.Outbound.Departure)
+              .format('kk:mm')
+              .split(':')
+              .join('') &&
+            selectOutboundEndTime >
+              +moment(data.Outbound.Departure)
+                .format('kk:mm')
+                .split(':')
+                .join('')
+            ? data
+            : null;
+        });
+        // console.log('filterData', filterData);
+      }
+      // console.log('originDatas', originDatas);
+    }, [originDatas, outboundEndFormat, outboundStartFormat]);
 
     return (
       <>
@@ -60,6 +103,7 @@ const FilterArea = React.memo(
               <S.DropItem>
                 <S.DropTitleBox>
                   <S.DropTitle>가는날 출발시간</S.DropTitle>
+                  <p>{`${outboundStartFormat} - ${outboundEndFormat}`}</p>
                   <p>{`${outboundStartTime} - ${outboundEndTime}`}</p>
                 </S.DropTitleBox>
                 <S.RangeSlider
@@ -74,6 +118,7 @@ const FilterArea = React.memo(
               <S.DropItem>
                 <S.DropTitleBox>
                   <S.DropTitle>오는날 출발시간</S.DropTitle>
+                  <p>{`${inboundStartFormat} - ${inboundEndFormat}`}</p>
                   <p>{`${inboundStartTime} - ${inboundEndTime}`}</p>
                 </S.DropTitleBox>
                 <S.RangeSlider
