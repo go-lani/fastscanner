@@ -65,7 +65,6 @@ const FilterArea = React.memo(
 
     const handleChangeOutbound = (event, newValue) => {
       setOutboundTime(newValue);
-      test();
     };
 
     const handleChangeInbound = (event, newValue) => {
