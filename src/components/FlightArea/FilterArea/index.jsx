@@ -21,6 +21,9 @@ const FilterArea = React.memo(
     setFilterModalVisible,
     originDatas,
     changeFilterDatas,
+    direct,
+    via,
+    selectWays,
   }) => {
     const [outboundTime, setOutboundTime] = useState([0, 48]);
     const [inboundTime, setInboundTime] = useState([0, 48]);
@@ -109,6 +112,10 @@ const FilterArea = React.memo(
       setFilterModalVisible(false);
     };
 
+    const setWays = e => {
+      selectWays(e.target.id, e.target.checked);
+    };
+
     useEffect(() => {
       if (originDatas && originDatas.length) {
         const selectOutboundStartTime = outboundStartFormat.split(':').join('');
@@ -150,10 +157,22 @@ const FilterArea = React.memo(
           <S.DropBoxList>
             <DropBox title="경유">
               <S.DropItem>
-                <CheckBox size="medium" label="직항" id="nonstopp" />
+                <CheckBox
+                  size="medium"
+                  label="직항"
+                  id="direct"
+                  checked={direct}
+                  onChange={setWays}
+                />
               </S.DropItem>
               <S.DropItem>
-                <CheckBox size="medium" label="경유" id="nonstopp2" />
+                <CheckBox
+                  size="medium"
+                  label="경유"
+                  id="via"
+                  checked={via}
+                  onChange={setWays}
+                />
               </S.DropItem>
             </DropBox>
             <DropBox title="출발 시간대 설정" range={true}>

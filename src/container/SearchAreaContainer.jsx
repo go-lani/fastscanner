@@ -18,7 +18,7 @@ export default connect(
     adults: state.search.adults,
     children: state.search.children,
     infants: state.search.infants,
-    stops: state.search.stops,
+    nonStops: state.search.nonStops,
   }),
   dispatch => ({
     changeWay: id => {

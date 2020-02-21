@@ -26,7 +26,7 @@ const create = () => {
         cabinClass: 'economy',
         children: 0,
         infants: 0,
-        stops: 1,
+        nonStops: false,
         way: 'round',
         originSearch: [],
         originName: '인천국제공항(ICN)',
