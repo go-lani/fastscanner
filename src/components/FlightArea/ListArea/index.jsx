@@ -6,6 +6,7 @@ import A11yTitle from '../../Common/A11yTitle';
 import Loader from './Loader';
 import * as S from './ListAreaStyled';
 import InfiniteScroller from 'react-infinite-scroller';
+import Loading from './Loading';
 
 const loaderRender = (() => {
   const loaderGroup = [];
@@ -49,7 +50,7 @@ const ListArea = ({
         <InfiniteScroller
           loadMore={() => getLiveSearch()}
           hasMore={!!pageIndex}
-          loader={<div key={uuid.v4()}> loading....</div>}
+          loader={<Loading key={uuid.v4()} />}
         >
           {datas && datas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
           {!datas && '해당하는 결과가 없습니다.'}
