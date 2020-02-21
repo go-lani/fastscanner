@@ -21,7 +21,6 @@ export const createSessionSaga = createAction('GET_SESSION_SAGA');
 
 function* createSession({ payload }) {
   const prevSessionId = yield select(state => state.flight.session);
-  // const datas = yield select(state => state.flight.datas);
   try {
     yield put(pending(0));
     const res = yield call(FlightService.createSession, payload);
@@ -44,10 +43,12 @@ function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
   const datas = yield select(state => state.flight.datas);
   const pageIndex = yield select(state => state.flight.pageIndex);
+
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'x-rapidapi-key': process.env.REACT_APP_SKYSCANNER_API_KEY,
   };
+
   const params = {
     sortType: 'price',
     sortOrder: 'asc',
@@ -61,13 +62,21 @@ function* getLiveSearch({ payload }) {
 
   function getStops(places, info) {
     return info.Stops.map(stop => {
-      let name = null;
-      places.forEach(place => {
-        if (place.Id === stop) name = place.Name;
-        return name;
-      });
+      const stopInfo = {};
 
-      return name;
+      const { Name: name, ParentId: cityId } = places.find(
+        place => place.Id === stop,
+      );
+
+      const { ParentId: countryId } = places.find(place => place.Id === cityId);
+      const { Name: countryName } = places.find(
+        place => place.Id === countryId,
+      );
+
+      stopInfo.name = name;
+      stopInfo.countryName = countryName;
+
+      return stopInfo;
     });
   }
 
@@ -77,21 +86,20 @@ function* getLiveSearch({ payload }) {
         name: null,
         imgUrl: null,
       };
-      carriers.forEach(carrier => {
-        if (carrier.Id === carrierId) {
-          airline.name = carrier.Name;
-          airline.imgUrl = carrier.ImageUrl;
-        }
 
-        return airline;
-      });
+      const { Name, ImageUrl } = carriers.find(
+        carrier => carrier.Id === carrierId,
+      );
+
+      airline.name = Name;
+      airline.imgUrl = ImageUrl;
 
       return airline;
     });
   }
 
   try {
-    if (!session) return;
+    if (!session || pageIndex === 'lastIndex') return yield put(success());
     yield put(pending(0));
 
     while (true) {
@@ -139,24 +147,36 @@ function* getLiveSearch({ payload }) {
           ListItem.push({
             Outbound: {
               ...outBoundInfo,
-              StopsName: outBoundStops,
+              StopsInfo: outBoundStops,
               AirlinesInfo: outBoundAirlines,
             },
             Inbound: itinerary.InboundLegId
               ? {
                   ...inBoundInfo,
-                  StopsName: inBoundStops,
+                  StopsInfo: inBoundStops,
                   AirlinesInfo: inBoundAirlines,
                 }
               : null,
-            price: Math.floor(itinerary.PricingOptions[0].Price),
+            price: Math.floor(itinerary.PricingOptions[0].Price)
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
             agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
             amount: itinerary.PricingOptions.length,
           });
         });
 
-        yield put(success({ datas: [...datas, ...ListItem] }));
-        yield put(success({ pageIndex: pageIndex + 1 }));
+        const newDatas = [...datas, ...ListItem];
+
+        if (datas.length !== newDatas.length) {
+          yield put(
+            success({
+              datas: [...datas, ...ListItem],
+              pageIndex: pageIndex + 1,
+            }),
+          );
+        } else {
+          yield put(success({ pageIndex: 'lastIndex' }));
+        }
         return;
       }
     }

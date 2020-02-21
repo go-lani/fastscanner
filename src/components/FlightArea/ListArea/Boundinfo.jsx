@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const Boundinfo = ({
   title,
-  info: { Departure, Arrival, Duration, StopsName, AirlinesInfo },
+  info: { Departure, Arrival, Duration, StopsInfo, AirlinesInfo },
 }) => {
   const departureName = useSelector(state => state.search.originPlace).split(
     '-',
@@ -43,16 +43,28 @@ const Boundinfo = ({
         </S.DepartureInfo>
         <S.FlightTimeInfo>
           <S.TimeContainer>
-            <span>{`${Math.floor(Duration / 60)}시간${Duration % 60}분`}</span>
+            <S.DurationText>{`${Math.floor(Duration / 60)}시간${Duration %
+              60}분`}</S.DurationText>
             <S.StopsInfo>
-              {StopsName && StopsName.length
-                ? StopsName.map(item => <i key={uuid.v4()} />)
+              {StopsInfo && StopsInfo.length
+                ? StopsInfo.map(item => <i key={uuid.v4()} />)
                 : null}
             </S.StopsInfo>
-            {StopsName.length ? (
-              <span>{StopsName.length}회 경유</span>
+            {StopsInfo.length ? (
+              <>
+                <S.StopsDetail>
+                  <S.StopsText>{StopsInfo.length}회 경유</S.StopsText>
+                  <ul>
+                    {StopsInfo.map(stopInfo => (
+                      <li key={uuid.v4()}>
+                        {`${stopInfo.name}, ${stopInfo.countryName}`}
+                      </li>
+                    ))}
+                  </ul>
+                </S.StopsDetail>
+              </>
             ) : (
-              <span>직항</span>
+              <S.StopsText>직항</S.StopsText>
             )}
           </S.TimeContainer>
           <S.ImgOuter>

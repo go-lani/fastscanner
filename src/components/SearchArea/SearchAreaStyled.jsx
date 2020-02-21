@@ -152,6 +152,18 @@ export const OptionPopupWrapper = styled.div`
     css`
       display: block;
     `}
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: -14px;
+    right: 95px;
+    width: 0;
+    height: 0;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #fff;
+    border-left: 15px solid transparent;
+  }
 `;
 
 export const StyledOptionPopup = styled.div`
@@ -160,17 +172,6 @@ export const StyledOptionPopup = styled.div`
   background-color: #fff;
   font-size: 1.6rem;
   font-weight: 500;
-`;
-
-export const Triangle = styled.div`
-  position: absolute;
-  top: -14px;
-  right: 95px;
-  width: 15px;
-  height: 15px;
-  border-right: 15px solid transparent;
-  border-bottom: 15px solid #fff;
-  border-left: 15px solid transparent;
 `;
 
 export const OptionPopup = styled.div`
