@@ -64,10 +64,11 @@ function* getLiveSearch({ payload }) {
     return info.Stops.map(stop => {
       const stopInfo = {};
 
-      const { Name: name, ParentId: countryId } = places.find(
+      const { Name: name, ParentId: cityId } = places.find(
         place => place.Id === stop,
       );
 
+      const { ParentId: countryId } = places.find(place => place.Id === cityId);
       const { Name: countryName } = places.find(
         place => place.Id === countryId,
       );
@@ -146,13 +147,13 @@ function* getLiveSearch({ payload }) {
           ListItem.push({
             Outbound: {
               ...outBoundInfo,
-              StopsName: outBoundStops,
+              StopsInfo: outBoundStops,
               AirlinesInfo: outBoundAirlines,
             },
             Inbound: itinerary.InboundLegId
               ? {
                   ...inBoundInfo,
-                  StopsName: inBoundStops,
+                  StopsInfo: inBoundStops,
                   AirlinesInfo: inBoundAirlines,
                 }
               : null,

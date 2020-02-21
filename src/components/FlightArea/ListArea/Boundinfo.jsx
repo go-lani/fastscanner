@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const Boundinfo = ({
   title,
-  info: { Departure, Arrival, Duration, StopsName, AirlinesInfo },
+  info: { Departure, Arrival, Duration, StopsInfo, AirlinesInfo },
 }) => {
   const departureName = useSelector(state => state.search.originPlace).split(
     '-',
@@ -45,12 +45,21 @@ const Boundinfo = ({
           <S.TimeContainer>
             <span>{`${Math.floor(Duration / 60)}시간${Duration % 60}분`}</span>
             <S.StopsInfo>
-              {StopsName && StopsName.length
-                ? StopsName.map(item => <i key={uuid.v4()} />)
+              {StopsInfo && StopsInfo.length
+                ? StopsInfo.map(item => <i key={uuid.v4()} />)
                 : null}
             </S.StopsInfo>
-            {StopsName.length ? (
-              <span>{StopsName.length}회 경유</span>
+            {StopsInfo.length ? (
+              <>
+                <div>{StopsInfo.length}회 경유</div>
+                <div>
+                  {StopsInfo.map(stopInfo => (
+                    <div key={uuid.v4()}>
+                      {stopInfo.name}, {stopInfo.countryName}
+                    </div>
+                  ))}
+                </div>
+              </>
             ) : (
               <span>직항</span>
             )}
