@@ -18,16 +18,17 @@ const loaderRender = (() => {
 })();
 
 const ListArea = ({
-  datas,
   progress,
   setFilterModalVisible,
-  getLiveSearch,
+  renderDatas,
   pageIndex,
   loading,
+  renderLiveSearch,
 }) => {
   const openFilterArea = () => {
     setFilterModalVisible(true);
   };
+
   return (
     <S.ListLayout>
       <A11yTitle>항공권 검색 결과</A11yTitle>
@@ -56,14 +57,18 @@ const ListArea = ({
       </S.TabUi>
       <S.FlightList>
         {loading && !pageIndex && loaderRender}
-        {/* <InfiniteScroller
-          loadMore={() => getLiveSearch()}
+        <InfiniteScroller
+          loadMore={() => renderLiveSearch()}
           hasMore={!!pageIndex && pageIndex !== 'lastIndex'}
           loader={<Loading key={uuid.v4()} />}
         >
-          {datas && datas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
-          {datas && !loading && !datas.length && '해당하는 결과가 없습니다.'}
-        </InfiniteScroller> */}
+          {renderDatas &&
+            renderDatas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
+          {renderDatas &&
+            !loading &&
+            !renderDatas.length &&
+            '해당하는 결과가 없습니다.'}
+        </InfiniteScroller>
       </S.FlightList>
     </S.ListLayout>
   );

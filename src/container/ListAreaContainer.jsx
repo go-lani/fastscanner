@@ -1,17 +1,17 @@
 import { connect } from 'react-redux';
 import ListArea from '../components/FlightArea/ListArea';
-import { getLiveSearchSaga } from '../redux/modules/flight';
+import { renderLiveSearchSaga } from '../redux/modules/flight';
 
 export default connect(
   state => ({
     progress: state.flight.progress,
-    datas: state.flight.datas,
+    renderDatas: state.flight.renderDatas,
     pageIndex: state.flight.pageIndex,
     loading: state.flight.loading,
   }),
   dispatch => ({
-    getLiveSearch: () => {
-      dispatch(getLiveSearchSaga());
+    renderLiveSearch: () => {
+      dispatch(renderLiveSearchSaga());
     },
   }),
 )(ListArea);

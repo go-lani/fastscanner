@@ -1,4 +1,4 @@
-import { put, call, takeLatest, select } from 'redux-saga/effects';
+import { put, call, takeLatest, select, delay } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
 import FlightService from '../../service/FlightService';
 
@@ -35,7 +35,7 @@ function* createSession({ payload }) {
     const sessionId = res.headers.location.split('/').pop();
 
     if (prevSessionId !== sessionId) {
-      yield put(success({ datas: [] }));
+      yield put(success({ originDatas: [] }));
       yield put(success({ pageIndex: 0 }));
     }
     yield put(success({ session: sessionId }));
@@ -49,7 +49,6 @@ export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 
 function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
-  const datas = yield select(state => state.flight.datas);
   const pageIndex = yield select(state => state.flight.pageIndex);
 
   const headers = {
@@ -61,7 +60,7 @@ function* getLiveSearch({ payload }) {
     sortType: 'price',
     sortOrder: 'asc',
     pageIndex: `${pageIndex}`,
-    pageSize: '999',
+    pageSize: '100',
   };
 
   function getInfo(legs, id) {
@@ -117,93 +116,113 @@ function* getLiveSearch({ payload }) {
         },
       }),
     );
-
-    while (true) {
-      const res = yield call(FlightService.getLiveData, {
-        session,
-        headers,
-        params,
-      });
-
-      const agentLength = res.Agents.length;
-      const completeLength = res.Agents.filter(
-        agent => agent.Status === 'UpdatesComplete',
-      ).length;
-
-      yield put(
-        pending({
-          progress: {
-            per: Math.floor((completeLength / agentLength) * 100),
-            all: agentLength,
-            complete: completeLength,
-          },
-        }),
-      );
-
-      if (res.Status === 'UpdatesComplete') {
-        const ListItem = [];
-
-        res.Itineraries.forEach(itinerary => {
-          // 출국 정보
-          const outBoundInfo = getInfo(res.Legs, itinerary.OutboundLegId);
-
-          // 출국 경유지 정보
-          const outBoundStops = getStops(res.Places, outBoundInfo);
-
-          // 출국 항공기 정보
-          const outBoundAirlines = getAirLine(res.Carriers, outBoundInfo);
-
-          // 입국 정보
-          const inBoundInfo = itinerary.InboundLegId
-            ? getInfo(res.Legs, itinerary.InboundLegId)
-            : null;
-
-          // 입국 경유지 정보
-          const inBoundStops = itinerary.InboundLegId
-            ? getStops(res.Places, inBoundInfo)
-            : null;
-
-          // 입국 항공기 정보
-          const inBoundAirlines = itinerary.InboundLegId
-            ? getAirLine(res.Carriers, inBoundInfo)
-            : null;
-
-          ListItem.push({
-            Outbound: {
-              ...outBoundInfo,
-              StopsInfo: outBoundStops,
-              AirlinesInfo: outBoundAirlines,
-            },
-            Inbound: itinerary.InboundLegId
-              ? {
-                  ...inBoundInfo,
-                  StopsInfo: inBoundStops,
-                  AirlinesInfo: inBoundAirlines,
-                }
-              : null,
-            price: Math.floor(itinerary.PricingOptions[0].Price)
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-            agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
-            amount: itinerary.PricingOptions.length,
-          });
+    if (!pageIndex) {
+      while (true) {
+        const res = yield call(FlightService.getLiveData, {
+          session,
+          headers,
+          params,
         });
 
-        const newDatas = [...datas, ...ListItem];
+        const agentLength = res.Agents.length;
+        const completeLength = res.Agents.filter(
+          agent => agent.Status === 'UpdatesComplete',
+        ).length;
 
-        if (datas.length !== newDatas.length) {
+        yield put(
+          pending({
+            progress: {
+              per: Math.floor((completeLength / agentLength) * 100),
+              all: agentLength,
+              complete: completeLength,
+            },
+          }),
+        );
+
+        if (res.Status === 'UpdatesComplete') {
+          const ListItem = [];
+
+          res.Itineraries.forEach(itinerary => {
+            // 출국 정보
+            const outBoundInfo = getInfo(res.Legs, itinerary.OutboundLegId);
+
+            // 출국 경유지 정보
+            const outBoundStops = getStops(res.Places, outBoundInfo);
+
+            // 출국 항공기 정보
+            const outBoundAirlines = getAirLine(res.Carriers, outBoundInfo);
+
+            // 입국 정보
+            const inBoundInfo = itinerary.InboundLegId
+              ? getInfo(res.Legs, itinerary.InboundLegId)
+              : null;
+
+            // 입국 경유지 정보
+            const inBoundStops = itinerary.InboundLegId
+              ? getStops(res.Places, inBoundInfo)
+              : null;
+
+            // 입국 항공기 정보
+            const inBoundAirlines = itinerary.InboundLegId
+              ? getAirLine(res.Carriers, inBoundInfo)
+              : null;
+
+            ListItem.push({
+              Outbound: {
+                ...outBoundInfo,
+                StopsInfo: outBoundStops,
+                AirlinesInfo: outBoundAirlines,
+              },
+              Inbound: itinerary.InboundLegId
+                ? {
+                    ...inBoundInfo,
+                    StopsInfo: inBoundStops,
+                    AirlinesInfo: inBoundAirlines,
+                  }
+                : null,
+              price: Math.floor(itinerary.PricingOptions[0].Price)
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
+              amount: itinerary.PricingOptions.length,
+            });
+          });
+
           yield put(
             success({
-              datas: [...datas, ...ListItem],
+              originDatas: ListItem,
+              renderDatas: ListItem.slice(0, 5),
               pageIndex: pageIndex + 1,
             }),
           );
-        } else {
-          yield put(success({ pageIndex: 'lastIndex' }));
+          return;
         }
-        return;
       }
     }
+  } catch (error) {
+    yield put(fail(error));
+  }
+}
+
+// 렌더링 데이터
+export const renderLiveSearchSaga = createAction('RENDER_LIVESEARCH_SAGA');
+
+function* renderLiveSearch({ payload }) {
+  const originDatas = yield select(state => state.flight.originDatas);
+  const renderDatas = yield select(state => state.flight.renderDatas);
+  const pageIndex = yield select(state => state.flight.pageIndex);
+
+  if (!originDatas) return;
+  const newDatas = originDatas.slice(pageIndex * 5, (pageIndex + 1) * 5);
+
+  try {
+    yield delay(600);
+    yield put(
+      success({
+        renderDatas: [...renderDatas, ...newDatas],
+        pageIndex: !newDatas.length < 5 ? pageIndex + 1 : 'lastIndex`',
+      }),
+    );
   } catch (error) {
     yield put(fail(error));
   }
@@ -212,6 +231,7 @@ function* getLiveSearch({ payload }) {
 export function* flightSaga() {
   yield takeLatest('GET_SESSION_SAGA', createSession);
   yield takeLatest('GET_LIVESEARCH_SAGA', getLiveSearch);
+  yield takeLatest('RENDER_LIVESEARCH_SAGA', renderLiveSearch);
 }
 
 const initialState = {
