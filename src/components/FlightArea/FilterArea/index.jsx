@@ -4,7 +4,6 @@ import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
 import A11yTitle from '../../Common/A11yTitle';
 import useTime from '../../../hooks/useTime';
-import { useSelector } from 'react-redux';
 import moment from 'moment';
 
 function valuetext(value) {
@@ -24,6 +23,8 @@ const FilterArea = React.memo(
     direct,
     via,
     selectWays,
+    setFilterOptions,
+    getLiveSearch,
   }) => {
     const [outboundTime, setOutboundTime] = useState([0, 48]);
     const [inboundTime, setInboundTime] = useState([0, 48]);
@@ -79,33 +80,21 @@ const FilterArea = React.memo(
     };
 
     const handleChangeDurationDatas = (event, newValue) => {
-      if (originDatas.map(originData => originData.Inbound)[0] !== null) {
-        console.log(
-          originDatas.filter(
-            originData =>
-              originData.Outbound.Duration + originData.Inbound.Duration <=
-              newValue,
-          ),
-        );
-        changeFilterDatas(
-          originDatas.filter(
-            originData =>
-              originData.Outbound.Duration + originData.Inbound.Duration <=
-              newValue,
-          ),
-        );
-      } else {
-        console.log(
-          originDatas.filter(
-            originData => originData.Outbound.Duration <= newValue,
-          ),
-        );
-        changeFilterDatas(
-          originDatas.filter(
-            originData => originData.Outbound.Duration <= newValue,
-          ),
-        );
-      }
+      // if (originDatas.map(originData => originData.Inbound)[0] !== null) {
+      //                                  (
+      //     originDatas.filter(
+      //       originData =>
+      //         originData.Outbound.Duration + originData.Inbound.Duration <=
+      //         newValue,
+      //     ),
+      //   );
+      // } else {
+      //   changeFilterDatas(
+      //     originDatas.filter(
+      //       originData => originData.Outbound.Duration <= newValue,
+      //     ),
+      //   );
+      // }
     };
 
     const closeFilterArea = () => {
@@ -116,29 +105,51 @@ const FilterArea = React.memo(
       selectWays(e.target.id, e.target.checked);
     };
 
-    useEffect(() => {
-      if (originDatas && originDatas.length) {
-        const selectOutboundStartTime = outboundStartFormat.split(':').join('');
-        const selectOutboundEndTime = outboundEndFormat.split(':').join('');
+    // useEffect(() => {
+    //   if (originDatas && originDatas.length) {
+    //     const filterData = originDatas.filter(data => {
+    //       return selectOutboundStartTime <
+    //         moment(data.Outbound.Departure)
+    //           .format('kk:mm')
+    //           .split(':')
+    //           .join('') &&
+    //         selectOutboundEndTime >
+    //           +moment(data.Outbound.Departure)
+    //             .format('kk:mm')
+    //             .split(':')
+    //             .join('')
+    //         ? data
+    //         : null;
+    //     });
+    //     console.log('filterData', filterData);
+    //   }
+    //   console.log('originDatas', originDatas);
+    // }, [originDatas, outboundEndFormat, outboundStartFormat]);
 
-        const filterData = originDatas.filter(data => {
-          return selectOutboundStartTime <
-            moment(data.Outbound.Departure)
-              .format('kk:mm')
-              .split(':')
-              .join('') &&
-            selectOutboundEndTime >
-              +moment(data.Outbound.Departure)
-                .format('kk:mm')
-                .split(':')
-                .join('')
-            ? data
-            : null;
-        });
-        // console.log('filterData', filterData);
-      }
-      // console.log('originDatas', originDatas);
-    }, [originDatas, outboundEndFormat, outboundStartFormat]);
+    const handleChangeOutboundDatas = () => {
+      const selectOutboundStartTime = outboundStartFormat.split(':').join('');
+      const selectOutboundEndTime = outboundEndFormat.split(':').join('');
+
+      console.log(selectOutboundStartTime);
+      console.log(selectOutboundEndTime);
+
+      changeFilterDatas('outBound');
+      setFilterOptions({
+        OutBound: {
+          start: selectOutboundStartTime,
+          end: selectOutboundEndTime,
+        },
+      });
+      getLiveSearch();
+    };
+
+    const handleChangeInboundDatas = () => {
+      const selectInboundStartTime = inboundStartFormat.split(':').join('');
+      const selectInboundEndTime = inboundEndFormat.split(':').join('');
+
+      console.log(selectInboundStartTime);
+      console.log(selectInboundEndTime);
+    };
 
     return (
       <>
@@ -185,6 +196,7 @@ const FilterArea = React.memo(
                 <S.RangeSlider
                   value={outboundTime}
                   onChange={handleChangeOutbound}
+                  onChangeCommitted={handleChangeOutboundDatas}
                   aria-labelledby="range-slider"
                   getAriaValueText={valuetext}
                   min={0}
@@ -200,6 +212,7 @@ const FilterArea = React.memo(
                 <S.RangeSlider
                   value={inboundTime}
                   onChange={handleChangeInbound}
+                  onChangeCommitted={handleChangeInboundDatas}
                   aria-labelledby="range-slider"
                   getAriaValueText={valuetext}
                   min={0}

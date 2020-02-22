@@ -5,6 +5,7 @@ import {
   getLiveSearchSaga,
   setFilterWaySaga,
   filterLiveSearchSaga,
+  setFilterOptionsSaga,
 } from '../redux/modules/flight';
 
 export default connect(
@@ -27,8 +28,11 @@ export default connect(
       console.log(id, status);
       dispatch(setFilterWaySaga({ id, status }));
     },
-    changeFilterDatas: filterDatas => {
-      dispatch(filterLiveSearchSaga(filterDatas));
+    changeFilterDatas: (filterName, content) => {
+      dispatch(filterLiveSearchSaga(filterName, content));
+    },
+    setFilterOptions: status => {
+      dispatch(setFilterOptionsSaga(status));
     },
   }),
 )(FlightArea);

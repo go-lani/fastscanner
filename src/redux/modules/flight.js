@@ -56,6 +56,7 @@ export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
   const pageIndex = yield select(state => state.flight.pageIndex);
+  const filterOptions = yield select(state => state.flight.filterOptions);
 
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -194,6 +195,13 @@ function* getLiveSearch({ payload }) {
             });
           });
 
+          console.log(filterOptions, 'filterOptions');
+          if (filterOptions && filterOptions.Outbound) {
+            console.log(filterOptions, '있다');
+          } else {
+            console.log(filterOptions, '없다');
+          }
+
           yield put(
             success({
               originDatas: ListItem,
@@ -218,7 +226,9 @@ function* renderLiveSearch({ payload }) {
   const renderDatas = yield select(state => state.flight.renderDatas);
   const pageIndex = yield select(state => state.flight.pageIndex);
 
-  if (!originDatas) return;
+  if (!originDatas || originDatas.length === renderDatas.length)
+    return yield put(success({ pageIndex: 'lastIndex' }));
+
   const newDatas = originDatas.slice(pageIndex * 5, (pageIndex + 1) * 5);
 
   try {
@@ -226,7 +236,7 @@ function* renderLiveSearch({ payload }) {
     yield put(
       success({
         renderDatas: [...renderDatas, ...newDatas],
-        pageIndex: !newDatas.length < 5 ? pageIndex + 1 : 'lastIndex',
+        pageIndex: pageIndex + 1,
       }),
     );
   } catch (error) {
@@ -235,6 +245,24 @@ function* renderLiveSearch({ payload }) {
 }
 
 // 필터 데이터
+// 필터 여부 체크
+export const setFilterOptionsSaga = createAction('SET_FILTER_OPTIONS_SAGA');
+
+function* setFilterOptions({ payload }) {
+  const filterOptions = yield select(state => state.flight.filterOptions);
+  try {
+    yield put(
+      success({
+        filterOptions: {
+          ...filterOptions,
+          ...payload,
+        },
+      }),
+    );
+  } catch (error) {
+    yield put(fail(error));
+  }
+}
 
 export const setFilterWaySaga = createAction('SET_FILTERWAY_SAGA');
 
@@ -284,8 +312,8 @@ export function* flightSaga() {
   yield takeLatest('GET_LIVESEARCH_SAGA', getLiveSearch);
   yield takeLatest('RENDER_LIVESEARCH_SAGA', renderLiveSearch);
   yield takeLatest('FILTER_LIVESEARCH_SAGA', filterLiveSearch);
+  yield takeLatest('SET_FILTER_OPTIONS_SAGA', setFilterOptions);
   yield takeLatest('SET_FILTERWAY_SAGA', setFilterWay);
-  yield takeLatest('FILTER_LIVERSEARCH_SAGA', filterLiveSearch);
 }
 
 const initialState = {

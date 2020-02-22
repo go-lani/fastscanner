@@ -24,6 +24,7 @@ const FlightArea = ({
   getLiveSearch,
   originDatas,
   changeFilterDatas,
+  setFilterOptions,
   direct,
   via,
   selectWays,
@@ -76,6 +77,8 @@ const FlightArea = ({
         selectWays={selectWays}
         direct={direct}
         via={via}
+        setFilterOptions={setFilterOptions}
+        getLiveSearch={getLiveSearch}
       />
       <ListAreaContainer setFilterModalVisible={setFilterModalVisible} />
     </FlightLayout>
