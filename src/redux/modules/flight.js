@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { put, call, takeLatest, select, delay } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
 import FlightService from '../../service/FlightService';
@@ -56,7 +57,6 @@ export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
   const pageIndex = yield select(state => state.flight.pageIndex);
-  const filterOptions = yield select(state => state.flight.filterOptions);
 
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -195,13 +195,6 @@ function* getLiveSearch({ payload }) {
             });
           });
 
-          console.log(filterOptions, 'filterOptions');
-          if (filterOptions && filterOptions.Outbound) {
-            console.log(filterOptions, '있다');
-          } else {
-            console.log(filterOptions, '없다');
-          }
-
           yield put(
             success({
               originDatas: ListItem,
@@ -229,7 +222,9 @@ function* renderLiveSearch({ payload }) {
   if (!originDatas || originDatas.length === renderDatas.length)
     return yield put(success({ pageIndex: 'lastIndex' }));
 
+  // origindata가 있다면 origindata를 5개 잘라서 renderData에
   const newDatas = originDatas.slice(pageIndex * 5, (pageIndex + 1) * 5);
+  // 만약 filtedata가 있따면 filterdata를 5개 잘라서 renderdata에
 
   try {
     yield delay(600);
@@ -257,6 +252,7 @@ function* setFilterOptions({ payload }) {
           ...filterOptions,
           ...payload,
         },
+        pageIndex: 0,
       }),
     );
   } catch (error) {
@@ -294,12 +290,38 @@ function* setFilterWay({ payload }) {
   }
 }
 
-export const filterLiveSearchSaga = createAction('FILTER_LIVERSEARCH_SAGA');
+export const filterLiveSearchSaga = createAction('FILTER_LIVESEARCH_SAGA');
 
 function* filterLiveSearch({ payload }) {
   const originDatas = yield select(state => state.flight.originDatas);
   const nonStops = yield select(state => state.flight.nonStops);
+  const filterOptions = yield select(state => state.flight.filterOptions);
+
+  if (filterOptions && filterOptions.OutBound) {
+    const filterData = originDatas.filter(data => {
+      return filterOptions.OutBound.start <
+        moment(data.Outbound.Departure)
+          .format('kk:mm')
+          .split(':')
+          .join('') &&
+        filterOptions.OutBound.end >
+          +moment(data.Outbound.Departure)
+            .format('kk:mm')
+            .split(':')
+            .join('')
+        ? data
+        : null;
+    });
+
+    console.log(filterData);
+  } else {
+    console.log(filterOptions, '없다');
+  }
+
   try {
+    // filter 데이터를 render 데이터에 5개 잘라서 덮어쓰기,
+    // filter 데이터에 담기
+    // pageIndex 0 으로 변경
     yield put(pending());
     yield put(success({ filterDatas: payload }));
   } catch (error) {

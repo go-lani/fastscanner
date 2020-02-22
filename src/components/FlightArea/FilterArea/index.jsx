@@ -24,7 +24,6 @@ const FilterArea = React.memo(
     via,
     selectWays,
     setFilterOptions,
-    getLiveSearch,
   }) => {
     const [outboundTime, setOutboundTime] = useState([0, 48]);
     const [inboundTime, setInboundTime] = useState([0, 48]);
@@ -130,17 +129,13 @@ const FilterArea = React.memo(
       const selectOutboundStartTime = outboundStartFormat.split(':').join('');
       const selectOutboundEndTime = outboundEndFormat.split(':').join('');
 
-      console.log(selectOutboundStartTime);
-      console.log(selectOutboundEndTime);
-
-      changeFilterDatas('outBound');
       setFilterOptions({
         OutBound: {
           start: selectOutboundStartTime,
           end: selectOutboundEndTime,
         },
       });
-      getLiveSearch();
+      changeFilterDatas();
     };
 
     const handleChangeInboundDatas = () => {

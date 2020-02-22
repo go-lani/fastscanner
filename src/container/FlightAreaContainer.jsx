@@ -29,7 +29,7 @@ export default connect(
       dispatch(setFilterWaySaga({ id, status }));
     },
     changeFilterDatas: (filterName, content) => {
-      dispatch(filterLiveSearchSaga(filterName, content));
+      dispatch(filterLiveSearchSaga());
     },
     setFilterOptions: status => {
       dispatch(setFilterOptionsSaga(status));
