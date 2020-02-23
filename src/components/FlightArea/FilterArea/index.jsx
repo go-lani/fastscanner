@@ -142,8 +142,13 @@ const FilterArea = React.memo(
       const selectInboundStartTime = inboundStartFormat.split(':').join('');
       const selectInboundEndTime = inboundEndFormat.split(':').join('');
 
-      console.log(selectInboundStartTime);
-      console.log(selectInboundEndTime);
+      setFilterOptions({
+        InBound: {
+          start: selectInboundStartTime,
+          end: selectInboundEndTime,
+        },
+      });
+      changeFilterDatas();
     };
 
     return (

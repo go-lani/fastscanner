@@ -28,6 +28,8 @@ const FlightArea = ({
   direct,
   via,
   selectWays,
+  filterOptions,
+  pageIndex,
 }) => {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
 
@@ -66,6 +68,10 @@ const FlightArea = ({
       getLiveSearch();
     }
   }, [getLiveSearch, session]);
+
+  useEffect(() => {
+    // if (originDatas && filterOptions && pageIndex) changeFilterDatas();
+  }, [changeFilterDatas, filterOptions, originDatas, pageIndex]);
 
   return (
     <FlightLayout>

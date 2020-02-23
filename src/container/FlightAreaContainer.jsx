@@ -14,6 +14,8 @@ export default connect(
     direct: state.flight.filter.direct,
     via: state.flight.filter.via,
     originDatas: state.flight.originDatas,
+    filterOptions: state.flight.filterOptions,
+    pageIndex: state.flight.pageIndex,
   }),
 
   dispatch => ({

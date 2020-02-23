@@ -42,7 +42,7 @@ function* createSession({ payload }) {
     const sessionId = res.headers.location.split('/').pop();
 
     if (prevSessionId !== sessionId) {
-      yield put(success({ originDatas: [], pageIndex: 0 }));
+      yield put(success({ originDatas: [], pageIndex: 0, filterDatas: null }));
       // yield put(success({ pageIndex: 0 }));
     }
     yield put(success({ session: sessionId }));
@@ -57,6 +57,7 @@ export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 function* getLiveSearch({ payload }) {
   const session = yield select(state => state.flight.session);
   const pageIndex = yield select(state => state.flight.pageIndex);
+  const filterOptions = yield select(state => state.flight.filterOptions);
 
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -195,6 +196,8 @@ function* getLiveSearch({ payload }) {
             });
           });
 
+          console.log('ListItem', ListItem);
+
           yield put(
             success({
               originDatas: ListItem,
@@ -216,26 +219,48 @@ export const renderLiveSearchSaga = createAction('RENDER_LIVESEARCH_SAGA');
 
 function* renderLiveSearch({ payload }) {
   const originDatas = yield select(state => state.flight.originDatas);
+  const filterDatas = yield select(state => state.flight.filterDatas);
   const renderDatas = yield select(state => state.flight.renderDatas);
   const pageIndex = yield select(state => state.flight.pageIndex);
 
-  if (!originDatas || originDatas.length === renderDatas.length)
-    return yield put(success({ pageIndex: 'lastIndex' }));
-
-  // origindata가 있다면 origindata를 5개 잘라서 renderData에
-  const newDatas = originDatas.slice(pageIndex * 5, (pageIndex + 1) * 5);
-  // 만약 filtedata가 있따면 filterdata를 5개 잘라서 renderdata에
-
   try {
+    console.log(pageIndex);
     yield delay(600);
-    yield put(
-      success({
-        renderDatas: [...renderDatas, ...newDatas],
-        pageIndex: pageIndex + 1,
-      }),
-    );
+
+    if (filterDatas) {
+      if (filterDatas.length === renderDatas.length)
+        return yield put(success({ pageIndex: 'lastIndex' }));
+
+      const newFilterDatas = filterDatas.slice(
+        pageIndex * 5,
+        (pageIndex + 1) * 5,
+      );
+
+      yield put(
+        success({
+          renderDatas: [...renderDatas, ...newFilterDatas],
+          pageIndex: pageIndex + 1,
+        }),
+      );
+    } else {
+      if (!originDatas || originDatas.length === renderDatas.length)
+        return yield put(success({ pageIndex: 'lastIndex' }));
+
+      const newOriginDatas = originDatas.slice(
+        pageIndex * 5,
+        (pageIndex + 1) * 5,
+      );
+
+      yield put(
+        success({
+          renderDatas: [...renderDatas, ...newOriginDatas],
+          pageIndex: pageIndex + 1,
+        }),
+      );
+    }
   } catch (error) {
     yield put(fail(error));
+    console.log(error);
   }
 }
 
@@ -296,36 +321,100 @@ function* filterLiveSearch({ payload }) {
   const originDatas = yield select(state => state.flight.originDatas);
   const nonStops = yield select(state => state.flight.nonStops);
   const filterOptions = yield select(state => state.flight.filterOptions);
-
-  if (filterOptions && filterOptions.OutBound) {
-    const filterData = originDatas.filter(data => {
-      return filterOptions.OutBound.start <
-        moment(data.Outbound.Departure)
-          .format('kk:mm')
-          .split(':')
-          .join('') &&
-        filterOptions.OutBound.end >
-          +moment(data.Outbound.Departure)
-            .format('kk:mm')
-            .split(':')
-            .join('')
-        ? data
-        : null;
-    });
-
-    console.log(filterData);
-  } else {
-    console.log(filterOptions, '없다');
-  }
+  const pageIndex = yield select(state => state.flight.pageIndex);
+  let newFilterData = null;
 
   try {
-    // filter 데이터를 render 데이터에 5개 잘라서 덮어쓰기,
-    // filter 데이터에 담기
-    // pageIndex 0 으로 변경
-    yield put(pending());
-    yield put(success({ filterDatas: payload }));
+    yield put(pending({ filterDatas: originDatas }));
+    const filterDatas = yield select(state => state.flight.filterDatas);
+
+    console.log(filterOptions.OutBound.start);
+    console.log(filterOptions.OutBound.start);
+    if (filterOptions.OutBound) {
+      if (newFilterData) {
+        newFilterData = newFilterData.filter(data => {
+          return filterOptions.OutBound.start <=
+            moment(data.Outbound.Departure)
+              .format('kk:mm')
+              .split(':')
+              .join('') &&
+            filterOptions.OutBound.end >=
+              moment(data.Outbound.Departure)
+                .format('kk:mm')
+                .split(':')
+                .join('')
+            ? data
+            : null;
+        });
+        console.log('newFilterData 있을때 Outbound', newFilterData);
+      } else {
+        newFilterData = filterDatas.filter(data => {
+          return filterOptions.OutBound.start <=
+            moment(data.Outbound.Departure)
+              .format('kk:mm')
+              .split(':')
+              .join('') &&
+            filterOptions.OutBound.end >=
+              moment(data.Outbound.Departure)
+                .format('kk:mm')
+                .split(':')
+                .join('')
+            ? data
+            : null;
+        });
+        console.log('newFilterData 없을때 Outbound', newFilterData);
+      }
+    }
+
+    if (filterOptions.InBound) {
+      if (newFilterData) {
+        newFilterData = newFilterData.filter(data => {
+          return filterOptions.InBound.start <=
+            moment(data.Inbound.Departure)
+              .format('kk:mm')
+              .split(':')
+              .join('') &&
+            filterOptions.InBound.end >=
+              moment(data.Inbound.Departure)
+                .format('kk:mm')
+                .split(':')
+                .join('')
+            ? data
+            : null;
+        });
+      } else {
+        newFilterData = filterDatas.filter(data => {
+          return filterOptions.InBound.start <=
+            moment(data.Inbound.Departure)
+              .format('kk:mm')
+              .split(':')
+              .join('') &&
+            filterOptions.InBound.end >=
+              moment(data.Inbound.Departure)
+                .format('kk:mm')
+                .split(':')
+                .join('')
+            ? data
+            : null;
+        });
+      }
+    }
+
+    const newRenderDatas = newFilterData.slice(
+      pageIndex * 5,
+      (pageIndex + 1) * 5,
+    );
+
+    yield put(
+      success({
+        pageIndex: pageIndex + 1,
+        filterDatas: newFilterData,
+        renderDatas: newRenderDatas,
+      }),
+    );
   } catch (error) {
     yield put(fail(error));
+    console.log(error);
   }
 }
 
