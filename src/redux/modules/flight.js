@@ -196,8 +196,6 @@ function* getLiveSearch({ payload }) {
             });
           });
 
-          console.log('ListItem', ListItem);
-
           yield put(
             success({
               originDatas: ListItem,
@@ -224,7 +222,6 @@ function* renderLiveSearch({ payload }) {
   const pageIndex = yield select(state => state.flight.pageIndex);
 
   try {
-    console.log(pageIndex);
     yield delay(600);
 
     if (filterDatas) {
