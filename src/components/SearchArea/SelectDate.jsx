@@ -39,21 +39,15 @@ const SelectDate = ({
   }, [momentInDate, selectInboundDate, way]);
 
   const setStartDate = startDate => {
-    console.log('4');
     if (startDate.format('YYYY-MM-DD') === momentOutDate.format('YYYY-MM-DD'))
       return;
-    console.log('4');
     selectMomentOutboundDate(startDate);
     selectOutboundDate(startDate.format('YYYY-MM-DD'));
-    console.log('5');
   };
 
   const setEndDate = endDate => {
-    console.log('6');
     if (!endDate) return;
-    console.log('7');
     selectMomentInboundDate(endDate);
-    console.log('8');
   };
 
   // const setDate = (startDate, endDate) => {

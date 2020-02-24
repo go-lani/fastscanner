@@ -25,6 +25,7 @@ const SearchArea = ({
   children,
   infants,
   nonStops,
+  direct,
   changeWay,
   selectStops,
   searchOrigin,

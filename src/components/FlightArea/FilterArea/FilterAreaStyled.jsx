@@ -89,6 +89,13 @@ export const DropItem = styled.li`
   }
 `;
 
+export const RtnOption = styled.p`
+  margin: 5px 0 0 20px;
+  /* padding-left: 20px; */
+  font-size: 1.4rem;
+  color: #68697f;
+`;
+
 export const DropTitleBox = styled.div`
   margin: 0 -15px 10px;
 
