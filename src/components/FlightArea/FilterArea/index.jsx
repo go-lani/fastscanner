@@ -19,7 +19,6 @@ const FilterArea = React.memo(
     filterModalVisible,
     setFilterModalVisible,
     originDatas,
-    filterDatas,
     changeFilterDatas,
     direct,
     via,
@@ -46,60 +45,6 @@ const FilterArea = React.memo(
       inboundEndFormat,
     ] = useTime(inboundTime);
 
-    useEffect(() => {
-      if (originDatas && originDatas.length) {
-        if (originDatas.map(originData => originData.Inbound)[0] !== null) {
-          const roundDurations = originDatas.map(
-            originData =>
-              originData.Outbound.Duration + originData.Inbound.Duration,
-          );
-          setMinDuration(Math.min(...roundDurations));
-          setMaxDuration(Math.max(...roundDurations));
-        } else {
-          const onewayDurations = originDatas.map(
-            originData => originData.Outbound.Duration,
-          );
-          setMinDuration(Math.min(...onewayDurations));
-          setMaxDuration(Math.max(...onewayDurations));
-        }
-      }
-    }, [maxDuration, originDatas]);
-
-    useEffect(() => {
-      setDurationTime(maxDuration);
-    }, [maxDuration]);
-
-    const handleChangeOutbound = (event, newValue) => {
-      setOutboundTime(newValue);
-    };
-
-    const handleChangeInbound = (event, newValue) => {
-      setInboundTime(newValue);
-    };
-
-    const handleChangeDuration = (event, newValue) => {
-      setDurationTime(newValue);
-    };
-
-    // 총 소요시간 필터
-    const handleChangeDurationDatas = (event, newValue) => {
-      // if (originDatas.map(originData => originData.Inbound)[0] !== null) {
-      //                                  (
-      //     originDatas.filter(
-      //       originData =>
-      //         originData.Outbound.Duration + originData.Inbound.Duration <=
-      //         newValue,
-      //     ),
-      //   );
-      // } else {
-      //   changeFilterDatas(
-      //     originDatas.filter(
-      //       originData => originData.Outbound.Duration <= newValue,
-      //     ),
-      //   );
-      // }
-    };
-
     // 필터조건 탭 닫기
     const closeFilterArea = () => {
       setFilterModalVisible(false);
@@ -110,50 +55,62 @@ const FilterArea = React.memo(
       selectWays(id, checked);
     };
 
-    // useEffect(() => {
-    //   if (originDatas && originDatas.length) {
-    //     const filterData = originDatas.filter(data => {
-    //       return selectOutboundStartTime <
-    //         moment(data.Outbound.Departure)
-    //           .format('kk:mm')
-    //           .split(':')
-    //           .join('') &&
-    //         selectOutboundEndTime >
-    //           +moment(data.Outbound.Departure)
-    //             .format('kk:mm')
-    //             .split(':')
-    //             .join('')
-    //         ? data
-    //         : null;
-    //     });
-    //     console.log('filterData', filterData);
-    //   }
-    //   console.log('originDatas', originDatas);
-    // }, [originDatas, outboundEndFormat, outboundStartFormat]);
+    // 출국 출발시간 옵션
+    const handleChangeOutbound = (event, newValue) => {
+      setOutboundTime(newValue);
+    };
 
     const handleChangeOutboundDatas = () => {
-      const selectOutboundStartTime = outboundStartFormat.split(':').join('');
-      const selectOutboundEndTime = outboundEndFormat.split(':').join('');
-
       setFilterOptions({
         OutBound: {
-          start: selectOutboundStartTime,
-          end: selectOutboundEndTime,
+          start: outboundStartFormat.split(':').join(''),
+          end: outboundEndFormat.split(':').join(''),
         },
       });
       changeFilterDatas();
     };
 
-    const handleChangeInboundDatas = () => {
-      const selectInboundStartTime = inboundStartFormat.split(':').join('');
-      const selectInboundEndTime = inboundEndFormat.split(':').join('');
+    // 입국 출발시간 옵션
+    const handleChangeInbound = (event, newValue) => {
+      setInboundTime(newValue);
+    };
 
+    const handleChangeInboundDatas = () => {
       setFilterOptions({
         InBound: {
-          start: selectInboundStartTime,
-          end: selectInboundEndTime,
+          start: inboundStartFormat.split(':').join(''),
+          end: inboundEndFormat.split(':').join(''),
         },
       });
+      changeFilterDatas();
+    };
+
+    // 총 소요시간 필터
+    useEffect(() => {
+      if (originDatas && originDatas.length) {
+        const roundDurations = originDatas.map(originData =>
+          originData.Inbound && originData.Inbound.Duration
+            ? originData.Outbound.Duration + originData.Inbound.Duration
+            : originData.Outbound.Duration,
+        );
+        setMinDuration(Math.min(...roundDurations));
+        setMaxDuration(Math.max(...roundDurations));
+      }
+    }, [originDatas]);
+
+    useEffect(() => {
+      setDurationTime(maxDuration);
+    }, [maxDuration]);
+
+    const handleChangeDuration = (event, newValue) => {
+      setDurationTime(newValue);
+    };
+
+    const handleChangeDurationDatas = (event, newValue) => {
+      setFilterOptions({
+        Duration: newValue,
+      });
+
       changeFilterDatas();
     };
 
@@ -182,21 +139,6 @@ const FilterArea = React.memo(
                   isDisable={directDisable}
                   onChange={e => setWays(e.target)}
                 />
-                {/* <S.RtnOption>
-                  {originDatas &&
-                  originDatas.filter(
-                    data =>
-                      data.Outbound.Stops.length === 0 &&
-                      data.Inbound.Stops.length === 0,
-                  ).length === 0
-                    ? '없음'
-                    : `₩${originDatas &&
-                        originDatas.filter(
-                          data =>
-                            data.Outbound.Stops.length === 0 &&
-                            data.Inbound.Stops.length === 0,
-                        )[0].price}`}
-                </S.RtnOption> */}
               </S.DropItem>
               <S.DropItem>
                 <CheckBox
@@ -207,21 +149,6 @@ const FilterArea = React.memo(
                   isDisable={viaDisable}
                   onChange={e => setWays(e.target)}
                 />
-                {/* <S.RtnOption>
-                  {originDatas &&
-                  originDatas.filter(
-                    data =>
-                      data.Outbound.Stops.length !== 0 ||
-                      data.Inbound.Stops.length !== 0,
-                  ).length === 0
-                    ? '없음'
-                    : `₩${originDatas &&
-                        originDatas.filter(
-                          data =>
-                            data.Outbound.Stops.length !== 0 ||
-                            data.Inbound.Stops.length !== 0,
-                        )[0].price}`}
-                </S.RtnOption> */}
               </S.DropItem>
             </DropBox>
             <DropBox title="출발 시간대 설정" range={true}>

@@ -206,7 +206,7 @@ function* getLiveSearch({ payload }) {
           yield put(
             success({
               originDatas: ListItem,
-              // renderDatas: ListItem.slice(0, 5),
+              renderDatas: ListItem.slice(0, 5),
               pageIndex: pageIndex + 1,
             }),
           );
@@ -214,123 +214,123 @@ function* getLiveSearch({ payload }) {
           console.log('ListItem', ListItem);
           console.log('way', way);
 
-          // 왕복, 편도 결정
-          if (way === 'round') {
-            const DirectRoundData = ListItem.filter(
-              data =>
-                data.Outbound.Stops.length === 0 &&
-                data.Inbound.Stops.length === 0,
-            );
+          // // 왕복, 편도 결정
+          // if (way === 'round') {
+          //   const DirectRoundData = ListItem.filter(
+          //     data =>
+          //       data.Outbound.Stops.length === 0 &&
+          //       data.Inbound.Stops.length === 0,
+          //   );
 
-            const ViaRoundData = ListItem.filter(
-              data =>
-                data.Outbound.Stops.length !== 0 ||
-                data.Inbound.Stops.length !== 0,
-            );
+          //   const ViaRoundData = ListItem.filter(
+          //     data =>
+          //       data.Outbound.Stops.length !== 0 ||
+          //       data.Inbound.Stops.length !== 0,
+          //   );
 
-            console.log('DirectRoundData', DirectRoundData);
-            console.log('ViaRoundData', ViaRoundData);
+          //   console.log('DirectRoundData', DirectRoundData);
+          //   console.log('ViaRoundData', ViaRoundData);
 
-            if (nonStops) {
-              yield put(
-                success({
-                  filterDatas:
-                    DirectRoundData.length !== 0
-                      ? DirectRoundData
-                      : ViaRoundData,
-                  renderDatas:
-                    DirectRoundData.length !== 0
-                      ? DirectRoundData.slice(0, 5)
-                      : ViaRoundData.slice(0, 5),
-                  filter: {
-                    direct: DirectRoundData.length !== 0 ? true : false,
-                    via: nonStops ? false : true,
-                    directDisable: DirectRoundData.length === 0 ? true : false,
-                    viaDisable: ViaRoundData.length === 0 ? true : false,
-                  },
-                }),
-              );
-            } else {
-              yield put(
-                success({
-                  filterDatas:
-                    ViaRoundData.length !== 0
-                      ? DirectRoundData.length !== 0
-                        ? ListItem
-                        : ViaRoundData
-                      : DirectRoundData,
-                  renderDatas:
-                    ViaRoundData.length !== 0
-                      ? DirectRoundData.length !== 0
-                        ? ListItem.slice(0, 5)
-                        : ViaRoundData.slice(0, 5)
-                      : DirectRoundData.slice(0, 5),
-                  filter: {
-                    direct: DirectRoundData.length !== 0 ? true : false,
-                    via: ViaRoundData.length !== 0 ? true : false,
-                    directDisable: DirectRoundData.length === 0 ? true : false,
-                    viaDisable: ViaRoundData.length === 0 ? true : false,
-                  },
-                }),
-              );
-            }
-            yield put(success({}));
-          } else {
-            const DirectOnewayData = ListItem.filter(
-              data => data.Outbound.Stops.length === 0,
-            );
+          //   if (nonStops) {
+          //     yield put(
+          //       success({
+          //         filterDatas:
+          //           DirectRoundData.length !== 0
+          //             ? DirectRoundData
+          //             : ViaRoundData,
+          //         renderDatas:
+          //           DirectRoundData.length !== 0
+          //             ? DirectRoundData.slice(0, 5)
+          //             : ViaRoundData.slice(0, 5),
+          //         filter: {
+          //           direct: DirectRoundData.length !== 0 ? true : false,
+          //           via: nonStops ? false : true,
+          //           directDisable: DirectRoundData.length === 0 ? true : false,
+          //           viaDisable: ViaRoundData.length === 0 ? true : false,
+          //         },
+          //       }),
+          //     );
+          //   } else {
+          //     yield put(
+          //       success({
+          //         filterDatas:
+          //           ViaRoundData.length !== 0
+          //             ? DirectRoundData.length !== 0
+          //               ? ListItem
+          //               : ViaRoundData
+          //             : DirectRoundData,
+          //         renderDatas:
+          //           ViaRoundData.length !== 0
+          //             ? DirectRoundData.length !== 0
+          //               ? ListItem.slice(0, 5)
+          //               : ViaRoundData.slice(0, 5)
+          //             : DirectRoundData.slice(0, 5),
+          //         filter: {
+          //           direct: DirectRoundData.length !== 0 ? true : false,
+          //           via: ViaRoundData.length !== 0 ? true : false,
+          //           directDisable: DirectRoundData.length === 0 ? true : false,
+          //           viaDisable: ViaRoundData.length === 0 ? true : false,
+          //         },
+          //       }),
+          //     );
+          //   }
+          //   yield put(success({}));
+          // } else {
+          //   const DirectOnewayData = ListItem.filter(
+          //     data => data.Outbound.Stops.length === 0,
+          //   );
 
-            const ViaOnewayData = ListItem.filter(
-              data => data.Outbound.Stops.length !== 0,
-            );
+          //   const ViaOnewayData = ListItem.filter(
+          //     data => data.Outbound.Stops.length !== 0,
+          //   );
 
-            console.log('DirectOnewayData', DirectOnewayData);
-            console.log('ViaOnewayData', ViaOnewayData);
+          //   console.log('DirectOnewayData', DirectOnewayData);
+          //   console.log('ViaOnewayData', ViaOnewayData);
 
-            if (nonStops) {
-              yield put(
-                success({
-                  filterDatas:
-                    DirectOnewayData.length !== 0
-                      ? DirectOnewayData
-                      : ViaOnewayData,
-                  renderDatas:
-                    DirectOnewayData.length !== 0
-                      ? DirectOnewayData.slice(0, 5)
-                      : ViaOnewayData.slice(0, 5),
-                  filter: {
-                    direct: DirectOnewayData.length !== 0 ? true : false,
-                    via: nonStops ? false : true,
-                    directDisable: DirectOnewayData.length === 0 ? true : false,
-                    viaDisable: ViaOnewayData.length === 0 ? true : false,
-                  },
-                }),
-              );
-            } else {
-              yield put(
-                success({
-                  filterDatas:
-                    ViaOnewayData.length !== 0
-                      ? DirectOnewayData.length !== 0
-                        ? ListItem
-                        : ViaOnewayData
-                      : DirectOnewayData,
-                  renderDatas:
-                    ViaOnewayData.length !== 0
-                      ? DirectOnewayData.length !== 0
-                        ? ListItem.slice(0, 5)
-                        : ViaOnewayData.slice(0, 5)
-                      : DirectOnewayData.slice(0, 5),
-                  filter: {
-                    direct: DirectOnewayData.length !== 0 ? true : false,
-                    via: ViaOnewayData.length !== 0 ? true : false,
-                    directDisable: DirectOnewayData.length === 0 ? true : false,
-                    viaDisable: ViaOnewayData.length === 0 ? true : false,
-                  },
-                }),
-              );
-            }
-          }
+          //   if (nonStops) {
+          //     yield put(
+          //       success({
+          //         filterDatas:
+          //           DirectOnewayData.length !== 0
+          //             ? DirectOnewayData
+          //             : ViaOnewayData,
+          //         renderDatas:
+          //           DirectOnewayData.length !== 0
+          //             ? DirectOnewayData.slice(0, 5)
+          //             : ViaOnewayData.slice(0, 5),
+          //         filter: {
+          //           direct: DirectOnewayData.length !== 0 ? true : false,
+          //           via: nonStops ? false : true,
+          //           directDisable: DirectOnewayData.length === 0 ? true : false,
+          //           viaDisable: ViaOnewayData.length === 0 ? true : false,
+          //         },
+          //       }),
+          //     );
+          //   } else {
+          //     yield put(
+          //       success({
+          //         filterDatas:
+          //           ViaOnewayData.length !== 0
+          //             ? DirectOnewayData.length !== 0
+          //               ? ListItem
+          //               : ViaOnewayData
+          //             : DirectOnewayData,
+          //         renderDatas:
+          //           ViaOnewayData.length !== 0
+          //             ? DirectOnewayData.length !== 0
+          //               ? ListItem.slice(0, 5)
+          //               : ViaOnewayData.slice(0, 5)
+          //             : DirectOnewayData.slice(0, 5),
+          //         filter: {
+          //           direct: DirectOnewayData.length !== 0 ? true : false,
+          //           via: ViaOnewayData.length !== 0 ? true : false,
+          //           directDisable: DirectOnewayData.length === 0 ? true : false,
+          //           viaDisable: ViaOnewayData.length === 0 ? true : false,
+          //         },
+          //       }),
+          //     );
+          //   }
+          // }
           return;
         }
       }
@@ -396,6 +396,7 @@ export const setFilterOptionsSaga = createAction('SET_FILTER_OPTIONS_SAGA');
 
 function* setFilterOptions({ payload }) {
   const filterOptions = yield select(state => state.flight.filterOptions);
+
   try {
     yield put(
       success({
@@ -456,8 +457,6 @@ function* filterLiveSearch({ payload }) {
     yield put(pending({ filterDatas: originDatas }));
     const filterDatas = yield select(state => state.flight.filterDatas);
 
-    console.log(filterOptions.OutBound.start);
-    console.log(filterOptions.OutBound.start);
     if (filterOptions.OutBound) {
       if (newFilterData) {
         newFilterData = newFilterData.filter(data => {
@@ -474,7 +473,6 @@ function* filterLiveSearch({ payload }) {
             ? data
             : null;
         });
-        console.log('newFilterData 있을때 Outbound', newFilterData);
       } else {
         newFilterData = filterDatas.filter(data => {
           return filterOptions.OutBound.start <=
@@ -490,7 +488,6 @@ function* filterLiveSearch({ payload }) {
             ? data
             : null;
         });
-        console.log('newFilterData 없을때 Outbound', newFilterData);
       }
     }
 
@@ -522,6 +519,26 @@ function* filterLiveSearch({ payload }) {
                 .format('kk:mm')
                 .split(':')
                 .join('')
+            ? data
+            : null;
+        });
+      }
+    }
+
+    if (filterOptions.Duration) {
+      if (newFilterData) {
+        newFilterData = newFilterData.filter(data => {
+          return (data.Inbound && data.Inbound.Duration
+            ? data.Outbound.Duration + data.Inbound.Duration
+            : data.Outbound.Duration) <= filterOptions.Duration
+            ? data
+            : null;
+        });
+      } else {
+        newFilterData = filterDatas.filter(data => {
+          return (data.Inbound && data.Inbound.Duration
+            ? data.Outbound.Duration + data.Inbound.Duration
+            : data.Outbound.Duration) <= filterOptions.Duration
             ? data
             : null;
         });
