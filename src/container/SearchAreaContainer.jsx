@@ -19,6 +19,7 @@ export default connect(
     children: state.search.children,
     infants: state.search.infants,
     nonStops: state.search.nonStops,
+    direct: state.flight.filter.direct,
   }),
   dispatch => ({
     changeWay: id => {
