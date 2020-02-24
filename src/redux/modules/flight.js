@@ -466,6 +466,7 @@ function* filterLiveSearch({ payload }) {
       }
     }
 
+    const regexr = /^24/;
     if (filterOptions.OutBound) {
       if (newFilterData) {
         newFilterData = newFilterData.filter(data => {
@@ -473,12 +474,14 @@ function* filterLiveSearch({ payload }) {
             moment(data.Outbound.Departure)
               .format('kk:mm')
               .split(':')
-              .join('') &&
+              .join('')
+              .replace(regexr, '00') &&
             filterOptions.OutBound.end >=
               moment(data.Outbound.Departure)
                 .format('kk:mm')
                 .split(':')
                 .join('')
+                .replace(regexr, '00')
             ? data
             : null;
         });
@@ -488,12 +491,14 @@ function* filterLiveSearch({ payload }) {
             moment(data.Outbound.Departure)
               .format('kk:mm')
               .split(':')
-              .join('') &&
+              .join('')
+              .replace(regexr, '00') &&
             filterOptions.OutBound.end >=
               moment(data.Outbound.Departure)
                 .format('kk:mm')
                 .split(':')
                 .join('')
+                .replace(regexr, '00')
             ? data
             : null;
         });
