@@ -4,7 +4,6 @@ import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
 import A11yTitle from '../../Common/A11yTitle';
 import useTime from '../../../hooks/useTime';
-import moment from 'moment';
 
 function valuetext(value) {
   return `${Math.floor(value[0] / 2)}시 ${value[1] / 2 ? '30' : '00'}분`;
@@ -20,11 +19,9 @@ const FilterArea = React.memo(
     setFilterModalVisible,
     originDatas,
     changeFilterDatas,
-    direct,
-    via,
     directDisable,
     viaDisable,
-    selectWays,
+    filterOptions,
     setFilterOptions,
   }) => {
     const [outboundTime, setOutboundTime] = useState([0, 48]);
@@ -51,12 +48,13 @@ const FilterArea = React.memo(
     };
 
     // 직항,경유 선택
-    const setWays = ({ id, checked }) => {
-      selectWays(id, checked);
+    const setWays = ({ target: { id, checked } }) => {
+      setFilterOptions({ [id]: checked });
+      changeFilterDatas();
     };
 
     // 출국 출발시간 옵션
-    const handleChangeOutbound = (event, newValue) => {
+    const handleChangeOutbound = newValue => {
       setOutboundTime(newValue);
     };
 
@@ -71,7 +69,7 @@ const FilterArea = React.memo(
     };
 
     // 입국 출발시간 옵션
-    const handleChangeInbound = (event, newValue) => {
+    const handleChangeInbound = newValue => {
       setInboundTime(newValue);
     };
 
@@ -135,9 +133,9 @@ const FilterArea = React.memo(
                   size="medium"
                   label="직항"
                   id="direct"
-                  checked={direct}
+                  checked={filterOptions.direct}
                   isDisable={directDisable}
-                  onChange={e => setWays(e.target)}
+                  onChange={setWays}
                 />
               </S.DropItem>
               <S.DropItem>
@@ -145,9 +143,9 @@ const FilterArea = React.memo(
                   size="medium"
                   label="경유"
                   id="via"
-                  checked={via}
+                  checked={filterOptions.via}
                   isDisable={viaDisable}
-                  onChange={e => setWays(e.target)}
+                  onChange={setWays}
                 />
               </S.DropItem>
             </DropBox>

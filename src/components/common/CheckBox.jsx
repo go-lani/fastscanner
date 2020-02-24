@@ -84,7 +84,7 @@ const CheckBox = ({
       htmlFor={id}
       size={size}
       labelColor={labelColor}
-      isDisable={isDisable || false}
+      isDisable={isDisable}
     >
       <StyledCheckbox
         type="checkbox"
@@ -92,7 +92,7 @@ const CheckBox = ({
         size={size}
         checked={checked}
         onChange={onChange}
-        disabled={isDisable || false}
+        disabled={isDisable}
       />
       {label}
     </StyledLabel>
