@@ -22,6 +22,12 @@ export const TabUi = styled.div`
 
 export const CategoryTab = styled.ul`
   display: flex;
+
+  li + li {
+    ${media.tablet`
+      margin-left: 5px;
+    `}
+  }
 `;
 
 export const TabButton = styled.button`

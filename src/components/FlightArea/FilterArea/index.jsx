@@ -4,7 +4,6 @@ import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
 import A11yTitle from '../../Common/A11yTitle';
 import useTime from '../../../hooks/useTime';
-import { useSelector } from 'react-redux';
 import moment from 'moment';
 
 function valuetext(value) {
@@ -20,9 +19,12 @@ const FilterArea = React.memo(
     filterModalVisible,
     setFilterModalVisible,
     originDatas,
+    filterDatas,
     changeFilterDatas,
     direct,
     via,
+    directDisable,
+    viaDisable,
     selectWays,
   }) => {
     const [outboundTime, setOutboundTime] = useState([0, 48]);
@@ -78,6 +80,7 @@ const FilterArea = React.memo(
       setDurationTime(newValue);
     };
 
+    // 총 소요시간 필터
     const handleChangeDurationDatas = (event, newValue) => {
       if (originDatas.map(originData => originData.Inbound)[0] !== null) {
         console.log(
@@ -108,12 +111,14 @@ const FilterArea = React.memo(
       }
     };
 
+    // 필터조건 탭 닫기
     const closeFilterArea = () => {
       setFilterModalVisible(false);
     };
 
-    const setWays = e => {
-      selectWays(e.target.id, e.target.checked);
+    // 직항,경유 선택
+    const setWays = ({ id, checked }) => {
+      selectWays(id, checked);
     };
 
     useEffect(() => {
@@ -139,6 +144,9 @@ const FilterArea = React.memo(
       }
       // console.log('originDatas', originDatas);
     }, [originDatas, outboundEndFormat, outboundStartFormat]);
+    useEffect(() => {
+      changeFilterDatas();
+    }, [changeFilterDatas, direct, via]);
 
     return (
       <>
@@ -162,8 +170,24 @@ const FilterArea = React.memo(
                   label="직항"
                   id="direct"
                   checked={direct}
-                  onChange={setWays}
+                  isDisable={directDisable}
+                  onChange={e => setWays(e.target)}
                 />
+                {/* <S.RtnOption>
+                  {originDatas &&
+                  originDatas.filter(
+                    data =>
+                      data.Outbound.Stops.length === 0 &&
+                      data.Inbound.Stops.length === 0,
+                  ).length === 0
+                    ? '없음'
+                    : `₩${originDatas &&
+                        originDatas.filter(
+                          data =>
+                            data.Outbound.Stops.length === 0 &&
+                            data.Inbound.Stops.length === 0,
+                        )[0].price}`}
+                </S.RtnOption> */}
               </S.DropItem>
               <S.DropItem>
                 <CheckBox
@@ -171,8 +195,24 @@ const FilterArea = React.memo(
                   label="경유"
                   id="via"
                   checked={via}
-                  onChange={setWays}
+                  isDisable={viaDisable}
+                  onChange={e => setWays(e.target)}
                 />
+                {/* <S.RtnOption>
+                  {originDatas &&
+                  originDatas.filter(
+                    data =>
+                      data.Outbound.Stops.length !== 0 ||
+                      data.Inbound.Stops.length !== 0,
+                  ).length === 0
+                    ? '없음'
+                    : `₩${originDatas &&
+                        originDatas.filter(
+                          data =>
+                            data.Outbound.Stops.length !== 0 ||
+                            data.Inbound.Stops.length !== 0,
+                        )[0].price}`}
+                </S.RtnOption> */}
               </S.DropItem>
             </DropBox>
             <DropBox title="출발 시간대 설정" range={true}>
