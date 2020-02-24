@@ -33,6 +33,7 @@ const FlightArea = ({
   selectWays,
   filterOptions,
   pageIndex,
+  main,
 }) => {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
 
@@ -68,9 +69,10 @@ const FlightArea = ({
 
   useEffect(() => {
     if (session) {
-      getLiveSearch();
+      // getLiveSearch();
+      main();
     }
-  }, [getLiveSearch, session]);
+  }, [getLiveSearch, main, session]);
 
   useEffect(() => {
     // if (originDatas && filterOptions && pageIndex) changeFilterDatas();
@@ -85,8 +87,7 @@ const FlightArea = ({
         filterDatas={filterDatas}
         changeFilterDatas={changeFilterDatas}
         selectWays={selectWays}
-        direct={direct}
-        via={via}
+        filterOptions={filterOptions}
         setFilterOptions={setFilterOptions}
         directDisable={directDisable}
         viaDisable={viaDisable}

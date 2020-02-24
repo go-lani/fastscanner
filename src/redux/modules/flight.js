@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { put, call, takeLatest, select, delay } from 'redux-saga/effects';
+import { put, call, takeLatest, select, delay, fork } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
 import FlightService from '../../service/FlightService';
 
@@ -21,9 +21,7 @@ const { success, pending, fail } = createActions(
 export const createSessionSaga = createAction('GET_SESSION_SAGA');
 
 function* createSession({ payload }) {
-  const nonStops = yield select(state => state.search.nonStops);
   const prevSessionId = yield select(state => state.flight.session);
-  const filter = yield select(state => state.flight.filter);
 
   try {
     yield put(
@@ -33,11 +31,6 @@ function* createSession({ payload }) {
           all: 0,
           complete: 0,
         },
-        filter: {
-          ...filter,
-          direct: true,
-          via: nonStops ? false : true,
-        },
       }),
     );
     const res = yield call(FlightService.createSession, payload);
@@ -45,7 +38,6 @@ function* createSession({ payload }) {
 
     if (prevSessionId !== sessionId) {
       yield put(success({ originDatas: [], pageIndex: 0, filterDatas: null }));
-      // yield put(success({ pageIndex: 0 }));
     }
     yield put(success({ session: sessionId }));
   } catch (error) {
@@ -53,18 +45,24 @@ function* createSession({ payload }) {
   }
 }
 
+function* fetchAll() {
+  yield call(getLiveSearch, 'payload');
+  yield call(filterLiveSearch, 'payload');
+}
+
+export const mainSaga = createAction('MAIN_SAGA');
+
+function* main() {
+  yield call(fetchAll);
+}
+
 // 데이터 요청
 export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 
 function* getLiveSearch({ payload }) {
-  const nonStops = yield select(state => state.search.nonStops);
-  const way = yield select(state => state.search.way);
-  const inboundDate = yield select(state => state.search.inboundDate);
   const session = yield select(state => state.flight.session);
   const pageIndex = yield select(state => state.flight.pageIndex);
   const filterOptions = yield select(state => state.flight.filterOptions);
-  const filter = yield select(state => state.flight.filter);
-  const filterDatas = yield select(state => state.flight.pageIndex);
 
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -75,7 +73,7 @@ function* getLiveSearch({ payload }) {
     sortType: 'price',
     sortOrder: 'asc',
     pageIndex: `${pageIndex}`,
-    pageSize: '100',
+    pageSize: '999',
   };
 
   function getInfo(legs, id) {
@@ -207,130 +205,15 @@ function* getLiveSearch({ payload }) {
             success({
               originDatas: ListItem,
               renderDatas: ListItem.slice(0, 5),
-              pageIndex: pageIndex + 1,
+              filterOptions: {
+                ...filterOptions,
+
+                Duration: null,
+              },
             }),
           );
 
           console.log('ListItem', ListItem);
-          console.log('way', way);
-
-          // // 왕복, 편도 결정
-          // if (way === 'round') {
-          //   const DirectRoundData = ListItem.filter(
-          //     data =>
-          //       data.Outbound.Stops.length === 0 &&
-          //       data.Inbound.Stops.length === 0,
-          //   );
-
-          //   const ViaRoundData = ListItem.filter(
-          //     data =>
-          //       data.Outbound.Stops.length !== 0 ||
-          //       data.Inbound.Stops.length !== 0,
-          //   );
-
-          //   console.log('DirectRoundData', DirectRoundData);
-          //   console.log('ViaRoundData', ViaRoundData);
-
-          //   if (nonStops) {
-          //     yield put(
-          //       success({
-          //         filterDatas:
-          //           DirectRoundData.length !== 0
-          //             ? DirectRoundData
-          //             : ViaRoundData,
-          //         renderDatas:
-          //           DirectRoundData.length !== 0
-          //             ? DirectRoundData.slice(0, 5)
-          //             : ViaRoundData.slice(0, 5),
-          //         filter: {
-          //           direct: DirectRoundData.length !== 0 ? true : false,
-          //           via: nonStops ? false : true,
-          //           directDisable: DirectRoundData.length === 0 ? true : false,
-          //           viaDisable: ViaRoundData.length === 0 ? true : false,
-          //         },
-          //       }),
-          //     );
-          //   } else {
-          //     yield put(
-          //       success({
-          //         filterDatas:
-          //           ViaRoundData.length !== 0
-          //             ? DirectRoundData.length !== 0
-          //               ? ListItem
-          //               : ViaRoundData
-          //             : DirectRoundData,
-          //         renderDatas:
-          //           ViaRoundData.length !== 0
-          //             ? DirectRoundData.length !== 0
-          //               ? ListItem.slice(0, 5)
-          //               : ViaRoundData.slice(0, 5)
-          //             : DirectRoundData.slice(0, 5),
-          //         filter: {
-          //           direct: DirectRoundData.length !== 0 ? true : false,
-          //           via: ViaRoundData.length !== 0 ? true : false,
-          //           directDisable: DirectRoundData.length === 0 ? true : false,
-          //           viaDisable: ViaRoundData.length === 0 ? true : false,
-          //         },
-          //       }),
-          //     );
-          //   }
-          //   yield put(success({}));
-          // } else {
-          //   const DirectOnewayData = ListItem.filter(
-          //     data => data.Outbound.Stops.length === 0,
-          //   );
-
-          //   const ViaOnewayData = ListItem.filter(
-          //     data => data.Outbound.Stops.length !== 0,
-          //   );
-
-          //   console.log('DirectOnewayData', DirectOnewayData);
-          //   console.log('ViaOnewayData', ViaOnewayData);
-
-          //   if (nonStops) {
-          //     yield put(
-          //       success({
-          //         filterDatas:
-          //           DirectOnewayData.length !== 0
-          //             ? DirectOnewayData
-          //             : ViaOnewayData,
-          //         renderDatas:
-          //           DirectOnewayData.length !== 0
-          //             ? DirectOnewayData.slice(0, 5)
-          //             : ViaOnewayData.slice(0, 5),
-          //         filter: {
-          //           direct: DirectOnewayData.length !== 0 ? true : false,
-          //           via: nonStops ? false : true,
-          //           directDisable: DirectOnewayData.length === 0 ? true : false,
-          //           viaDisable: ViaOnewayData.length === 0 ? true : false,
-          //         },
-          //       }),
-          //     );
-          //   } else {
-          //     yield put(
-          //       success({
-          //         filterDatas:
-          //           ViaOnewayData.length !== 0
-          //             ? DirectOnewayData.length !== 0
-          //               ? ListItem
-          //               : ViaOnewayData
-          //             : DirectOnewayData,
-          //         renderDatas:
-          //           ViaOnewayData.length !== 0
-          //             ? DirectOnewayData.length !== 0
-          //               ? ListItem.slice(0, 5)
-          //               : ViaOnewayData.slice(0, 5)
-          //             : DirectOnewayData.slice(0, 5),
-          //         filter: {
-          //           direct: DirectOnewayData.length !== 0 ? true : false,
-          //           via: ViaOnewayData.length !== 0 ? true : false,
-          //           directDisable: DirectOnewayData.length === 0 ? true : false,
-          //           viaDisable: ViaOnewayData.length === 0 ? true : false,
-          //         },
-          //       }),
-          //     );
-          //   }
-          // }
           return;
         }
       }
@@ -413,49 +296,79 @@ function* setFilterOptions({ payload }) {
   }
 }
 
-export const setFilterWaySaga = createAction('SET_FILTERWAY_SAGA');
-
-function* setFilterWay({ payload }) {
-  const filter = yield select(state => state.flight.filter);
-
-  try {
-    yield put(pending());
-    if (payload.id === 'direct') {
-      yield put(
-        success({
-          filter: {
-            ...filter,
-            direct: payload.status,
-          },
-        }),
-      );
-    } else {
-      yield put(
-        success({
-          filter: {
-            ...filter,
-            via: payload.status,
-          },
-        }),
-      );
-    }
-  } catch (error) {
-    yield put(fail(error));
-  }
-}
-
 export const filterLiveSearchSaga = createAction('FILTER_LIVESEARCH_SAGA');
 
 function* filterLiveSearch({ payload }) {
+  const way = yield select(state => state.search.way);
   const originDatas = yield select(state => state.flight.originDatas);
-  const nonStops = yield select(state => state.flight.nonStops);
   const filterOptions = yield select(state => state.flight.filterOptions);
   const pageIndex = yield select(state => state.flight.pageIndex);
   let newFilterData = null;
+  let directDisable = false;
+  let viaDisable = false;
 
   try {
     yield put(pending({ filterDatas: originDatas }));
     const filterDatas = yield select(state => state.flight.filterDatas);
+
+    console.log(filterOptions);
+    // 직항 필터링
+    const DirectData = way => {
+      let DirectDatas = [];
+
+      if (way === 'round')
+        // 왕복
+        DirectDatas = filterDatas.filter(
+          data =>
+            data.Outbound.Stops.length === 0 && data.Inbound.Stops.length === 0,
+        );
+      // 편도
+      else
+        DirectDatas = filterDatas.filter(
+          data => data.Outbound.Stops.length === 0,
+        );
+
+      return DirectDatas.length
+        ? { DirectDatas, directDisable: false }
+        : { DirectDatas: filterDatas, directDisable: true };
+    };
+
+    // 경유 필터링
+    const ViaData = way => {
+      let ViaDatas = [];
+
+      if (way === 'round')
+        // 왕복
+        ViaDatas = filterDatas.filter(
+          data =>
+            data.Outbound.Stops.length !== 0 || data.Inbound.Stops.length !== 0,
+        );
+      // 편도
+      else
+        ViaDatas = filterDatas.filter(data => data.Outbound.Stops.length !== 0);
+
+      return ViaDatas.length
+        ? { ViaDatas, viaDisable: false }
+        : { ViaDatas: filterDatas, viaDisable: true };
+    };
+
+    if (filterOptions.direct) {
+      if (filterOptions.via) {
+        newFilterData = filterDatas;
+      } else {
+        const { DirectDatas, directDisable: disable } = DirectData(way);
+        newFilterData = DirectDatas;
+        directDisable = disable;
+      }
+    } else {
+      if (filterOptions.via) {
+        const { ViaDatas, viaDisable: disable } = ViaData(way);
+        newFilterData = ViaDatas;
+        viaDisable = disable;
+      } else {
+        newFilterData = [];
+      }
+    }
 
     if (filterOptions.OutBound) {
       if (newFilterData) {
@@ -544,17 +457,24 @@ function* filterLiveSearch({ payload }) {
         });
       }
     }
-
     const newRenderDatas = newFilterData.slice(
       pageIndex * 5,
       (pageIndex + 1) * 5,
     );
 
+    console.log(newFilterData);
     yield put(
       success({
         pageIndex: pageIndex + 1,
         filterDatas: newFilterData,
         renderDatas: newRenderDatas,
+        filterOptions: {
+          ...filterOptions,
+          viaDisable,
+          directDisable,
+          via: !viaDisable,
+          direct: !directDisable,
+        },
       }),
     );
   } catch (error) {
@@ -569,7 +489,7 @@ export function* flightSaga() {
   yield takeLatest('RENDER_LIVESEARCH_SAGA', renderLiveSearch);
   yield takeLatest('FILTER_LIVESEARCH_SAGA', filterLiveSearch);
   yield takeLatest('SET_FILTER_OPTIONS_SAGA', setFilterOptions);
-  yield takeLatest('SET_FILTERWAY_SAGA', setFilterWay);
+  yield takeLatest('MAIN_SAGA', main);
 }
 
 const initialState = {
@@ -582,9 +502,9 @@ const initialState = {
     complete: 0,
   },
   pageIndex: 0,
-  filter: {
-    direct: false,
-    via: false,
+  filterOptions: {
+    direct: true,
+    via: true,
     directDisable: false,
     viaDisable: false,
   },
