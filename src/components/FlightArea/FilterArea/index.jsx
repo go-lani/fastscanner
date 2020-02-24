@@ -54,7 +54,7 @@ const FilterArea = React.memo(
     };
 
     // 출국 출발시간 옵션
-    const handleChangeOutbound = newValue => {
+    const handleChangeOutbound = (event, newValue) => {
       setOutboundTime(newValue);
     };
 
@@ -69,7 +69,7 @@ const FilterArea = React.memo(
     };
 
     // 입국 출발시간 옵션
-    const handleChangeInbound = newValue => {
+    const handleChangeInbound = (event, newValue) => {
       setInboundTime(newValue);
     };
 
