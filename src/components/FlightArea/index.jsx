@@ -23,10 +23,13 @@ const FlightArea = ({
   createSession,
   getLiveSearch,
   originDatas,
+  filterDatas,
   changeFilterDatas,
   setFilterOptions,
   direct,
   via,
+  directDisable,
+  viaDisable,
   selectWays,
   filterOptions,
   pageIndex,
@@ -79,11 +82,14 @@ const FlightArea = ({
         filterModalVisible={filterModalVisible}
         setFilterModalVisible={setFilterModalVisible}
         originDatas={originDatas}
+        filterDatas={filterDatas}
         changeFilterDatas={changeFilterDatas}
         selectWays={selectWays}
         direct={direct}
         via={via}
         setFilterOptions={setFilterOptions}
+        directDisable={directDisable}
+        viaDisable={viaDisable}
       />
       <ListAreaContainer setFilterModalVisible={setFilterModalVisible} />
     </FlightLayout>

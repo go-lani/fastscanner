@@ -19,9 +19,12 @@ const FilterArea = React.memo(
     filterModalVisible,
     setFilterModalVisible,
     originDatas,
+    filterDatas,
     changeFilterDatas,
     direct,
     via,
+    directDisable,
+    viaDisable,
     selectWays,
     setFilterOptions,
   }) => {
@@ -78,6 +81,7 @@ const FilterArea = React.memo(
       setDurationTime(newValue);
     };
 
+    // 총 소요시간 필터
     const handleChangeDurationDatas = (event, newValue) => {
       // if (originDatas.map(originData => originData.Inbound)[0] !== null) {
       //                                  (
@@ -96,12 +100,14 @@ const FilterArea = React.memo(
       // }
     };
 
+    // 필터조건 탭 닫기
     const closeFilterArea = () => {
       setFilterModalVisible(false);
     };
 
-    const setWays = e => {
-      selectWays(e.target.id, e.target.checked);
+    // 직항,경유 선택
+    const setWays = ({ id, checked }) => {
+      selectWays(id, checked);
     };
 
     // useEffect(() => {
@@ -173,8 +179,24 @@ const FilterArea = React.memo(
                   label="직항"
                   id="direct"
                   checked={direct}
-                  onChange={setWays}
+                  isDisable={directDisable}
+                  onChange={e => setWays(e.target)}
                 />
+                {/* <S.RtnOption>
+                  {originDatas &&
+                  originDatas.filter(
+                    data =>
+                      data.Outbound.Stops.length === 0 &&
+                      data.Inbound.Stops.length === 0,
+                  ).length === 0
+                    ? '없음'
+                    : `₩${originDatas &&
+                        originDatas.filter(
+                          data =>
+                            data.Outbound.Stops.length === 0 &&
+                            data.Inbound.Stops.length === 0,
+                        )[0].price}`}
+                </S.RtnOption> */}
               </S.DropItem>
               <S.DropItem>
                 <CheckBox
@@ -182,8 +204,24 @@ const FilterArea = React.memo(
                   label="경유"
                   id="via"
                   checked={via}
-                  onChange={setWays}
+                  isDisable={viaDisable}
+                  onChange={e => setWays(e.target)}
                 />
+                {/* <S.RtnOption>
+                  {originDatas &&
+                  originDatas.filter(
+                    data =>
+                      data.Outbound.Stops.length !== 0 ||
+                      data.Inbound.Stops.length !== 0,
+                  ).length === 0
+                    ? '없음'
+                    : `₩${originDatas &&
+                        originDatas.filter(
+                          data =>
+                            data.Outbound.Stops.length !== 0 ||
+                            data.Inbound.Stops.length !== 0,
+                        )[0].price}`}
+                </S.RtnOption> */}
               </S.DropItem>
             </DropBox>
             <DropBox title="출발 시간대 설정" range={true}>

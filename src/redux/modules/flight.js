@@ -21,8 +21,9 @@ const { success, pending, fail } = createActions(
 export const createSessionSaga = createAction('GET_SESSION_SAGA');
 
 function* createSession({ payload }) {
-  const prevSessionId = yield select(state => state.flight.session);
   const nonStops = yield select(state => state.search.nonStops);
+  const prevSessionId = yield select(state => state.flight.session);
+  const filter = yield select(state => state.flight.filter);
 
   try {
     yield put(
@@ -33,6 +34,7 @@ function* createSession({ payload }) {
           complete: 0,
         },
         filter: {
+          ...filter,
           direct: true,
           via: nonStops ? false : true,
         },
@@ -55,9 +57,14 @@ function* createSession({ payload }) {
 export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 
 function* getLiveSearch({ payload }) {
+  const nonStops = yield select(state => state.search.nonStops);
+  const way = yield select(state => state.search.way);
+  const inboundDate = yield select(state => state.search.inboundDate);
   const session = yield select(state => state.flight.session);
   const pageIndex = yield select(state => state.flight.pageIndex);
   const filterOptions = yield select(state => state.flight.filterOptions);
+  const filter = yield select(state => state.flight.filter);
+  const filterDatas = yield select(state => state.flight.pageIndex);
 
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -199,16 +206,138 @@ function* getLiveSearch({ payload }) {
           yield put(
             success({
               originDatas: ListItem,
-              renderDatas: ListItem.slice(0, 5),
+              // renderDatas: ListItem.slice(0, 5),
               pageIndex: pageIndex + 1,
             }),
           );
+
+          console.log('ListItem', ListItem);
+          console.log('way', way);
+
+          // 왕복, 편도 결정
+          if (way === 'round') {
+            const DirectRoundData = ListItem.filter(
+              data =>
+                data.Outbound.Stops.length === 0 &&
+                data.Inbound.Stops.length === 0,
+            );
+
+            const ViaRoundData = ListItem.filter(
+              data =>
+                data.Outbound.Stops.length !== 0 ||
+                data.Inbound.Stops.length !== 0,
+            );
+
+            console.log('DirectRoundData', DirectRoundData);
+            console.log('ViaRoundData', ViaRoundData);
+
+            if (nonStops) {
+              yield put(
+                success({
+                  filterDatas:
+                    DirectRoundData.length !== 0
+                      ? DirectRoundData
+                      : ViaRoundData,
+                  renderDatas:
+                    DirectRoundData.length !== 0
+                      ? DirectRoundData.slice(0, 5)
+                      : ViaRoundData.slice(0, 5),
+                  filter: {
+                    direct: DirectRoundData.length !== 0 ? true : false,
+                    via: nonStops ? false : true,
+                    directDisable: DirectRoundData.length === 0 ? true : false,
+                    viaDisable: ViaRoundData.length === 0 ? true : false,
+                  },
+                }),
+              );
+            } else {
+              yield put(
+                success({
+                  filterDatas:
+                    ViaRoundData.length !== 0
+                      ? DirectRoundData.length !== 0
+                        ? ListItem
+                        : ViaRoundData
+                      : DirectRoundData,
+                  renderDatas:
+                    ViaRoundData.length !== 0
+                      ? DirectRoundData.length !== 0
+                        ? ListItem.slice(0, 5)
+                        : ViaRoundData.slice(0, 5)
+                      : DirectRoundData.slice(0, 5),
+                  filter: {
+                    direct: DirectRoundData.length !== 0 ? true : false,
+                    via: ViaRoundData.length !== 0 ? true : false,
+                    directDisable: DirectRoundData.length === 0 ? true : false,
+                    viaDisable: ViaRoundData.length === 0 ? true : false,
+                  },
+                }),
+              );
+            }
+            yield put(success({}));
+          } else {
+            const DirectOnewayData = ListItem.filter(
+              data => data.Outbound.Stops.length === 0,
+            );
+
+            const ViaOnewayData = ListItem.filter(
+              data => data.Outbound.Stops.length !== 0,
+            );
+
+            console.log('DirectOnewayData', DirectOnewayData);
+            console.log('ViaOnewayData', ViaOnewayData);
+
+            if (nonStops) {
+              yield put(
+                success({
+                  filterDatas:
+                    DirectOnewayData.length !== 0
+                      ? DirectOnewayData
+                      : ViaOnewayData,
+                  renderDatas:
+                    DirectOnewayData.length !== 0
+                      ? DirectOnewayData.slice(0, 5)
+                      : ViaOnewayData.slice(0, 5),
+                  filter: {
+                    direct: DirectOnewayData.length !== 0 ? true : false,
+                    via: nonStops ? false : true,
+                    directDisable: DirectOnewayData.length === 0 ? true : false,
+                    viaDisable: ViaOnewayData.length === 0 ? true : false,
+                  },
+                }),
+              );
+            } else {
+              yield put(
+                success({
+                  filterDatas:
+                    ViaOnewayData.length !== 0
+                      ? DirectOnewayData.length !== 0
+                        ? ListItem
+                        : ViaOnewayData
+                      : DirectOnewayData,
+                  renderDatas:
+                    ViaOnewayData.length !== 0
+                      ? DirectOnewayData.length !== 0
+                        ? ListItem.slice(0, 5)
+                        : ViaOnewayData.slice(0, 5)
+                      : DirectOnewayData.slice(0, 5),
+                  filter: {
+                    direct: DirectOnewayData.length !== 0 ? true : false,
+                    via: ViaOnewayData.length !== 0 ? true : false,
+                    directDisable: DirectOnewayData.length === 0 ? true : false,
+                    viaDisable: ViaOnewayData.length === 0 ? true : false,
+                  },
+                }),
+              );
+            }
+          }
           return;
         }
       }
     }
   } catch (error) {
     yield put(fail(error));
+    console.log(error);
   }
 }
 
@@ -279,6 +408,7 @@ function* setFilterOptions({ payload }) {
     );
   } catch (error) {
     yield put(fail(error));
+    console.log(error);
   }
 }
 
@@ -286,6 +416,7 @@ export const setFilterWaySaga = createAction('SET_FILTERWAY_SAGA');
 
 function* setFilterWay({ payload }) {
   const filter = yield select(state => state.flight.filter);
+
   try {
     yield put(pending());
     if (payload.id === 'direct') {
@@ -435,8 +566,10 @@ const initialState = {
   },
   pageIndex: 0,
   filter: {
-    direct: 0,
-    via: 0,
+    direct: false,
+    via: false,
+    directDisable: false,
+    viaDisable: false,
   },
 };
 

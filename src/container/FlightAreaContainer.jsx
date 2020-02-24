@@ -13,9 +13,12 @@ export default connect(
     session: state.flight.session,
     direct: state.flight.filter.direct,
     via: state.flight.filter.via,
+    directDisable: state.flight.filter.directDisable,
+    viaDisable: state.flight.filter.viaDisable,
     originDatas: state.flight.originDatas,
     filterOptions: state.flight.filterOptions,
     pageIndex: state.flight.pageIndex,
+    filterDatas: state.flight.filterDatas,
   }),
 
   dispatch => ({
@@ -27,7 +30,6 @@ export default connect(
     },
     // 필요한지 고민중...
     selectWays: (id, status) => {
-      console.log(id, status);
       dispatch(setFilterWaySaga({ id, status }));
     },
     changeFilterDatas: (filterName, content) => {
