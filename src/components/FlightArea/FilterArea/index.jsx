@@ -54,7 +54,7 @@ const FilterArea = React.memo(
     };
 
     // 출국 출발시간 옵션
-    const handleChangeOutbound = newValue => {
+    const handleChangeOutbound = (event, newValue) => {
       setOutboundTime(newValue);
     };
 
@@ -69,7 +69,7 @@ const FilterArea = React.memo(
     };
 
     // 입국 출발시간 옵션
-    const handleChangeInbound = newValue => {
+    const handleChangeInbound = (event, newValue) => {
       setInboundTime(newValue);
     };
 
@@ -153,7 +153,6 @@ const FilterArea = React.memo(
               <S.DropItem>
                 <S.DropTitleBox>
                   <S.DropTitle>가는날 출발시간</S.DropTitle>
-                  <p>{`${outboundStartFormat} - ${outboundEndFormat}`}</p>
                   <p>{`${outboundStartTime} - ${outboundEndTime}`}</p>
                 </S.DropTitleBox>
                 <S.RangeSlider
@@ -169,7 +168,6 @@ const FilterArea = React.memo(
               <S.DropItem>
                 <S.DropTitleBox>
                   <S.DropTitle>오는날 출발시간</S.DropTitle>
-                  <p>{`${inboundStartFormat} - ${inboundEndFormat}`}</p>
                   <p>{`${inboundStartTime} - ${inboundEndTime}`}</p>
                 </S.DropTitleBox>
                 <S.RangeSlider
