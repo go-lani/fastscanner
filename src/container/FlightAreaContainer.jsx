@@ -11,8 +11,6 @@ import {
 export default connect(
   state => ({
     session: state.flight.session,
-    // direct: state.flight.filterOptions.direct,
-    // via: state.flight.filter.via,
     directDisable: state.flight.filterOptions.directDisable,
     viaDisable: state.flight.filterOptions.viaDisable,
     originDatas: state.flight.originDatas,
