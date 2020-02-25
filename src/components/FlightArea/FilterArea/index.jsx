@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import * as S from './FilterAreaStyled';
 import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
 import A11yTitle from '../../Common/A11yTitle';
 import useTime from '../../../hooks/useTime';
 
-function valuetext(value) {
+const valuetext = value => {
   return `${Math.floor(value[0] / 2)}시 ${value[1] / 2 ? '30' : '00'}분`;
-}
+};
 
-function durationValueText(value) {
+const durationValueText = value => {
   return `${Math.floor(value / 60)}시 ${value % 60}분`;
-}
+};
 
 const FilterArea = React.memo(
   ({
@@ -43,22 +43,25 @@ const FilterArea = React.memo(
     ] = useTime(inboundTime);
 
     // 필터조건 탭 닫기
-    const closeFilterArea = () => {
+    const closeFilterArea = useCallback(() => {
       setFilterModalVisible(false);
-    };
+    }, [setFilterModalVisible]);
 
     // 직항,경유 선택
-    const setWays = ({ target: { id, checked } }) => {
-      setFilterOptions({ [id]: checked });
-      filterLiveSearch();
-    };
+    const setWays = useCallback(
+      ({ target: { id, checked } }) => {
+        setFilterOptions({ [id]: checked });
+        filterLiveSearch();
+      },
+      [filterLiveSearch, setFilterOptions],
+    );
 
     // 출국 출발시간 옵션
-    const handleChangeOutbound = (event, newValue) => {
+    const handleChangeOutbound = useCallback((event, newValue) => {
       setOutboundTime(newValue);
-    };
+    }, []);
 
-    const handleChangeOutboundDatas = () => {
+    const handleChangeOutboundDatas = useCallback(() => {
       setFilterOptions({
         OutBound: {
           start: outboundStartFormat.split(':').join(''),
@@ -66,14 +69,19 @@ const FilterArea = React.memo(
         },
       });
       filterLiveSearch();
-    };
+    }, [
+      filterLiveSearch,
+      outboundEndFormat,
+      outboundStartFormat,
+      setFilterOptions,
+    ]);
 
     // 입국 출발시간 옵션
-    const handleChangeInbound = (event, newValue) => {
+    const handleChangeInbound = useCallback((event, newValue) => {
       setInboundTime(newValue);
-    };
+    }, []);
 
-    const handleChangeInboundDatas = () => {
+    const handleChangeInboundDatas = useCallback(() => {
       setFilterOptions({
         InBound: {
           start: inboundStartFormat.split(':').join(''),
@@ -81,7 +89,12 @@ const FilterArea = React.memo(
         },
       });
       filterLiveSearch();
-    };
+    }, [
+      filterLiveSearch,
+      inboundEndFormat,
+      inboundStartFormat,
+      setFilterOptions,
+    ]);
 
     // 총 소요시간 필터
     useEffect(() => {
@@ -100,17 +113,20 @@ const FilterArea = React.memo(
       setDurationTime(maxDuration);
     }, [maxDuration]);
 
-    const handleChangeDuration = (event, newValue) => {
+    const handleChangeDuration = useCallback((event, newValue) => {
       setDurationTime(newValue);
-    };
+    }, []);
 
-    const handleChangeDurationDatas = (event, newValue) => {
-      setFilterOptions({
-        Duration: newValue,
-      });
+    const handleChangeDurationDatas = useCallback(
+      (event, newValue) => {
+        setFilterOptions({
+          Duration: newValue,
+        });
 
-      filterLiveSearch();
-    };
+        filterLiveSearch();
+      },
+      [filterLiveSearch, setFilterOptions],
+    );
 
     return (
       <>

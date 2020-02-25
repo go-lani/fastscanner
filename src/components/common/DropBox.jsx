@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 
 const StyledDropBoxContainer = styled.li`
@@ -61,14 +61,14 @@ const StyledDropBoxList = styled.ul`
   }
 `;
 
-const DropBox = ({ title, range, children }) => {
+const DropBox = React.memo(({ title, range, children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [isClicked, setIsClicked] = useState(false);
 
-  const dropState = () => {
+  const dropState = useCallback(() => {
     setIsOpen(!isOpen);
     setIsClicked(!isClicked);
-  };
+  }, [isClicked, isOpen]);
 
   return (
     <StyledDropBoxContainer>
@@ -81,6 +81,6 @@ const DropBox = ({ title, range, children }) => {
       </StyledDropBoxList>
     </StyledDropBoxContainer>
   );
-};
+});
 
 export default DropBox;
