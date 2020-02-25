@@ -23,10 +23,6 @@ const AirportDestinationBox = ({
     else setVisible(false);
   }, [destinationSearchList]);
 
-  useEffect(() => {
-    console.log('visible', visible);
-  }, [visible]);
-
   const _handleChange = debounce(value => {
     searchDestination(value);
   }, 300);

@@ -112,16 +112,6 @@ const FilterArea = React.memo(
       changeFilterDatas();
     };
 
-    useEffect(() => {
-      console.log(
-        'direct',
-        filterOptions.direct,
-        'directDisable',
-        directDisable,
-      );
-      console.log('via', filterOptions.via, 'viaDisable', viaDisable);
-    });
-
     return (
       <>
         <S.FilterOverlay

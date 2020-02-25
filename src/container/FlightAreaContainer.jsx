@@ -30,7 +30,6 @@ export default connect(
       dispatch(filterLiveSearchSaga());
     },
     setFilterOptions: status => {
-      console.log(status);
       dispatch(setFilterOptionsSaga(status));
     },
     main: () => {
