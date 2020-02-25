@@ -2,7 +2,7 @@ import React from 'react';
 import * as S from './headerStyled';
 import LanguageIcon from '@material-ui/icons/Language';
 
-const Country = ({ openClick, selectLang }) => {
+const Country = React.memo(({ openClick, selectLang }) => {
   return (
     <>
       <li>
@@ -18,6 +18,6 @@ const Country = ({ openClick, selectLang }) => {
       </li>
     </>
   );
-};
+});
 
 export default Country;

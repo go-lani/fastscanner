@@ -1,7 +1,7 @@
 import React from 'react';
 import * as S from './headerStyled';
 
-const Info = props => {
+const Info = React.memo(props => {
   return (
     <li>
       <S.NavButton>
@@ -16,6 +16,6 @@ const Info = props => {
       </S.NavButton>
     </li>
   );
-};
+});
 
 export default Info;

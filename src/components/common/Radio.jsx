@@ -103,7 +103,7 @@ const Input = styled.input`
   }
 `;
 
-const Radio = props => {
+const Radio = React.memo(props => {
   return (
     <Label htmlFor={props.radioId} size={props.size}>
       <Input
@@ -117,6 +117,6 @@ const Radio = props => {
       <span>{props.label}</span>
     </Label>
   );
-};
+});
 
 export default Radio;

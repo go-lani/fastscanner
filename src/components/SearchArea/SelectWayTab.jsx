@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import A11yTitle from '../Common/A11yTitle';
 import Radio from '../Common/Radio';
 
-const SelectWayTab = ({ way, changeWay }) => {
+const SelectWayTab = React.memo(({ way, changeWay }) => {
   const handleChange = useCallback(
     event => {
       changeWay(event.target.id);
@@ -21,7 +21,6 @@ const SelectWayTab = ({ way, changeWay }) => {
         label="왕복"
         onChange={handleChange}
         checked={way === 'round'}
-        // checked={way === 'round' ? true : false}
       />
       <Radio
         radioId="oneway"
@@ -31,10 +30,9 @@ const SelectWayTab = ({ way, changeWay }) => {
         label="편도"
         onChange={handleChange}
         checked={way === 'oneway'}
-        // checked={way === 'oneway' ? true : false}
       />
     </fieldset>
   );
-};
+});
 
 export default SelectWayTab;

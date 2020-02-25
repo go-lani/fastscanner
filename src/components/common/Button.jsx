@@ -75,7 +75,7 @@ const Span = styled.span`
   vertical-align: middle;
 `;
 
-const Button = ({ text, image, ...rest }) => {
+const Button = React.memo(({ text, image, ...rest }) => {
   return (
     <>
       <StyledButton {...rest}>
@@ -84,6 +84,6 @@ const Button = ({ text, image, ...rest }) => {
       </StyledButton>
     </>
   );
-};
+});
 
 export default Button;

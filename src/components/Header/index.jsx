@@ -8,7 +8,7 @@ import ModalPortal from '../Popup/ModalPotal';
 import CountryModal from './CountryModal';
 import CurrencyModal from './CurrencyModal';
 
-const Header = props => {
+const Header = React.memo(props => {
   const [status, setStatus] = useState({
     lang: false,
     currency: false,
@@ -28,7 +28,7 @@ const Header = props => {
     currencyName: '한국 원',
   });
 
-  const openClick = id => {
+  const openClick = useCallback(id => {
     if (id === 'lang')
       return setStatus({
         lang: true,
@@ -40,7 +40,7 @@ const Header = props => {
         lang: false,
         currency: true,
       });
-  };
+  }, []);
 
   const closeClick = useCallback(() => {
     setStatus({
@@ -102,6 +102,6 @@ const Header = props => {
       </S.Header>
     </>
   );
-};
+});
 
 export default Header;

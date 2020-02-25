@@ -70,33 +70,27 @@ const StyledCheckbox = styled.input`
   }
 `;
 
-const CheckBox = ({
-  label,
-  id,
-  size,
-  onChange,
-  checked,
-  isDisable,
-  labelColor,
-}) => {
-  return (
-    <StyledLabel
-      htmlFor={id}
-      size={size}
-      labelColor={labelColor}
-      isDisable={isDisable}
-    >
-      <StyledCheckbox
-        type="checkbox"
-        id={id}
+const CheckBox = React.memo(
+  ({ label, id, size, onChange, checked, isDisable, labelColor }) => {
+    return (
+      <StyledLabel
+        htmlFor={id}
         size={size}
-        checked={checked}
-        onChange={onChange}
-        disabled={isDisable}
-      />
-      {label}
-    </StyledLabel>
-  );
-};
+        labelColor={labelColor}
+        isDisable={isDisable}
+      >
+        <StyledCheckbox
+          type="checkbox"
+          id={id}
+          size={size}
+          checked={checked}
+          onChange={onChange}
+          disabled={isDisable}
+        />
+        {label}
+      </StyledLabel>
+    );
+  },
+);
 
 export default CheckBox;
