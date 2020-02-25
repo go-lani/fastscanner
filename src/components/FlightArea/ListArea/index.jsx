@@ -33,6 +33,7 @@ const ListArea = React.memo(
     }, [setFilterModalVisible]);
 
     const changeCategory = useCallback(e => {
+      if (e.target.id === 'recommend') return alert('준비중입니다.');
       setActive(e.target.id);
     }, []);
 
@@ -51,20 +52,38 @@ const ListArea = React.memo(
         <S.TabArea>
           <S.FilterButton onClick={openFilterArea}>필터 (조건)</S.FilterButton>
           <S.CategoryTab>
-            <S.TabItem isActive={isActive === 'price'}>
-              <button id="price" type="button" onClick={changeCategory}>
-                최저가
-              </button>
+            <S.TabItem
+              id="price"
+              onClick={changeCategory}
+              isActive={isActive === 'price'}
+              role="button"
+              tabindex="0"
+            >
+              <p>최저가</p>
+              <em>₩ 222,222</em>
+              <small>(평균) 13시간 50분</small>
             </S.TabItem>
-            <S.TabItem isActive={isActive === 'duration'}>
-              <button id="duration" type="button" onClick={changeCategory}>
-                최단 여행시간
-              </button>
+            <S.TabItem
+              id="duration"
+              onClick={changeCategory}
+              isActive={isActive === 'duration'}
+              role="button"
+              tabindex="0"
+            >
+              <p>최단 여행시간</p>
+              <em>₩ 222,222</em>
+              <small>(평균) 13시간 50분</small>
             </S.TabItem>
-            <S.TabItem isActive={isActive === 'recommend'}>
-              <button id="recommend" type="button" onClick={changeCategory}>
-                추천순
-              </button>
+            <S.TabItem
+              id="recommend"
+              onClick={changeCategory}
+              isActive={isActive === 'recommend'}
+              role="button"
+              tabindex="0"
+            >
+              <p>추천순</p>
+              <em>₩ 222,222</em>
+              <small>(평균) 13시간 50분</small>
             </S.TabItem>
           </S.CategoryTab>
         </S.TabArea>

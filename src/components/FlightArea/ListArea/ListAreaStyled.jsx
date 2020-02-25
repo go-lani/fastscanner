@@ -32,30 +32,33 @@ export const CategoryTab = styled.ul`
 `;
 
 export const TabItem = styled.li`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
   width: 100%;
   min-width: 150px;
   min-height: 100px;
+  padding: 10px 20px;
+  border: 2px solid #eee;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0288d1;
+  text-align: left;
+  word-break: keep-all;
+  transition: all 0.3s;
+  cursor: pointer;
 
-  button {
-    width: 100%;
-    height: 100%;
-    padding: 10px 20px;
-    color: #0288d1;
-    font-size: 1.6rem;
-    font-weight: 700;
-    border: 2px solid #eee;
-    word-break: keep-all;
-    transition: all 0.3s;
+  & > * {
+    align-self: flex-start;
   }
 
   ${props =>
     props.isActive
       ? css`
-          button {
-            border: 2px solid #042759;
-            background: #042759;
-            color: #fff;
-          }
+          border: 2px solid #042759;
+          background: #042759;
+          color: #fff;
         `
       : css``}
 
