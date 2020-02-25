@@ -60,6 +60,7 @@ function* main() {
 export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
 
 function* getLiveSearch({ payload }) {
+  const nonStops = yield select(state => state.search.nonStops);
   const session = yield select(state => state.flight.session);
   const pageIndex = yield select(state => state.flight.pageIndex);
   const filterOptions = yield select(state => state.flight.filterOptions);
@@ -207,13 +208,12 @@ function* getLiveSearch({ payload }) {
               renderDatas: ListItem.slice(0, 5),
               filterOptions: {
                 ...filterOptions,
-
+                direct: true,
+                via: !nonStops,
                 Duration: null,
               },
             }),
           );
-
-          console.log('ListItem', ListItem);
           return;
         }
       }
@@ -304,69 +304,155 @@ function* filterLiveSearch({ payload }) {
   const filterOptions = yield select(state => state.flight.filterOptions);
   const pageIndex = yield select(state => state.flight.pageIndex);
   let newFilterData = null;
-  let directDisable = false;
-  let viaDisable = false;
+  let directDisable = filterOptions.directDisable;
+  let viaDisable = filterOptions.viaDisable;
+  let direct = filterOptions.direct;
+  let via = filterOptions.via;
 
   try {
     yield put(pending({ filterDatas: originDatas }));
     const filterDatas = yield select(state => state.flight.filterDatas);
 
-    console.log(filterOptions);
     // 직항 필터링
     const DirectData = way => {
       let DirectDatas = [];
+      let ViaDatas = [];
 
-      if (way === 'round')
+      if (way === 'round') {
         // 왕복
         DirectDatas = filterDatas.filter(
           data =>
             data.Outbound.Stops.length === 0 && data.Inbound.Stops.length === 0,
         );
-      // 편도
-      else
-        DirectDatas = filterDatas.filter(
-          data => data.Outbound.Stops.length === 0,
-        );
 
-      return DirectDatas.length
-        ? { DirectDatas, directDisable: false }
-        : { DirectDatas: filterDatas, directDisable: true };
-    };
-
-    // 경유 필터링
-    const ViaData = way => {
-      let ViaDatas = [];
-
-      if (way === 'round')
-        // 왕복
         ViaDatas = filterDatas.filter(
           data =>
             data.Outbound.Stops.length !== 0 || data.Inbound.Stops.length !== 0,
         );
-      // 편도
-      else
+      } else {
+        // 편도
+        DirectDatas = filterDatas.filter(
+          data => data.Outbound.Stops.length === 0,
+        );
+
         ViaDatas = filterDatas.filter(data => data.Outbound.Stops.length !== 0);
+      }
+
+      return DirectDatas.length
+        ? {
+            DirectDatas: filterOptions.direct
+              ? !filterOptions.via
+                ? DirectDatas
+                : filterDatas
+              : null,
+            directDisable: DirectDatas.length === 0 ? true : false,
+            viaDisable: ViaDatas.length === 0 ? true : false,
+            direct: filterOptions.direct && DirectDatas.length,
+            via: filterOptions.via && ViaDatas.length,
+          }
+        : {
+            DirectDatas: ViaDatas,
+            directDisable: DirectDatas.length === 0 ? true : false,
+            viaDisable: ViaDatas.length === 0 ? true : false,
+            direct: filterOptions.direct && DirectDatas.length,
+            via: filterOptions.via || ViaDatas.length,
+          };
+    };
+
+    // 경유 필터링
+    const ViaData = way => {
+      let DirectDatas = [];
+      let ViaDatas = [];
+
+      if (way === 'round') {
+        // 왕복
+        DirectDatas = filterDatas.filter(
+          data =>
+            data.Outbound.Stops.length === 0 && data.Inbound.Stops.length === 0,
+        );
+
+        ViaDatas = filterDatas.filter(
+          data =>
+            data.Outbound.Stops.length !== 0 || data.Inbound.Stops.length !== 0,
+        );
+      } else {
+        // 편도
+        DirectDatas = filterDatas.filter(
+          data => data.Outbound.Stops.length === 0,
+        );
+
+        ViaDatas = filterDatas.filter(data => data.Outbound.Stops.length !== 0);
+      }
 
       return ViaDatas.length
-        ? { ViaDatas, viaDisable: false }
-        : { ViaDatas: filterDatas, viaDisable: true };
+        ? {
+            ViaDatas: filterOptions.via
+              ? !filterOptions.direct
+                ? ViaDatas
+                : filterDatas
+              : null,
+            directDisable: !DirectDatas.length,
+            viaDisable: !ViaDatas.length,
+            direct: filterOptions.direct && DirectDatas.length,
+            via: filterOptions.via && ViaDatas.length,
+          }
+        : {
+            ViaDatas: ViaDatas,
+            directDisable: !DirectDatas.length,
+            viaDisable: !ViaDatas.length,
+            direct: filterOptions.direct && DirectDatas.length,
+            via: filterOptions.via && ViaDatas.length,
+          };
     };
 
     if (filterOptions.direct) {
       if (filterOptions.via) {
-        newFilterData = filterDatas;
-      } else {
-        const { DirectDatas, directDisable: disable } = DirectData(way);
+        const {
+          DirectDatas,
+          directDisable: dDisable,
+          viaDisable: vDisable,
+          direct: d,
+          via: v,
+        } = DirectData(way);
         newFilterData = DirectDatas;
-        directDisable = disable;
+        directDisable = dDisable;
+        viaDisable = vDisable;
+        direct = d;
+        via = v;
+      } else {
+        const {
+          DirectDatas,
+          directDisable: dDisable,
+          viaDisable: vDisable,
+          direct: d,
+          via: v,
+        } = DirectData(way);
+        newFilterData = DirectDatas;
+        directDisable = dDisable;
+        viaDisable = vDisable;
+        direct = d;
+        via = v;
       }
     } else {
       if (filterOptions.via) {
-        const { ViaDatas, viaDisable: disable } = ViaData(way);
+        const {
+          ViaDatas,
+          directDisable: dDisable,
+          viaDisable: vDisable,
+          direct: d,
+          via: v,
+        } = ViaData(way);
         newFilterData = ViaDatas;
-        viaDisable = disable;
+        directDisable = dDisable;
+        viaDisable = vDisable;
+        direct = d;
+        via = v;
       } else {
         newFilterData = [];
+        directDisable = filterOptions.directDisable ? true : false;
+        viaDisable = filterOptions.viaDisable ? true : false;
+        direct = false;
+        via = false;
       }
     }
 
@@ -466,8 +552,6 @@ function* filterLiveSearch({ payload }) {
       pageIndex * 5,
       (pageIndex + 1) * 5,
     );
-
-    console.log(newFilterData);
     yield put(
       success({
         pageIndex: pageIndex + 1,
@@ -475,10 +559,10 @@ function* filterLiveSearch({ payload }) {
         renderDatas: newRenderDatas,
         filterOptions: {
           ...filterOptions,
-          viaDisable,
+          direct: direct,
+          via: via,
           directDisable,
-          via: !viaDisable,
-          direct: !directDisable,
+          viaDisable,
         },
       }),
     );
@@ -509,7 +593,7 @@ const initialState = {
   pageIndex: 0,
   filterOptions: {
     direct: true,
-    via: true,
+    via: false,
     directDisable: false,
     viaDisable: false,
   },

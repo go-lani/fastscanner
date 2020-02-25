@@ -91,6 +91,8 @@ const FlightArea = ({
         setFilterOptions={setFilterOptions}
         directDisable={directDisable}
         viaDisable={viaDisable}
+        direct={direct}
+        via={via}
       />
       <ListAreaContainer setFilterModalVisible={setFilterModalVisible} />
     </FlightLayout>
