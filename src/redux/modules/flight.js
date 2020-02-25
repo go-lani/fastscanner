@@ -238,6 +238,8 @@ function* renderLiveSearch({ payload }) {
         (pageIndex + 1) * 5,
       );
 
+      yield delay(600);
+
       yield put(
         success({
           renderDatas: [...renderDatas, ...newFilterDatas],
@@ -252,6 +254,8 @@ function* renderLiveSearch({ payload }) {
         pageIndex * 5,
         (pageIndex + 1) * 5,
       );
+
+      yield delay(600);
 
       yield put(
         success({
