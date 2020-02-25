@@ -45,6 +45,7 @@ const FlightArea = ({ location, session, createSession, mainLiveSearch }) => {
       outboundDate: outBound,
       adults: +adults,
       inboundDate: `${+query.rtn ? inBound : ''}`,
+      groupPricing: +adults + +children + +infants > 1 ? true : false,
     };
 
     createSession(requestBody);

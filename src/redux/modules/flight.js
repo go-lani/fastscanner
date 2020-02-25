@@ -22,7 +22,7 @@ export const createSessionSaga = createAction('GET_SESSION_SAGA');
 
 function* createSession({ payload }) {
   const prevSessionId = yield select(state => state.flight.session);
-
+  console.log(payload);
   try {
     yield put(
       pending({
@@ -192,9 +192,7 @@ function* getLiveSearch({ payload }) {
                     AirlinesInfo: inBoundAirlines,
                   }
                 : null,
-              price: Math.floor(itinerary.PricingOptions[0].Price)
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+              price: Math.floor(itinerary.PricingOptions[0].Price).toString(),
               agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
               amount: itinerary.PricingOptions.length,
             });
