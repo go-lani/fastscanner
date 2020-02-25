@@ -406,9 +406,17 @@ export const FlightPrice = styled.div`
 
   em {
     display: block;
-    margin-bottom: 10px;
+    margin: 0 0 10px;
     font-weight: 700;
     font-size: 2.2rem;
+
+    small {
+      display: block;
+      margin: 5px 0 0;
+      font-weight: 400;
+      font-size: 1.2rem;
+      color: #909090;
+    }
   }
 
   ${media.desktop`
