@@ -49,7 +49,6 @@ const OptionPopup = ({
 
   const changeCabinClass = ({ target }) => {
     selectCabinClass(cabinClassRef.current.value);
-    console.log(target.value);
   };
 
   const submitOption = () => {
