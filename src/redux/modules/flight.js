@@ -22,7 +22,6 @@ export const createSessionSaga = createAction('GET_SESSION_SAGA');
 
 function* createSession({ payload }) {
   const prevSessionId = yield select(state => state.flight.session);
-  console.log(payload);
   try {
     yield put(
       pending({
@@ -230,8 +229,6 @@ function* renderLiveSearch({ payload }) {
   const pageIndex = yield select(state => state.flight.pageIndex);
 
   try {
-    yield delay(600);
-
     if (filterDatas) {
       if (filterDatas.length === renderDatas.length)
         return yield put(success({ pageIndex: 'lastIndex' }));
