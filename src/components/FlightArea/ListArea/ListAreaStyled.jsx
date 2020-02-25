@@ -10,71 +10,80 @@ export const ListLayout = styled.section`
 `;
 
 // Flight Category Tab
-export const TabUi = styled.div`
+export const TabArea = styled.div`
   display: flex;
-  justify-content: space-between;
-  padding: 5px 0 15px 0;
+  flex-direction: column;
+  margin: 5px 0 15px;
 
   ${media.desktop`
-  padding: 5px 0 10px 0;
+    flex-direction: row;
+    margin: 5px 0 10px;
   `}
 `;
 
 export const CategoryTab = styled.ul`
   display: flex;
-
-  li + li {
-    ${media.tablet`
-      margin-left: 5px;
-    `}
-  }
-`;
-
-export const TabButton = styled.button`
-  /* padding: 10px;
-  color: #0288d1;
-  font-size: 1.6rem;
-  font-weight: 700;
-  border: 2px solid #eee;
-  border-radius: 5px;
-
-  &:hover {
-    border: 2px solid #0288d1;
-  }
+  overflow-x: auto;
+  overflow-y: hidden;
 
   ${media.desktop`
-    display: none;
+    flex-basis: 70%;
   `}
+`;
 
-  ${media.mobile`
-    font-size: 1.2rem;
+export const TabItem = styled.li`
+  width: 100%;
+  min-width: 150px;
+  min-height: 100px;
+
+  button {
+    width: 100%;
+    height: 100%;
+    padding: 10px 20px;
+    color: #0288d1;
+    font-size: 1.6rem;
     font-weight: 700;
+    border: 2px solid #eee;
     word-break: keep-all;
-    `} */
+    transition: all 0.3s;
+  }
+
+  ${props =>
+    props.isActive
+      ? css`
+          button {
+            border: 2px solid #042759;
+            background: #042759;
+            color: #fff;
+          }
+        `
+      : css``}
+
+  & + & {
+    margin: 0 0 0 10px;
+  }
 `;
 
 export const FilterButton = styled.button`
-  /* display: block; */
+  display: none;
   padding: 10px 20px;
   color: #0288d1;
   font-size: 1.6rem;
   font-weight: 700;
   border: 2px solid #eee;
   border-radius: 5px;
+  margin: 0 0 5px;
 
   &:hover {
     border: 2px solid #0288d1;
   }
 
-  ${media.desktop`
-    display: none;
+  ${media.tablet`
+    display: block;
   `}
 
   ${media.mobile`
-    padding: 10px;
-    font-size: 1.2rem;
-    font-weight: 700;
-    word-break: keep-all;
+    display: block;
   `}
 `;
 
@@ -206,10 +215,12 @@ export const AirlineInfo = styled.ul`
 
 export const AirlineList = styled.li`
   display: block;
+  position: relative;
   width: auto;
   min-width: 60px;
   height: 35px;
   margin: 0;
+  white-space: nowrap;
 
   ${media.mobile`
     display: inline-block;
@@ -226,6 +237,27 @@ export const AirlineList = styled.li`
   img {
     height: 100%;
   }
+
+  &:hover {
+    p {
+      display: inline-block;
+    }
+  }
+`;
+
+export const AirlineName = styled.p`
+  display: none;
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 50%;
+  min-width: 100%;
+  padding: 10px;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 5px #eee;
+  text-align: center;
 `;
 
 export const FlyInfo = styled.div`

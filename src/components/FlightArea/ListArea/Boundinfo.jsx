@@ -27,6 +27,7 @@ const Boundinfo = React.memo(
               {AirlinesInfo.map(info => (
                 <S.AirlineList key={uuid.v4()}>
                   <img src={info.imgUrl} alt={info.name} />
+                  <S.AirlineName>{info.name}</S.AirlineName>
                 </S.AirlineList>
               ))}
             </>

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import uuid from 'uuid';
 import FlightItem from './FlightItem';
 import A11yTitle from '../../Common/A11yTitle';
@@ -26,9 +26,15 @@ const ListArea = React.memo(
     loading,
     renderLiveSearch,
   }) => {
+    const [isActive, setActive] = useState('price');
+
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
     }, [setFilterModalVisible]);
+
+    const changeCategory = useCallback(e => {
+      setActive(e.target.id);
+    }, []);
 
     return (
       <S.ListLayout>
@@ -42,20 +48,26 @@ const ListArea = React.memo(
           </S.ProgressTextBox>
           <S.Progress variant="determinate" value={progress.per} />
         </S.ProgressBox>
-        <S.TabUi>
-          <S.CategoryTab>
-            <li>
-              <S.FilterButton>최저가</S.FilterButton>
-            </li>
-            <li>
-              <S.FilterButton>최단 여행시간</S.FilterButton>
-            </li>
-            <li>
-              <S.FilterButton>추천순</S.FilterButton>
-            </li>
-          </S.CategoryTab>
+        <S.TabArea>
           <S.FilterButton onClick={openFilterArea}>필터 (조건)</S.FilterButton>
-        </S.TabUi>
+          <S.CategoryTab>
+            <S.TabItem isActive={isActive === 'price'}>
+              <button id="price" type="button" onClick={changeCategory}>
+                최저가
+              </button>
+            </S.TabItem>
+            <S.TabItem isActive={isActive === 'duration'}>
+              <button id="duration" type="button" onClick={changeCategory}>
+                최단 여행시간
+              </button>
+            </S.TabItem>
+            <S.TabItem isActive={isActive === 'recommend'}>
+              <button id="recommend" type="button" onClick={changeCategory}>
+                추천순
+              </button>
+            </S.TabItem>
+          </S.CategoryTab>
+        </S.TabArea>
         <S.FlightList>
           {loading && !pageIndex && loaderRender}
           <InfiniteScroller
