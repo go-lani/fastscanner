@@ -18,10 +18,10 @@ const FilterArea = React.memo(
     filterModalVisible,
     setFilterModalVisible,
     originDatas,
-    changeFilterDatas,
     directDisable,
     viaDisable,
     filterOptions,
+    filterLiveSearch,
     setFilterOptions,
   }) => {
     const [outboundTime, setOutboundTime] = useState([0, 48]);
@@ -50,7 +50,7 @@ const FilterArea = React.memo(
     // 직항,경유 선택
     const setWays = ({ target: { id, checked } }) => {
       setFilterOptions({ [id]: checked });
-      changeFilterDatas();
+      filterLiveSearch();
     };
 
     // 출국 출발시간 옵션
@@ -65,7 +65,7 @@ const FilterArea = React.memo(
           end: outboundEndFormat.split(':').join(''),
         },
       });
-      changeFilterDatas();
+      filterLiveSearch();
     };
 
     // 입국 출발시간 옵션
@@ -80,7 +80,7 @@ const FilterArea = React.memo(
           end: inboundEndFormat.split(':').join(''),
         },
       });
-      changeFilterDatas();
+      filterLiveSearch();
     };
 
     // 총 소요시간 필터
@@ -109,7 +109,7 @@ const FilterArea = React.memo(
         Duration: newValue,
       });
 
-      changeFilterDatas();
+      filterLiveSearch();
     };
 
     return (

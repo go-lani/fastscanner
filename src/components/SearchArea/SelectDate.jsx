@@ -50,32 +50,6 @@ const SelectDate = ({
     selectMomentInboundDate(endDate);
   };
 
-  // const setDate = (startDate, endDate) => {
-  //   if (startDate && !endDate) {
-  //     if (
-  //       startDate.format('YYYY-MM-DD') === momentOutDate.format('YYYY-MM-DD')
-  //     ) {
-  //       return selectOutboundDate(startDate.format('YYYY-MM-DD'));
-  //     }
-  //     selectMomentOutboundDate(startDate);
-  //     selectOutboundDate(startDate.format('YYYY-MM-DD'));
-  //   } else if (startDate && endDate) {
-  //     selectMomentInboundDate(endDate);
-  //   }
-  // };
-
-  // const setStartDate = startDate => {
-  //   selectOutboundDate(moment(startDate).format('YYYY-MM-DD'));
-  //   selectMomentOutboundDate(startDate);
-  // };
-
-  // const setEndDate = endDate => {
-  //   if (!endDate) return;
-
-  //   selectInboundDate(moment(endDate).format('YYYY-MM-DD'));
-  //   selectMomentInboundDate(endDate);
-  // };
-
   return (
     <fieldset className="option-field date">
       <S.FieldTitle>가는날 / 오는날</S.FieldTitle>
@@ -93,7 +67,6 @@ const SelectDate = ({
           onDatesChange={({ startDate, endDate }) => {
             setStartDate(startDate);
             setEndDate(endDate);
-            // setDate(startDate, endDate);
           }}
           focusedInput={focusedInput}
           onFocusChange={focusedInput => setFocusedInput(focusedInput)}

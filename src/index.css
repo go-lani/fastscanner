@@ -116,6 +116,10 @@ select::-ms-expand {
 	color: #777777;
 }
 
+input[type=text] {
+	border-radius: 0;
+}
+
 button,
 input[type=file],
 input[type=image],
@@ -127,6 +131,7 @@ input[type=submit] {
 	cursor: pointer;
 	-webkit-appearance: none;
 	appearance: none;
+	border-radius: none;
 }
 
 label {
@@ -164,4 +169,10 @@ a:active {
 a:focus {
 	text-decoration: none;
 	color: inherit;
+}
+
+@media all and (max-width: 768px) {
+	html {
+		font-size: 8px;
+	}
 }

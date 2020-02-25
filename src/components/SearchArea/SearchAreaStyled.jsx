@@ -24,6 +24,10 @@ export const SearchWrapper = styled.section`
     css`
       display: none;
     `}
+
+  ${media.mobile`
+    padding: ${props => (props.isHeader ? 0 : '80px 0')};
+  `}
 `;
 
 export const Greeting = styled.h2`

@@ -58,6 +58,15 @@
 }
 
 /* Mobile */
+@media all and (max-width: 768px) {
+  .DateInput {
+    width: 42%;
+  }
+
+  .DateRangePickerInput_arrow {
+    width: 16%;
+  }
+}
 @media all and (max-width: 450px) {
   .openStartDate .DateRangePicker_picker {
     left: 50%  !important;

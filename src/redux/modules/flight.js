@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { put, call, takeLatest, select, delay, fork } from 'redux-saga/effects';
+import { put, call, takeLatest, select, delay } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
 import FlightService from '../../service/FlightService';
 
@@ -45,20 +45,18 @@ function* createSession({ payload }) {
   }
 }
 
-function* fetchAll() {
+export const mainLiveSearchSaga = createAction('MAIN_LIVESEARCH_SAGA');
+
+function* fetchLiveSearch() {
   yield call(getLiveSearch, 'payload');
   yield call(filterLiveSearch, 'payload');
 }
 
-export const mainSaga = createAction('MAIN_SAGA');
-
-function* main() {
-  yield call(fetchAll);
+function* mainLiveSearch() {
+  yield call(fetchLiveSearch);
 }
 
 // 데이터 요청
-export const getLiveSearchSaga = createAction('GET_LIVESEARCH_SAGA');
-
 function* getLiveSearch({ payload }) {
   const nonStops = yield select(state => state.search.nonStops);
   const session = yield select(state => state.flight.session);
@@ -574,11 +572,10 @@ function* filterLiveSearch({ payload }) {
 
 export function* flightSaga() {
   yield takeLatest('GET_SESSION_SAGA', createSession);
-  yield takeLatest('GET_LIVESEARCH_SAGA', getLiveSearch);
   yield takeLatest('RENDER_LIVESEARCH_SAGA', renderLiveSearch);
   yield takeLatest('FILTER_LIVESEARCH_SAGA', filterLiveSearch);
   yield takeLatest('SET_FILTER_OPTIONS_SAGA', setFilterOptions);
-  yield takeLatest('MAIN_SAGA', main);
+  yield takeLatest('MAIN_LIVESEARCH_SAGA', mainLiveSearch);
 }
 
 const initialState = {

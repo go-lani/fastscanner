@@ -3,9 +3,9 @@ import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import moment from 'moment';
-import FilterArea from './FilterArea';
 import media from '../../libs/MediaQuery';
 import ListAreaContainer from '../../container/ListAreaContainer';
+import FilterAreaContainer from '../../container/FilterAreaContainer';
 
 const FlightLayout = styled.div`
   display: flex;
@@ -17,24 +17,7 @@ const FlightLayout = styled.div`
   `}
 `;
 
-const FlightArea = ({
-  location,
-  session,
-  createSession,
-  getLiveSearch,
-  originDatas,
-  filterDatas,
-  changeFilterDatas,
-  setFilterOptions,
-  direct,
-  via,
-  directDisable,
-  viaDisable,
-  selectWays,
-  filterOptions,
-  pageIndex,
-  main,
-}) => {
+const FlightArea = ({ location, session, createSession, mainLiveSearch }) => {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
 
   useEffect(() => {
@@ -69,30 +52,15 @@ const FlightArea = ({
 
   useEffect(() => {
     if (session) {
-      // getLiveSearch();
-      main();
+      mainLiveSearch();
     }
-  }, [getLiveSearch, main, session]);
-
-  useEffect(() => {
-    // if (originDatas && filterOptions && pageIndex) changeFilterDatas();
-  }, [changeFilterDatas, filterOptions, originDatas, pageIndex]);
+  }, [mainLiveSearch, session]);
 
   return (
     <FlightLayout>
-      <FilterArea
+      <FilterAreaContainer
         filterModalVisible={filterModalVisible}
         setFilterModalVisible={setFilterModalVisible}
-        originDatas={originDatas}
-        filterDatas={filterDatas}
-        changeFilterDatas={changeFilterDatas}
-        selectWays={selectWays}
-        filterOptions={filterOptions}
-        setFilterOptions={setFilterOptions}
-        directDisable={directDisable}
-        viaDisable={viaDisable}
-        direct={direct}
-        via={via}
       />
       <ListAreaContainer setFilterModalVisible={setFilterModalVisible} />
     </FlightLayout>

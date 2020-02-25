@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../components/Header';
 import SearchAreaContainer from '../container/SearchAreaContainer';
 import styled from 'styled-components';
+import Footer from '../components/Footer';
 
 const MainLayout = styled.div`
   display: flex;
@@ -22,7 +23,7 @@ const Home = () => {
         <Header />
         <SearchAreaContainer />
       </MainLayout>
-      <div style={{ height: 300 }}></div>
+      <Footer />
     </>
   );
 };

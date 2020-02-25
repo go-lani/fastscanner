@@ -23,8 +23,9 @@ export const FilterOverlay = styled.div`
 
 export const FilterAreaLayout = styled.section`
   flex-basis: 20vw;
-  background: #f5f5f5;
+  min-height: 100vh;
   padding: 20px 30px;
+  background: #f5f5f5;
 
   ${media.tablet`
     transform: ${({ filterModalVisible }) =>
