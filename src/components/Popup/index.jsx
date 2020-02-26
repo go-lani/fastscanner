@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ModalPortal from './ModalPotal';
 import * as S from './popupStyled';
 
-const Popup = ({ visible, children, hide, title }) => {
+const Popup = ({ visible, children, hide, title, name }) => {
   const [animate, setAnimate] = useState(false);
   const [localVisible, setLocalVisible] = useState(visible);
 
@@ -21,8 +21,12 @@ const Popup = ({ visible, children, hide, title }) => {
       <S.PopupLayout>
         <S.Dim disappear={!visible} onClick={hide} />
         <S.PopupInner disappear={!visible}>
-          {title && <p>{title}</p>}
-          <S.CloseButton onClick={hide}>취소</S.CloseButton>
+          {name !== 'optionsPopup' && (
+            <>
+              {title && <p>{title}</p>}
+              <S.CloseButton onClick={hide}>취소</S.CloseButton>
+            </>
+          )}
           {children}
         </S.PopupInner>
       </S.PopupLayout>

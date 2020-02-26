@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 const Loader = () => {
   const device = useSelector(state => state.util.device);
   const way = useSelector(state => state.search.way);
-  console.log(device);
 
   const loaderRender = (() => {
     if (device === 'Desktop') {

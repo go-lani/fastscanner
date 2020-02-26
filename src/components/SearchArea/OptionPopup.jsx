@@ -86,72 +86,79 @@ const OptionPopup = React.memo(
               </S.SelectCabinClass>
             ) : (
               <S.RequestRequiredNotice>
-                <p style={{ fontWeight: '700' }}>
-                  검색하신 노선은 일반석 가격만 보여 드릴 수 있습니다.
-                </p>
+                <em>검색하신 노선은 일반석 가격만 보여 드릴 수 있습니다.</em>
                 <p>
                   비즈니스석 및 일등석 옵션을 보려면 정확한 날짜 및 도착지 도시
                   이름을 알려주세요.
                 </p>
               </S.RequestRequiredNotice>
             )}
-            <S.CategoryTitle>성인</S.CategoryTitle>
-            <S.CountArea>
-              <S.CountButton
-                type="button"
-                disabled={adults === 1 ? true : false}
-                onClick={minusAdult}
-              >
-                <RemoveRoundedIcon fontSize="large" />
-              </S.CountButton>
-              <S.CountNum>{adults}</S.CountNum>
-              <S.CountButton
-                type="button"
-                disabled={allCount === 16 ? true : false}
-                onClick={plusAdult}
-              >
-                <AddRoundedIcon fontSize="large" />
-              </S.CountButton>
-              <S.AgeRangText>만 16세 이상</S.AgeRangText>
-            </S.CountArea>
-            <S.CategoryTitle>소아</S.CategoryTitle>
-            <S.CountArea>
-              <S.CountButton
-                type="button"
-                disabled={children ? false : true}
-                onClick={minusChild}
-              >
-                <RemoveRoundedIcon fontSize="large" />
-              </S.CountButton>
-              <S.CountNum>{children}</S.CountNum>
-              <S.CountButton
-                type="button"
-                disabled={allCount === 16 ? true : false}
-                onClick={plusChild}
-              >
-                <AddRoundedIcon fontSize="large" />
-              </S.CountButton>
-              <S.AgeRangText>만 16세 미만</S.AgeRangText>
-            </S.CountArea>
-            <S.CategoryTitle>유아</S.CategoryTitle>
-            <S.CountArea>
-              <S.CountButton
-                type="button"
-                disabled={infants ? false : true}
-                onClick={minusInfants}
-              >
-                <RemoveRoundedIcon fontSize="large" />
-              </S.CountButton>
-              <S.CountNum>{infants}</S.CountNum>
-              <S.CountButton
-                type="button"
-                disabled={allCount === 16 ? true : false}
-                onClick={plusInfants}
-              >
-                <AddRoundedIcon fontSize="large" />
-              </S.CountButton>
-              <S.AgeRangText>만 24개월 미만</S.AgeRangText>
-            </S.CountArea>
+            <S.PersonTypeList>
+              <S.CategoryItem>
+                <S.CategoryTitle>성인</S.CategoryTitle>
+                <S.CountArea>
+                  <S.CountButton
+                    type="button"
+                    disabled={adults === 1 ? true : false}
+                    onClick={minusAdult}
+                  >
+                    <RemoveRoundedIcon fontSize="large" />
+                  </S.CountButton>
+                  <S.CountNum>{adults}</S.CountNum>
+                  <S.CountButton
+                    type="button"
+                    disabled={allCount === 16 ? true : false}
+                    onClick={plusAdult}
+                  >
+                    <AddRoundedIcon fontSize="large" />
+                  </S.CountButton>
+                  <S.AgeRangText>만 16세 이상</S.AgeRangText>
+                </S.CountArea>
+              </S.CategoryItem>
+              <S.CategoryItem>
+                <S.CategoryTitle>소아</S.CategoryTitle>
+                <S.CountArea>
+                  <S.CountButton
+                    type="button"
+                    disabled={children ? false : true}
+                    onClick={minusChild}
+                  >
+                    <RemoveRoundedIcon fontSize="large" />
+                  </S.CountButton>
+                  <S.CountNum>{children}</S.CountNum>
+                  <S.CountButton
+                    type="button"
+                    disabled={allCount === 16 ? true : false}
+                    onClick={plusChild}
+                  >
+                    <AddRoundedIcon fontSize="large" />
+                  </S.CountButton>
+                  <S.AgeRangText>만 16세 미만</S.AgeRangText>
+                </S.CountArea>
+              </S.CategoryItem>
+              <S.CategoryItem>
+                {' '}
+                <S.CategoryTitle>유아</S.CategoryTitle>
+                <S.CountArea>
+                  <S.CountButton
+                    type="button"
+                    disabled={infants ? false : true}
+                    onClick={minusInfants}
+                  >
+                    <RemoveRoundedIcon fontSize="large" />
+                  </S.CountButton>
+                  <S.CountNum>{infants}</S.CountNum>
+                  <S.CountButton
+                    type="button"
+                    disabled={allCount === 16 ? true : false}
+                    onClick={plusInfants}
+                  >
+                    <AddRoundedIcon fontSize="large" />
+                  </S.CountButton>
+                  <S.AgeRangText>만 24개월 미만</S.AgeRangText>
+                </S.CountArea>
+              </S.CategoryItem>
+            </S.PersonTypeList>
             <S.Notice>
               여행 시 탑승객의 나이는 예약된 연령 범주에 부합해야 합니다.
               항공사는 만 18세 미만의 단독 여행 탑승객에 대한 제한이 있습니다.

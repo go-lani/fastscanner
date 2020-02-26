@@ -2,7 +2,7 @@ import React, { useState, createRef } from 'react';
 import { useSelector } from 'react-redux';
 import OptionPopupContainer from '../../container/OptionPopupContainer';
 import ArrowDropDownOutlinedIcon from '@material-ui/icons/ArrowDropDownOutlined';
-import ModalPortal from '../Popup/ModalPotal';
+import Popup from '../Popup';
 import * as S from './SearchAreaStyled';
 import { useEffect } from 'react';
 
@@ -52,11 +52,9 @@ const SelectOption = ({ cabinClass, adults, children, infants }) => {
             <S.Dim ref={dimRef} isOpen={isOpen} onClick={click} />
           </>
         ) : isOpen ? (
-          <ModalPortal>
-            <S.ModalDim ref={dimRef} onClick={click}>
-              <OptionPopupContainer isOpen={isOpen} hidePopup={popupClose} />
-            </S.ModalDim>
-          </ModalPortal>
+          <Popup visible={isOpen} hide={popupClose} name="optionsPopup">
+            <OptionPopupContainer hidePopup={popupClose} />
+          </Popup>
         ) : null}
       </div>
     </>

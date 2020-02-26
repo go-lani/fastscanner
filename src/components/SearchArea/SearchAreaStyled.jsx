@@ -214,7 +214,8 @@ export const StyledOptionPopup = styled.div`
 `;
 
 export const OptionPopup = styled.div`
-  padding: 15px;
+  position: relative;
+  padding: 15px 15px 40px;
   border-radius: 5px;
   background-color: #fff;
   font-size: 1.6rem;
@@ -223,9 +224,19 @@ export const OptionPopup = styled.div`
   z-index: 2;
 `;
 
+export const PersonTypeList = styled.ul`
+  margin: 15px 0 0;
+`;
+
+export const CategoryItem = styled.li`
+  & + & {
+    margin: 10px 0 0;
+  }
+`;
+
 export const CategoryTitle = styled.p`
   font-weight: 700;
-  margin: 10px 0;
+  margin: 0 0 10px;
 `;
 
 export const SelectCabinClass = styled.select`
@@ -238,9 +249,16 @@ export const SelectCabinClass = styled.select`
 export const RequestRequiredNotice = styled.div`
   width: 100%;
   padding: 15px;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   border-radius: 5px;
   background-color: #eee;
+  word-break: keep-all;
+
+  em {
+    display: block;
+    font-weight: 700;
+    margin: 0 0 5px;
+  }
 `;
 
 export const CountArea = styled.div`
@@ -273,17 +291,21 @@ export const AgeRangText = styled.span`
 `;
 
 export const Notice = styled.p`
-  font-size: 1.2rem;
-  margin: 20px 0;
+  margin: 20px 0 0;
+  font-size: 1.4rem;
   color: #999;
+  word-break: keep-all;
 `;
 
 export const CompleteButton = styled.button`
+  display: inline-block;
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  padding: 10px;
   color: #0288d1;
   font-weight: 700;
   border: 0;
-  margin: 10px 0 0 auto;
-  display: block;
 `;
 
 // SearchAirport

@@ -47,6 +47,7 @@ export const PopupLayout = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
+  padding: 20px;
 `;
 
 export const Dim = styled.div`
@@ -69,11 +70,12 @@ export const Dim = styled.div`
 `;
 
 export const PopupInner = styled.div`
+  overflow-x: hidden;
+  overflow-y: auto;
   position: relative;
   z-index: 1;
   max-width: 700px;
-  width: 100%;
-  padding: 40px;
+  max-height: calc(100vh - 40px);
   border-radius: 5px;
   background: #fff;
   animation-duration: 0.3s;
