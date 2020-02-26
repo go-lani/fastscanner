@@ -4,7 +4,7 @@ import * as S from './headerStyled';
 import Country from './Country';
 import Currency from './Currency';
 import Info from './Info';
-import ModalPortal from '../Popup/ModalPotal';
+import Popup from '../Popup';
 import CountryModal from './CountryModal';
 import CurrencyModal from './CurrencyModal';
 
@@ -49,6 +49,7 @@ const Header = React.memo(props => {
     });
   }, []);
 
+  console.log(status);
   return (
     <>
       <S.Header isView={props.isView}>
@@ -80,25 +81,20 @@ const Header = React.memo(props => {
             <Info />
           </S.NavUl>
         </S.Nav>
-        {status.lang ? (
-          <ModalPortal>
-            <CountryModal
-              status={status.lang}
-              closeClick={closeClick}
-              selectLang={selectLang}
-              setSelectLang={setSelectLang}
-            />
-          </ModalPortal>
-        ) : status.currency ? (
-          <ModalPortal>
-            <CurrencyModal
-              status={status.currency}
-              closeClick={closeClick}
-              selectCurrnecy={selectCurrnecy}
-              setSelectCurrency={setSelectCurrency}
-            />
-          </ModalPortal>
-        ) : null}
+        <Popup visible={status.lang} hide={closeClick}>
+          <CountryModal
+            closeClick={closeClick}
+            selectLang={selectLang}
+            setSelectLang={setSelectLang}
+          />
+        </Popup>
+        <Popup visible={status.currency} hide={closeClick}>
+          <CurrencyModal
+            closeClick={closeClick}
+            selectCurrnecy={selectCurrnecy}
+            setSelectCurrency={setSelectCurrency}
+          />
+        </Popup>
       </S.Header>
     </>
   );

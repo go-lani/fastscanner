@@ -1,6 +1,9 @@
 import { connect } from 'react-redux';
 import ListArea from '../components/FlightArea/ListArea';
-import { renderLiveSearchSaga } from '../redux/modules/flight';
+import {
+  renderLiveSearchSaga,
+  filterLiveSearchSaga,
+} from '../redux/modules/flight';
 
 export default connect(
   state => ({
@@ -12,6 +15,9 @@ export default connect(
   dispatch => ({
     renderLiveSearch: () => {
       dispatch(renderLiveSearchSaga());
+    },
+    filterLiveSearch: () => {
+      dispatch(filterLiveSearchSaga());
     },
   }),
 )(ListArea);

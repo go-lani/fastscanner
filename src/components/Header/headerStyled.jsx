@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from 'styled-components';
+import styled, { css } from 'styled-components';
 import media from '../../libs/MediaQuery';
 
 // button style
@@ -94,42 +94,10 @@ export const NavDiv = styled.div`
 `;
 
 // Modal
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-
-  to {
-    background-color: rgba(0, 0, 0, 0.4);
-    opacity: 1;
-  }
-`;
-
-export const Modal = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 11;
-  height: 100%;
-  width: 100%;
-  padding: 20px;
-
-  ${props =>
-    props.status &&
-    css`
-      animation-name: ${fadeIn};
-      animation-duration: 0.3s;
-      animation-fill-mode: both;
-    `}
-`;
-
 export const ModalContents = styled.div`
   position: relative;
-  min-width: 320px;
-  max-width: 1000px;
+  /* min-width: 320px;
+  max-width: 1000px; */
   padding: 24px;
   background: #fff;
   border-radius: 12px;
@@ -138,7 +106,7 @@ export const ModalSection = styled.section`
   width: 100%;
 
   & > div {
-    margin: 0 0 50px;
+    margin: 0 0 20px;
 
     &:last-child {
       margin: 0;
@@ -150,7 +118,7 @@ export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 0 0 20px;
-  padding: 0 0 20px;
+  padding: 0 0 10px;
   border-bottom: 2px solid #0288d1;
 `;
 
