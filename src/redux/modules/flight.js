@@ -283,6 +283,7 @@ function* setFilterOptions({ payload }) {
         filterOptions: {
           ...filterOptions,
           ...payload,
+          filterUpdate: true,
         },
         pageIndex: 0,
       }),
@@ -307,6 +308,7 @@ function* filterLiveSearch({ payload }) {
   let via = filterOptions.via;
 
   try {
+    if (filterOptions.filterUpdate) yield delay(700);
     yield put(pending({ filterDatas: originDatas }));
     const filterDatas = yield select(state => state.flight.filterDatas);
 
@@ -560,6 +562,7 @@ function* filterLiveSearch({ payload }) {
           via: via,
           directDisable,
           viaDisable,
+          filterUpdate: false,
         },
       }),
     );

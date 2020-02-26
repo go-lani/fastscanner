@@ -152,7 +152,9 @@ export const Progress = withStyles({
 })(LinearProgress);
 
 // Flight 리스트
-export const FlightList = styled.ul``;
+export const FlightList = styled.ul`
+  position: relative;
+`;
 
 export const FlightItem = styled.li`
   display: flex;

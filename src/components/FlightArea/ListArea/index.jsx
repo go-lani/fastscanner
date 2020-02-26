@@ -27,6 +27,7 @@ const ListArea = React.memo(
     pageIndex,
     loading,
     renderLiveSearch,
+    filterUpdate,
   }) => {
     const compare = key => {
       return function(a, b) {
@@ -130,6 +131,7 @@ const ListArea = React.memo(
         </S.TabArea>
         <S.FlightList>
           {loading && !pageIndex && loaderRender}
+          {filterUpdate && <Updating filterUpdate={filterUpdate} />}
           <InfiniteScroller
             loadMore={() => renderLiveSearch()}
             hasMore={!!pageIndex && pageIndex !== 'lastIndex'}
