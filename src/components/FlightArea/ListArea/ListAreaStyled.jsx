@@ -4,7 +4,7 @@ import { lighten, withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 export const ListLayout = styled.section`
-  flex-basis: 80vw;
+  flex-basis: 77vw;
   background: #fff;
   padding: 10px 4% 20px 20px;
 `;
@@ -27,7 +27,7 @@ export const CategoryTab = styled.ul`
   overflow-y: hidden;
 
   ${media.desktop`
-    flex-basis: 70%;
+    flex-basis: 78%;
   `}
 `;
 
@@ -37,12 +37,12 @@ export const TabItem = styled.li`
   justify-content: space-around;
   flex-direction: column;
   width: 100%;
-  min-width: 150px;
-  min-height: 100px;
-  padding: 10px 20px;
+  min-width: 170px;
+  min-height: 120px;
+  padding: 10px 15px;
   border: 2px solid #eee;
+  font-weight: 600;
   font-size: 1.2rem;
-  font-weight: 700;
   color: #333;
   text-align: left;
   word-break: keep-all;
@@ -52,6 +52,24 @@ export const TabItem = styled.li`
   & > * {
     align-self: flex-start;
   }
+
+  p {
+    font-size: 1.4rem;
+  }
+
+  ${props =>
+    props.id !== 'recommend'
+      ? css`
+          color: #333;
+        `
+      : css`
+          color: #ccc;
+          cursor: not-allowed;
+
+          & > * {
+            color: #ccc !important;
+          }
+        `}
 
   ${props =>
     props.isActive
@@ -68,8 +86,20 @@ export const TabItem = styled.li`
 `;
 
 export const TabPrice = styled.em`
+  font-weight: 700;
+  font-size: 2rem;
+  color: #0288d1;
+  ${props =>
+    props.isActive &&
+    css`
+      color: #fff;
+    `}
+`;
+
+export const NonAverage = styled.p`
   font-size: 2.2rem;
   color: #0288d1;
+
   ${props =>
     props.isActive &&
     css`
@@ -79,13 +109,13 @@ export const TabPrice = styled.em`
 
 export const FilterButton = styled.button`
   display: none;
+  margin: 0 0 15px;
   padding: 10px 20px;
+  border: 2px solid #eee;
+  border-radius: 5px;
   color: #0288d1;
   font-size: 1.6rem;
   font-weight: 700;
-  border: 2px solid #eee;
-  border-radius: 5px;
-  margin: 0 0 5px;
 
   &:hover {
     border: 2px solid #0288d1;
