@@ -270,14 +270,15 @@ function* renderLiveSearch({ payload }) {
   }
 }
 
-// 필터 데이터
+// 필터 데이터 로직
+
 // 필터 여부 체크
 export const setFilterOptionsSaga = createAction('SET_FILTER_OPTIONS_SAGA');
 
 function* setFilterOptions({ payload }) {
   const filterOptions = yield select(state => state.flight.filterOptions);
-
   try {
+    yield put(pending());
     yield put(
       success({
         filterOptions: {
@@ -293,11 +294,32 @@ function* setFilterOptions({ payload }) {
   }
 }
 
+// SET Tab 필터 데이터
+export const setSortDatasSaga = createAction('SET_SORT_DATAS_SAGA');
+
+function* setSortDatas({ payload }) {
+  console.log(payload);
+  try {
+    yield put(pending());
+    yield put(
+      success({
+        sortDatas: payload,
+        pageIndex: 0,
+      }),
+    );
+  } catch (error) {
+    yield put(fail(error));
+    console.log(error);
+  }
+}
+
+// 필터 데이터 렌더링
 export const filterLiveSearchSaga = createAction('FILTER_LIVESEARCH_SAGA');
 
 function* filterLiveSearch({ payload }) {
   const way = yield select(state => state.search.way);
   const originDatas = yield select(state => state.flight.originDatas);
+  const sortDatas = yield select(state => state.flight.sortDatas);
   const filterOptions = yield select(state => state.flight.filterOptions);
   const pageIndex = yield select(state => state.flight.pageIndex);
   let newFilterData = null;
@@ -309,13 +331,11 @@ function* filterLiveSearch({ payload }) {
   try {
     yield put(
       pending({
-        filterDatas: originDatas,
-        pageIndex: payload ? 0 : pageIndex,
+        filterDatas: sortDatas ? sortDatas : originDatas,
       }),
     );
-    const filterDatas = yield select(state => state.flight.filterDatas);
 
-    if (payload) newFilterData = payload;
+    const filterDatas = yield select(state => state.flight.filterDatas);
 
     // 직항 필터링
     const DirectData = way => {
@@ -553,15 +573,14 @@ function* filterLiveSearch({ payload }) {
       }
     }
 
-    let newRenderDatas;
-
-    if (payload) newRenderDatas = newFilterData.slice(0, 5);
-    else
-      newRenderDatas = newFilterData.slice(pageIndex * 5, (pageIndex + 1) * 5);
+    const newRenderDatas = newFilterData.slice(
+      pageIndex * 5,
+      (pageIndex + 1) * 5,
+    );
 
     yield put(
       success({
-        pageIndex: payload ? 1 : pageIndex + 1,
+        pageIndex: pageIndex + 1,
         filterDatas: newFilterData,
         renderDatas: newRenderDatas,
         filterOptions: {
@@ -584,6 +603,7 @@ export function* flightSaga() {
   yield takeLatest('RENDER_LIVESEARCH_SAGA', renderLiveSearch);
   yield takeLatest('FILTER_LIVESEARCH_SAGA', filterLiveSearch);
   yield takeLatest('SET_FILTER_OPTIONS_SAGA', setFilterOptions);
+  yield takeLatest('SET_SORT_DATAS_SAGA', setSortDatas);
   yield takeLatest('MAIN_LIVESEARCH_SAGA', mainLiveSearch);
 }
 

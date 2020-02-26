@@ -7,7 +7,6 @@ import * as S from './ListAreaStyled';
 import InfiniteScroller from 'react-infinite-scroller';
 import Loading from './Loading';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Updating from './Updating';
 
 const loaderRender = (() => {
   const loaderGroup = [];
@@ -26,41 +25,14 @@ const ListArea = React.memo(
     renderDatas,
     pageIndex,
     loading,
+    setSortDatas,
     renderLiveSearch,
     filterLiveSearch,
   }) => {
     const [isActive, setActive] = useState('price');
+    const [priceAverage, setPriceAverage] = useState();
     const [durationAverage, setDurationAverage] = useState();
-    const [durationData, setDurationData] = useState();
-    const regExp = /\B(?=(\d{3})+(?!\d))/g;
-
-    const compare = key => {
-      return function(a, b) {
-        return a[key] > b[key] ? 1 : a[key] < b[key] ? -1 : 0;
-      };
-    };
-
-    console.log(
-      filterDatas &&
-        filterDatas.sort(
-          compare(filterDatas.map(filterData => filterData.price)),
-        ),
-    );
-
-    const minPrice =
-      filterDatas &&
-      Math.min(...filterDatas.map(filterData => filterData.price));
-
-    const minPriceDatas =
-      filterDatas &&
-      filterDatas.filter(filterData => +filterData.price === minPrice)[0];
-
-    const minPriceDuration =
-      filterDatas &&
-      minPriceDatas &&
-      minPriceDatas.Outbound &&
-      minPriceDatas.Outbound.Duration +
-        (minPriceDatas.Inbound ? minPriceDatas.Inbound.Duration : 0);
+    const [currentDatas, setCurrentDatas] = useState();
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
@@ -69,14 +41,17 @@ const ListArea = React.memo(
     const changeCategory = e => {
       e.stopPropagation();
 
-      if (e.target.parentNode.id === 'recommend' || e.target.id === 'recommend')
-        return alert('준비중입니다.');
-
-      setActive(e.target.parentNode.id || e.target.id);
+      if (e.target.parentNode.id === 'price' || e.target.id === 'price') {
+        if (filterDatas) {
+          setCurrentDatas(
+            filterDatas.sort((pre, cur) => pre.price - cur.price),
+          );
+        }
+      }
 
       if (e.target.parentNode.id === 'duration' || e.target.id === 'duration') {
         if (filterDatas) {
-          setDurationData(
+          setCurrentDatas(
             filterDatas.sort(
               (pre, cur) =>
                 pre.Outbound.Duration +
@@ -86,21 +61,25 @@ const ListArea = React.memo(
           );
         }
       }
+
+      if (e.target.parentNode.id === 'recommend' || e.target.id === 'recommend')
+        return alert('준비중입니다.');
+
+      setActive(e.target.parentNode.id || e.target.id);
     };
 
     useEffect(() => {
-      if (durationData) {
-        filterLiveSearch(durationData);
+      if (currentDatas) {
+        setSortDatas(currentDatas);
+        filterLiveSearch();
       }
-    }, [filterLiveSearch, durationData]);
+    }, [currentDatas, filterLiveSearch, setSortDatas]);
 
     useEffect(() => {
       const regExp = /\B(?=(\d{3})+(?!\d))/g;
 
       if (filterDatas) {
-        const _copyFilterDatas = filterDatas.slice();
-
-        _copyFilterDatas.sort(
+        filterDatas.sort(
           (pre, cur) =>
             pre.Outbound.Duration +
             pre.Inbound.Duration -
@@ -121,12 +100,33 @@ const ListArea = React.memo(
             durationAverage % 60,
           )}분`,
           price:
-            _copyFilterDatas &&
-            _copyFilterDatas[0] &&
-            _copyFilterDatas[0].price.toString().replace(regExp, ','),
+            filterDatas &&
+            filterDatas[0] &&
+            filterDatas[0].price.toString().replace(regExp, ','),
+        });
+
+        const minPrice =
+          filterDatas &&
+          Math.min(...filterDatas.map(filterData => filterData.price));
+
+        const minPriceDatas =
+          filterDatas &&
+          filterDatas.filter(filterData => +filterData.price === minPrice)[0];
+
+        const minPriceDuration =
+          minPriceDatas &&
+          minPriceDatas.Outbound &&
+          minPriceDatas.Outbound.Duration +
+            (minPriceDatas.Inbound ? minPriceDatas.Inbound.Duration : 0);
+
+        setPriceAverage({
+          time: `${Math.floor(minPriceDuration / 60)}시간${Math.floor(
+            minPriceDuration % 60,
+          )}분`,
+          price: minPrice.toString().replace(regExp, ','),
         });
       }
-    }, [durationData, filterDatas]);
+    }, [filterDatas]);
 
     return (
       <S.ListLayout>
@@ -152,21 +152,10 @@ const ListArea = React.memo(
             >
               <p>최저가</p>
               <S.TabPrice isActive={isActive === 'price'}>
-                {filterDatas && minPriceDatas && minPriceDatas.Outbound ? (
-                  `₩ ${minPrice.toString().replace(regExp, ',')}`
-                ) : (
-                  <CircularProgress disableShrink size={20} />
-                )}
+                {priceAverage && `₩ ${priceAverage.price}`}
+                {!priceAverage && <CircularProgress disableShrink size={20} />}
               </S.TabPrice>
-              <small>
-                {filterDatas && minPriceDatas && minPriceDatas.Outbound
-                  ? `${Math.floor(
-                      minPriceDuration / 60,
-                    )}시간 ${minPriceDuration % 60}분 ${
-                      minPriceDatas.Inbound ? '(평균)' : ''
-                    }`
-                  : ''}
-              </small>
+              <small>{priceAverage && `${priceAverage.time}`}</small>
             </S.TabItem>
             <S.TabItem
               id="duration"
