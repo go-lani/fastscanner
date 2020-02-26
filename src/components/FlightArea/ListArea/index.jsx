@@ -7,6 +7,7 @@ import * as S from './ListAreaStyled';
 import InfiniteScroller from 'react-infinite-scroller';
 import Loading from './Loading';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Updating from './Updating';
 
 const loaderRender = (() => {
   const loaderGroup = [];
@@ -46,6 +47,8 @@ const ListArea = React.memo(
       filterDatas.filter(filterData => +filterData.price === minPrice)[0];
     const minPriceDuration =
       filterDatas &&
+      minPriceDatas &&
+      minPriceDatas.Outbound &&
       minPriceDatas.Outbound.Duration +
         (minPriceDatas.Inbound ? minPriceDatas.Inbound.Duration : 0);
 
@@ -85,14 +88,14 @@ const ListArea = React.memo(
             >
               <p>최저가</p>
               <S.TabPrice isActive={isActive === 'price'}>
-                {filterDatas ? (
+                {filterDatas && minPriceDatas && minPriceDatas.Outbound ? (
                   `₩ ${minPrice.toString().replace(regExp, ',')}`
                 ) : (
                   <CircularProgress disableShrink size={20} />
                 )}
               </S.TabPrice>
               <small>
-                {filterDatas
+                {filterDatas && minPriceDatas && minPriceDatas.Outbound
                   ? `${Math.floor(
                       minPriceDuration / 60,
                     )}시간 ${minPriceDuration % 60}분 ${
