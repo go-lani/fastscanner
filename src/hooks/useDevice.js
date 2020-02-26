@@ -15,7 +15,7 @@ const initialState = (() => {
 
 export default function useDevice() {
   const dispatch = useDispatch();
-  const device = useSelector(state => state.util.device);
+  const device = useSelector(state => state.util.device, []);
 
   const resize = useCallback(() => {
     if (window.innerWidth >= 1025) {

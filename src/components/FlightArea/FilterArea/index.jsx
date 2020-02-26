@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { withRouter } from 'react-router-dom';
+import qs from 'query-string';
 import * as S from './FilterAreaStyled';
 import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
@@ -15,6 +17,7 @@ const durationValueText = value => {
 
 const FilterArea = React.memo(
   ({
+    location,
     filterModalVisible,
     setFilterModalVisible,
     originDatas,
@@ -29,6 +32,7 @@ const FilterArea = React.memo(
     const [durationTime, setDurationTime] = useState(1000);
     const [minDuration, setMinDuration] = useState(null);
     const [maxDuration, setMaxDuration] = useState(null);
+    const [isOneway, setIsOneway] = useState();
     const [
       outboundStartTime,
       outboundStartFormat,
@@ -41,6 +45,13 @@ const FilterArea = React.memo(
       inboundEndTime,
       inboundEndFormat,
     ] = useTime(inboundTime);
+
+    useEffect(() => {
+      const query = qs.parse(location.search);
+      const { rtn } = query;
+
+      setIsOneway(!+rtn);
+    }, [location]);
 
     // 필터조건 탭 닫기
     const closeFilterArea = useCallback(() => {
@@ -181,21 +192,23 @@ const FilterArea = React.memo(
                   max={48}
                 />
               </S.DropItem>
-              <S.DropItem>
-                <S.DropTitleBox>
-                  <S.DropTitle>오는날 출발시간</S.DropTitle>
-                  <p>{`${inboundStartTime} - ${inboundEndTime}`}</p>
-                </S.DropTitleBox>
-                <S.RangeSlider
-                  value={inboundTime}
-                  onChange={handleChangeInbound}
-                  onChangeCommitted={handleChangeInboundDatas}
-                  aria-labelledby="range-slider"
-                  getAriaValueText={valuetext}
-                  min={0}
-                  max={48}
-                />
-              </S.DropItem>
+              {!isOneway && (
+                <S.DropItem>
+                  <S.DropTitleBox>
+                    <S.DropTitle>오는날 출발시간</S.DropTitle>
+                    <p>{`${inboundStartTime} - ${inboundEndTime}`}</p>
+                  </S.DropTitleBox>
+                  <S.RangeSlider
+                    value={inboundTime}
+                    onChange={handleChangeInbound}
+                    onChangeCommitted={handleChangeInboundDatas}
+                    aria-labelledby="range-slider"
+                    getAriaValueText={valuetext}
+                    min={0}
+                    max={48}
+                  />
+                </S.DropItem>
+              )}
             </DropBox>
             <DropBox title="총 소요시간 설정" range={true}>
               <S.DropItem>
@@ -224,4 +237,4 @@ const FilterArea = React.memo(
   },
 );
 
-export default FilterArea;
+export default withRouter(FilterArea);
