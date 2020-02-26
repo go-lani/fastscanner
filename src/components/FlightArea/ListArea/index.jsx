@@ -7,6 +7,7 @@ import * as S from './ListAreaStyled';
 import InfiniteScroller from 'react-infinite-scroller';
 import Loading from './Loading';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { useSelector } from 'react-redux';
 import Updating from './Updating';
 
 const loaderRender = (() => {
@@ -27,6 +28,7 @@ const ListArea = React.memo(
     pageIndex,
     loading,
     renderLiveSearch,
+    filterLiveSearch,
     filterUpdate,
   }) => {
     const compare = key => {
@@ -54,6 +56,7 @@ const ListArea = React.memo(
         (minPriceDatas.Inbound ? minPriceDatas.Inbound.Duration : 0);
 
     const [isActive, setActive] = useState('price');
+    const originDatas = useSelector(state => state.flight.originDatas);
     const regExp = /\B(?=(\d{3})+(?!\d))/g;
 
     const openFilterArea = useCallback(() => {
@@ -65,15 +68,40 @@ const ListArea = React.memo(
       setActive(e.target.id);
     }, []);
 
+    const filterReset = () => {
+      // filterLiveSearch();
+    };
+
     return (
       <S.ListLayout>
         <A11yTitle>항공권 검색 결과</A11yTitle>
         <S.ProgressBox loading={pageIndex}>
-          <S.ProgressTextBox>
-            <CircularProgress disableShrink size={20} />
-            <S.ProgressText>
-              ({progress.all}개의 항공사중 {progress.complete}개 확인)
-            </S.ProgressText>
+          <S.ProgressTextBox loading={pageIndex}>
+            {progress.per === 100 ? (
+              <S.ProgressResult
+                onClick={filterReset}
+                status={
+                  originDatas &&
+                  filterDatas &&
+                  filterDatas.length !== originDatas.length
+                }
+              >
+                <span>{originDatas && `총 ${originDatas.length}개 중, `}</span>
+                <em>{filterDatas && filterDatas.length}개</em>
+                {originDatas &&
+                  filterDatas &&
+                  filterDatas.length !== originDatas.length && (
+                    <span> (전체보기)</span>
+                  )}
+              </S.ProgressResult>
+            ) : (
+              <>
+                <CircularProgress disableShrink size={20} />
+                <S.ProgressText>
+                  ({progress.all}개의 항공사중 {progress.complete}개 확인)
+                </S.ProgressText>
+              </>
+            )}
           </S.ProgressTextBox>
           <S.Progress variant="determinate" value={progress.per} />
         </S.ProgressBox>

@@ -25,6 +25,7 @@ const SearchArea = React.memo(
     cabinClass,
     adults,
     children,
+    infants,
     nonStops,
     changeWay,
     selectStops,
@@ -72,7 +73,7 @@ const SearchArea = React.memo(
         adults: adults,
         children: children,
         cabinclass: cabinClass,
-        infants: 0,
+        infants: infants,
         rtn: way === 'round' ? 1 : 0,
         preferdirects: nonStops,
       });
