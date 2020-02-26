@@ -22,8 +22,10 @@ const OptionPopup = React.memo(
     const allCount = adults + children + infants;
 
     const minusAdult = useCallback(() => {
+      if (adults === infants)
+        return alert('성인 1명당 유아 1명까지 선택할 수 있습니다.');
       selectAdults(adults - 1);
-    }, [adults, selectAdults]);
+    }, [adults, infants, selectAdults]);
 
     const minusChild = useCallback(() => {
       selectChildren(children - 1);

@@ -335,6 +335,7 @@ export const AirlineName = styled.p`
   border-radius: 5px;
   box-shadow: 0 0 10px 5px #eee;
   text-align: center;
+  z-index: 1;
 `;
 
 export const FlyInfo = styled.div`
