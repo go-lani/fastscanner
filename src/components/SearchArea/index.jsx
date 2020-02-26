@@ -49,7 +49,6 @@ const SearchArea = React.memo(
     }, []);
 
     function searchSubmit() {
-      setIsOpen && setIsOpen(false);
       const originCode = originPlace.slice(0, -4).toLowerCase();
       const destinationCode =
         destinationPlace && destinationPlace.slice(0, -4).toLowerCase();
@@ -86,6 +85,7 @@ const SearchArea = React.memo(
         history.push(
           `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/${inboundCode}/?${params}`,
         );
+        setIsOpen && setIsOpen(false);
       } else {
         if (!originInputValue) return alert('출발지를 선택해주세요.');
         if (!destinationInputValue) return alert('도착지를 선택해주세요.');
@@ -93,6 +93,7 @@ const SearchArea = React.memo(
         history.push(
           `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
         );
+        setIsOpen && setIsOpen(false);
       }
     }
 
