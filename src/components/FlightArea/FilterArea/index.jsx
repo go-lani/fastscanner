@@ -6,6 +6,8 @@ import DropBox from '../../Common/DropBox';
 import CheckBox from '../../Common/CheckBox';
 import A11yTitle from '../../Common/A11yTitle';
 import useTime from '../../../hooks/useTime';
+import Loading from './Loading';
+import { useSelector } from 'react-redux';
 
 const valuetext = value => {
   return `${Math.floor(value[0] / 2)}시 ${value[1] / 2 ? '30' : '00'}분`;
@@ -52,6 +54,8 @@ const FilterArea = React.memo(
 
       setIsOneway(!+rtn);
     }, [location]);
+
+    const loading = useSelector(state => state.flight.loading);
 
     // 필터조건 탭 닫기
     const closeFilterArea = useCallback(() => {
@@ -146,91 +150,97 @@ const FilterArea = React.memo(
           filterModalVisible={filterModalVisible}
         ></S.FilterOverlay>
         <S.FilterAreaLayout filterModalVisible={filterModalVisible}>
-          <A11yTitle>항공권 설정</A11yTitle>
-          <S.FilterHeader>
-            필터(조건)
-            <S.FilterHeaderCloseButton onClick={closeFilterArea}>
-              완료
-            </S.FilterHeaderCloseButton>
-          </S.FilterHeader>
-          <S.DropBoxList>
-            <DropBox title="경유">
-              <S.DropItem>
-                <CheckBox
-                  size="medium"
-                  label="직항"
-                  id="direct"
-                  checked={filterOptions.direct}
-                  isDisable={directDisable}
-                  onChange={setWays}
-                />
-              </S.DropItem>
-              <S.DropItem>
-                <CheckBox
-                  size="medium"
-                  label="경유"
-                  id="via"
-                  checked={filterOptions.via}
-                  isDisable={viaDisable}
-                  onChange={setWays}
-                />
-              </S.DropItem>
-            </DropBox>
-            <DropBox title="출발 시간대 설정" range={true}>
-              <S.DropItem>
-                <S.DropTitleBox>
-                  <S.DropTitle>가는날 출발시간</S.DropTitle>
-                  <p>{`${outboundStartTime} - ${outboundEndTime}`}</p>
-                </S.DropTitleBox>
-                <S.RangeSlider
-                  value={outboundTime}
-                  onChange={handleChangeOutbound}
-                  onChangeCommitted={handleChangeOutboundDatas}
-                  aria-labelledby="range-slider"
-                  getAriaValueText={valuetext}
-                  min={0}
-                  max={48}
-                />
-              </S.DropItem>
-              {!isOneway && (
-                <S.DropItem>
-                  <S.DropTitleBox>
-                    <S.DropTitle>오는날 출발시간</S.DropTitle>
-                    <p>{`${inboundStartTime} - ${inboundEndTime}`}</p>
-                  </S.DropTitleBox>
-                  <S.RangeSlider
-                    value={inboundTime}
-                    onChange={handleChangeInbound}
-                    onChangeCommitted={handleChangeInboundDatas}
-                    aria-labelledby="range-slider"
-                    getAriaValueText={valuetext}
-                    min={0}
-                    max={48}
-                  />
-                </S.DropItem>
-              )}
-            </DropBox>
-            <DropBox title="총 소요시간 설정" range={true}>
-              <S.DropItem>
-                <S.DropTitleBox>
-                  <S.DropTitle>총 소요시간</S.DropTitle>
-                  <p>{`${Math.floor(minDuration / 60)}시간 ${minDuration %
-                    60}분 - ${Math.floor(
-                    durationTime / 60,
-                  )}시간 ${durationTime % 60}분`}</p>
-                </S.DropTitleBox>
-                <S.RangeSlider
-                  value={durationTime || 1000}
-                  getAriaValueText={durationValueText}
-                  onChange={handleChangeDuration}
-                  onChangeCommitted={handleChangeDurationDatas}
-                  step={60}
-                  min={minDuration || 0}
-                  max={maxDuration || 1000}
-                />
-              </S.DropItem>
-            </DropBox>
-          </S.DropBoxList>
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              <A11yTitle>항공권 설정</A11yTitle>
+              <S.FilterHeader>
+                필터(조건)
+                <S.FilterHeaderCloseButton onClick={closeFilterArea}>
+                  완료
+                </S.FilterHeaderCloseButton>
+              </S.FilterHeader>
+              <S.DropBoxList>
+                <DropBox title="경유">
+                  <S.DropItem>
+                    <CheckBox
+                      size="medium"
+                      label="직항"
+                      id="direct"
+                      checked={filterOptions.direct}
+                      isDisable={directDisable}
+                      onChange={setWays}
+                    />
+                  </S.DropItem>
+                  <S.DropItem>
+                    <CheckBox
+                      size="medium"
+                      label="경유"
+                      id="via"
+                      checked={filterOptions.via}
+                      isDisable={viaDisable}
+                      onChange={setWays}
+                    />
+                  </S.DropItem>
+                </DropBox>
+                <DropBox title="출발 시간대 설정" range={true}>
+                  <S.DropItem>
+                    <S.DropTitleBox>
+                      <S.DropTitle>가는날 출발시간</S.DropTitle>
+                      <p>{`${outboundStartTime} - ${outboundEndTime}`}</p>
+                    </S.DropTitleBox>
+                    <S.RangeSlider
+                      value={outboundTime}
+                      onChange={handleChangeOutbound}
+                      onChangeCommitted={handleChangeOutboundDatas}
+                      aria-labelledby="range-slider"
+                      getAriaValueText={valuetext}
+                      min={0}
+                      max={48}
+                    />
+                  </S.DropItem>
+                  {!isOneway && (
+                    <S.DropItem>
+                      <S.DropTitleBox>
+                        <S.DropTitle>오는날 출발시간</S.DropTitle>
+                        <p>{`${inboundStartTime} - ${inboundEndTime}`}</p>
+                      </S.DropTitleBox>
+                      <S.RangeSlider
+                        value={inboundTime}
+                        onChange={handleChangeInbound}
+                        onChangeCommitted={handleChangeInboundDatas}
+                        aria-labelledby="range-slider"
+                        getAriaValueText={valuetext}
+                        min={0}
+                        max={48}
+                      />
+                    </S.DropItem>
+                  )}
+                </DropBox>
+                <DropBox title="총 소요시간 설정" range={true}>
+                  <S.DropItem>
+                    <S.DropTitleBox>
+                      <S.DropTitle>총 소요시간</S.DropTitle>
+                      <p>{`${Math.floor(minDuration / 60)}시간 ${minDuration %
+                        60}분 - ${Math.floor(
+                        durationTime / 60,
+                      )}시간 ${durationTime % 60}분`}</p>
+                    </S.DropTitleBox>
+                    <S.RangeSlider
+                      value={durationTime || 1000}
+                      getAriaValueText={durationValueText}
+                      onChange={handleChangeDuration}
+                      onChangeCommitted={handleChangeDurationDatas}
+                      step={60}
+                      min={minDuration || 0}
+                      max={maxDuration || 1000}
+                    />
+                  </S.DropItem>
+                </DropBox>
+              </S.DropBoxList>
+            </>
+          )}
         </S.FilterAreaLayout>
       </>
     );
