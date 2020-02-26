@@ -41,9 +41,9 @@ export const TabItem = styled.li`
   min-height: 100px;
   padding: 10px 20px;
   border: 2px solid #eee;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  color: #0288d1;
+  color: #333;
   text-align: left;
   word-break: keep-all;
   transition: all 0.3s;
@@ -65,6 +65,16 @@ export const TabItem = styled.li`
   & + & {
     margin: 0 0 0 10px;
   }
+`;
+
+export const TabPrice = styled.em`
+  font-size: 2.2rem;
+  color: #0288d1;
+  ${props =>
+    props.isActive &&
+    css`
+      color: #fff;
+    `}
 `;
 
 export const FilterButton = styled.button`

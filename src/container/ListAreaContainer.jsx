@@ -6,6 +6,7 @@ export default connect(
   state => ({
     progress: state.flight.progress,
     renderDatas: state.flight.renderDatas,
+    filterDatas: state.flight.filterDatas,
     pageIndex: state.flight.pageIndex,
     loading: state.flight.loading,
   }),
