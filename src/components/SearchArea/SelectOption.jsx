@@ -1,7 +1,10 @@
 import React, { useState, createRef } from 'react';
+import { useSelector } from 'react-redux';
 import OptionPopupContainer from '../../container/OptionPopupContainer';
 import ArrowDropDownOutlinedIcon from '@material-ui/icons/ArrowDropDownOutlined';
+import ModalPortal from '../Popup/ModalPotal';
 import * as S from './SearchAreaStyled';
+import { useEffect } from 'react';
 
 const SelectOption = ({ cabinClass, adults, children, infants }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,6 +12,7 @@ const SelectOption = ({ cabinClass, adults, children, infants }) => {
   const popupClose = () => setIsOpen(!isOpen);
 
   const dimRef = createRef();
+  const device = useSelector(state => state.util.device);
 
   const cabinClassName = (() => {
     return cabinClass === 'economy'
@@ -21,8 +25,17 @@ const SelectOption = ({ cabinClass, adults, children, infants }) => {
   })();
 
   const click = e => {
-    if (dimRef.current.contains(e.target)) setIsOpen(false);
+    if (device === 'Desktop') {
+      if (isOpen && dimRef.current.contains(e.target)) setIsOpen(false);
+    } else {
+      if (isOpen && dimRef.current === e.target) setIsOpen(false);
+    }
   };
+
+  useEffect(() => {
+    console.log(device);
+  }, [device]);
+
   return (
     <>
       <div className="option-field options">
@@ -33,8 +46,18 @@ const SelectOption = ({ cabinClass, adults, children, infants }) => {
             <ArrowDropDownOutlinedIcon />
           </S.OptionValue>
         </S.OptionButton>
-        <OptionPopupContainer isOpen={isOpen} hidePopup={popupClose} />
-        <S.Dim ref={dimRef} isOpen={isOpen} onClick={click} />
+        {device === 'Desktop' ? (
+          <>
+            <OptionPopupContainer isOpen={isOpen} hidePopup={popupClose} />
+            <S.Dim ref={dimRef} isOpen={isOpen} onClick={click} />
+          </>
+        ) : isOpen ? (
+          <ModalPortal>
+            <S.ModalDim ref={dimRef} onClick={click}>
+              <OptionPopupContainer isOpen={isOpen} hidePopup={popupClose} />
+            </S.ModalDim>
+          </ModalPortal>
+        ) : null}
       </div>
     </>
   );
