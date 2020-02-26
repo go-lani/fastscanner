@@ -4,7 +4,6 @@ import OptionPopupContainer from '../../container/OptionPopupContainer';
 import ArrowDropDownOutlinedIcon from '@material-ui/icons/ArrowDropDownOutlined';
 import Popup from '../Popup';
 import * as S from './SearchAreaStyled';
-import { useEffect } from 'react';
 
 const SelectOption = ({ cabinClass, adults, children, infants }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,10 +30,6 @@ const SelectOption = ({ cabinClass, adults, children, infants }) => {
       if (isOpen && dimRef.current === e.target) setIsOpen(false);
     }
   };
-
-  useEffect(() => {
-    console.log(device);
-  }, [device]);
 
   return (
     <>

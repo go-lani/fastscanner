@@ -284,6 +284,7 @@ function* setFilterOptions({ payload }) {
         filterOptions: {
           ...filterOptions,
           ...payload,
+          filterUpdate: true,
         },
         pageIndex: 0,
       }),
@@ -329,12 +330,12 @@ function* filterLiveSearch({ payload }) {
   let via = filterOptions.via;
 
   try {
+    if (filterOptions.filterUpdate) yield delay(700);
     yield put(
       pending({
         filterDatas: sortDatas ? sortDatas : originDatas,
       }),
     );
-
     const filterDatas = yield select(state => state.flight.filterDatas);
 
     // 직항 필터링
@@ -589,6 +590,7 @@ function* filterLiveSearch({ payload }) {
           via: via,
           directDisable,
           viaDisable,
+          filterUpdate: false,
         },
       }),
     );

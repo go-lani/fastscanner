@@ -102,16 +102,17 @@ export const FilterButton = styled.button`
 
 // progress
 export const ProgressBox = styled.div`
-  ${props =>
-    props.loading
-      ? css`
-          opacity: 0;
-        `
-      : css`
-          opacity: 1;
-        `}
-
-  transition: opacity 1s ease-out;
+  .MuiLinearProgress-root,
+  .MuiLinearProgress-bar {
+    ${props =>
+      props.loading
+        ? css`
+            display: none;
+          `
+        : css`
+            display: block;
+          `}
+  }
 `;
 
 const twincle = keyframes`
@@ -127,16 +128,47 @@ const twincle = keyframes`
 `;
 
 export const ProgressTextBox = styled.div`
+  /* padding-bottom: 5px; */
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin: 0 0 10px;
+
+  ${props =>
+    !props.loading
+      ? css`
+          padding-bottom: 5px;
+        `
+      : css`
+          padding-bottom: 10px;
+        `}
 `;
 
 export const ProgressText = styled.p`
   margin: 0 0 0 10px;
   font-size: 1.4rem;
   animation: ${twincle} infinite 2s linear;
+`;
+
+export const ProgressResult = styled.button`
+  font-size: 1.4rem;
+  color: #0288d1;
+  font-weight: 400;
+  border: transparent;
+
+  span {
+    line-height: 2.1rem;
+  }
+
+  em {
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+
+  ${props =>
+    !props.status &&
+    css`
+      cursor: default;
+    `}
 `;
 
 export const Progress = withStyles({
@@ -152,7 +184,9 @@ export const Progress = withStyles({
 })(LinearProgress);
 
 // Flight 리스트
-export const FlightList = styled.ul``;
+export const FlightList = styled.ul`
+  position: relative;
+`;
 
 export const FlightItem = styled.li`
   display: flex;
