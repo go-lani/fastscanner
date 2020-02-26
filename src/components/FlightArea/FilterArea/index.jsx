@@ -147,7 +147,7 @@ const FilterArea = React.memo(
     const directLowPrice =
       originDatas &&
       originDatas.filter(data =>
-        originDatas.Inbound
+        data.Inbound
           ? data.Outbound.Stops.length === 0 && data.Inbound.Stops.length === 0
           : data.Outbound.Stops.length === 0,
       )[0];
@@ -155,7 +155,7 @@ const FilterArea = React.memo(
     const viaLowPrice =
       originDatas &&
       originDatas.filter(data =>
-        originDatas.Inbound
+        data.Inbound
           ? data.Outbound.Stops.length !== 0 || data.Inbound.Stops.length !== 0
           : data.Outbound.Stops.length !== 0,
       )[0];

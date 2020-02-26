@@ -40,9 +40,9 @@ function* createSession({ payload }) {
       yield put(
         success({
           originDatas: [],
+          renderDatas: null,
           pageIndex: 0,
           filterDatas: null,
-          sortDatas: null,
         }),
       );
     }
@@ -292,7 +292,7 @@ function* setFilterOptions({ payload }) {
         filterOptions: {
           ...filterOptions,
           ...payload,
-          filterUpdate: true,
+          filterUpdate: payload.sortBy ? false : true,
         },
         pageIndex: 0,
       }),

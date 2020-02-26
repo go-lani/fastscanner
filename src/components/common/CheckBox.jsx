@@ -40,22 +40,23 @@ const StyledLabel = styled.label`
   ${fontSizeStyle};
   display: inline-block;
   color: ${({ labelColor }) => labelColor || 'inherit'};
+
   ${({ isDisable }) =>
     isDisable &&
     css`
       color: #666;
     `};
 
-  span + span {
-    margin-top: 5px;
-  }
-
-  span:last-child {
-    display: block;
-    padding-left: 20px;
-    color: #777;
-    font-size: 1.2rem;
-  }
+  ${props =>
+    props.price &&
+    css`
+      em {
+        display: block;
+        margin: 5px 0 0 20px;
+        color: #777;
+        font-size: 1.2rem;
+      }
+    `}
 `;
 
 const StyledCheckbox = styled.input`
@@ -94,6 +95,7 @@ const CheckBox = React.memo(
         size={size}
         labelColor={labelColor}
         isDisable={isDisable}
+        price={price}
       >
         <StyledCheckbox
           type="checkbox"
@@ -104,7 +106,9 @@ const CheckBox = React.memo(
           disabled={isDisable}
         />
         <span>{label}</span>
-        <span>{price ? `₩ ${price.replace(regExp, ',')}` : `없음`}</span>
+        {price ? (
+          <em>{price ? `₩ ${price.replace(regExp, ',')}` : `없음`}</em>
+        ) : null}
       </StyledLabel>
     );
   },
