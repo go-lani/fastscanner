@@ -36,7 +36,14 @@ function* createSession({ payload }) {
     const sessionId = res.headers.location.split('/').pop();
 
     if (prevSessionId !== sessionId) {
-      yield put(success({ originDatas: [], pageIndex: 0, filterDatas: null }));
+      yield put(
+        success({
+          originDatas: [],
+          pageIndex: 0,
+          filterDatas: null,
+          sortDatas: null,
+        }),
+      );
     }
     yield put(success({ session: sessionId }));
   } catch (error) {
