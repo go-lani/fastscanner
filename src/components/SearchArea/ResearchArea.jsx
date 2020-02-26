@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import qs from 'query-string';
+import moment from 'moment';
+import { CircularProgress } from '@material-ui/core';
 import A11yTitle from '../Common/A11yTitle';
 import * as S from './SearchAreaStyled';
 import SearchAreaContainer from '../../container/SearchAreaContainer';
-import moment from 'moment';
 
 const ResearchArea = React.memo(
   ({
@@ -98,14 +99,26 @@ const ResearchArea = React.memo(
                 src="/images/flight-white.png"
                 alt="출발지에서 도착지로 이동"
               />
-              <S.AirportName>{destinationName}</S.AirportName>
+              <S.AirportName>
+                {destinationName ? (
+                  destinationName
+                ) : (
+                  <CircularProgress disableShrink size={20} />
+                )}
+              </S.AirportName>
             </S.AirportInfoBox>
             <S.OptionArea isOpen={isOpen}>
               <S.DateOpionInfoBox>
                 <S.DateText>{moment(outboundDate).format('LL')}</S.DateText>
-                {inboundDate && (
-                  <S.DateText>{moment(inboundDate).format('LL')}</S.DateText>
-                )}
+                {inboundDate
+                  ? inboundDate !== null && (
+                      <S.DateText>
+                        {moment(inboundDate).format('LL')}
+                      </S.DateText>
+                    )
+                  : inboundDate !== null && (
+                      <CircularProgress disableShrink size={20} />
+                    )}
               </S.DateOpionInfoBox>
               <S.DateOpionInfoBox>
                 <S.OptionText>

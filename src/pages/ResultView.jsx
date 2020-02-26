@@ -3,6 +3,7 @@ import FlightAreaContainer from '../container/FlightAreaContainer';
 import ResearchAreaContainer from '../container/ResearchAreaContainer';
 import Header from '../components/Header';
 import styled from 'styled-components';
+import ScrollTop from '../components/Common/ScrollTop';
 
 const SubLayout = styled.div`
   position: relative;
@@ -16,6 +17,7 @@ const ResultView = () => {
       <Header isView={true} />
       <ResearchAreaContainer />
       <FlightAreaContainer />
+      <ScrollTop />
     </SubLayout>
   );
 };

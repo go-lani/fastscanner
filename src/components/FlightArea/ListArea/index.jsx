@@ -94,7 +94,7 @@ const ListArea = React.memo(
             2;
 
         setDurationAverage({
-          time: `${Math.floor(minDurationAverage / 60)}시간${Math.floor(
+          time: `${Math.floor(minDurationAverage / 60)}시간 ${Math.floor(
             minDurationAverage % 60,
           )}분`,
           price:
@@ -118,7 +118,7 @@ const ListArea = React.memo(
             2;
 
         setPriceAverage({
-          time: `${Math.floor(minPriceDuration / 60)}시간${Math.floor(
+          time: `${Math.floor(minPriceDuration / 60)}시간 ${Math.floor(
             minPriceDuration % 60,
           )}분`,
           price: minPrice.toString().replace(regExp, ','),
@@ -174,11 +174,27 @@ const ListArea = React.memo(
               tabindex="0"
             >
               <p>최저가</p>
-              <S.TabPrice isActive={isActive === 'price'}>
-                {priceAverage && `₩ ${priceAverage.price}`}
-                {!priceAverage && <CircularProgress disableShrink size={20} />}
-              </S.TabPrice>
-              <small>{priceAverage && `${priceAverage.time}`}(평균)</small>
+              {!filterUpdate && (
+                <>
+                  {renderDatas && renderDatas.length ? (
+                    <>
+                      <S.TabPrice isActive={isActive === 'price'}>
+                        {priceAverage && `₩ ${priceAverage.price}`}
+                      </S.TabPrice>
+                      <small>
+                        {priceAverage && `${priceAverage.time}`} (평균)
+                      </small>
+                    </>
+                  ) : (
+                    <>
+                      <S.NonAverage isActive={isActive === 'price'}>
+                        없음
+                      </S.NonAverage>
+                    </>
+                  )}
+                </>
+              )}
+              {filterUpdate && <CircularProgress disableShrink size={30} />}
             </S.TabItem>
             <S.TabItem
               id="duration"
@@ -188,15 +204,27 @@ const ListArea = React.memo(
               tabindex="0"
             >
               <p>최단 여행시간</p>
-              <S.TabPrice isActive={isActive === 'duration'}>
-                {durationAverage && `₩ ${durationAverage.price}`}
-                {!durationAverage && (
-                  <CircularProgress disableShrink size={20} />
-                )}
-              </S.TabPrice>
-              <small>
-                {durationAverage && `${durationAverage.time}`}(평균)
-              </small>
+              {!filterUpdate && (
+                <>
+                  {renderDatas && renderDatas.length ? (
+                    <>
+                      <S.TabPrice isActive={isActive === 'duration'}>
+                        {durationAverage && `₩ ${durationAverage.price}`}
+                      </S.TabPrice>
+                      <small>
+                        {durationAverage && `${durationAverage.time}`} (평균)
+                      </small>
+                    </>
+                  ) : (
+                    <>
+                      <S.NonAverage isActive={isActive === 'duration'}>
+                        없음
+                      </S.NonAverage>
+                    </>
+                  )}
+                </>
+              )}
+              {filterUpdate && <CircularProgress disableShrink size={30} />}
             </S.TabItem>
             <S.TabItem
               id="recommend"
@@ -206,8 +234,14 @@ const ListArea = React.memo(
               tabindex="0"
             >
               <p>추천순</p>
-              <em>₩ 0</em>
-              <small>(평균) 00시간 00분</small>
+              {!filterUpdate && (
+                <>
+                  <S.TabPrice isActive={isActive === 'recommend'}>
+                    준비중..
+                  </S.TabPrice>
+                </>
+              )}
+              {filterUpdate && <CircularProgress disableShrink size={30} />}
             </S.TabItem>
           </S.CategoryTab>
         </S.TabArea>
