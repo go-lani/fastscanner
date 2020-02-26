@@ -1,6 +1,7 @@
 import moment from 'moment';
 import { put, call, takeLatest, select, delay } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
+import { cloneDeep } from 'lodash';
 import FlightService from '../../service/FlightService';
 
 const options = {
@@ -302,35 +303,16 @@ function* setFilterOptions({ payload }) {
   }
 }
 
-// SET Tab 필터 데이터
-export const setSortDatasSaga = createAction('SET_SORT_DATAS_SAGA');
-
-function* setSortDatas({ payload }) {
-  console.log(payload);
-  try {
-    yield put(pending());
-    yield put(
-      success({
-        sortDatas: payload,
-        pageIndex: 0,
-      }),
-    );
-  } catch (error) {
-    yield put(fail(error));
-    console.log(error);
-  }
-}
-
 // 필터 데이터 렌더링
 export const filterLiveSearchSaga = createAction('FILTER_LIVESEARCH_SAGA');
 
 function* filterLiveSearch({ payload }) {
   const way = yield select(state => state.search.way);
   const originDatas = yield select(state => state.flight.originDatas);
-  const sortDatas = yield select(state => state.flight.sortDatas);
   const filterOptions = yield select(state => state.flight.filterOptions);
   const pageIndex = yield select(state => state.flight.pageIndex);
-  let newFilterData = null;
+  let newFilterDatas = null;
+  let sortFilterDatas = null;
   let directDisable = filterOptions.directDisable;
   let viaDisable = filterOptions.viaDisable;
   let direct = filterOptions.direct;
@@ -340,11 +322,25 @@ function* filterLiveSearch({ payload }) {
     if (filterOptions.filterUpdate) yield delay(700);
     yield put(
       pending({
-        filterDatas: sortDatas ? sortDatas : originDatas,
+        filterDatas: originDatas,
       }),
     );
     const filterDatas = yield select(state => state.flight.filterDatas);
 
+    if (!filterDatas) return;
+
+    if (filterOptions.sortBy === 'price') {
+      sortFilterDatas = cloneDeep(filterDatas).sort(
+        (pre, cur) => pre.price - cur.price,
+      );
+    } else if (filterOptions.sortBy === 'duration') {
+      sortFilterDatas = cloneDeep(filterDatas).sort(
+        (pre, cur) =>
+          pre.Outbound.Duration +
+          (pre.Inbound ? pre.Inbound.Duration : 0) -
+          (cur.Outbound.Duration + (cur.Inbound ? cur.Inbound.Duration : 0)),
+      );
+    }
     // 직항 필터링
     const DirectData = way => {
       let DirectDatas = [];
@@ -352,22 +348,24 @@ function* filterLiveSearch({ payload }) {
 
       if (way === 'round') {
         // 왕복
-        DirectDatas = filterDatas.filter(
+        DirectDatas = sortFilterDatas.filter(
           data =>
             data.Outbound.Stops.length === 0 && data.Inbound.Stops.length === 0,
         );
 
-        ViaDatas = filterDatas.filter(
+        ViaDatas = sortFilterDatas.filter(
           data =>
             data.Outbound.Stops.length !== 0 || data.Inbound.Stops.length !== 0,
         );
       } else {
         // 편도
-        DirectDatas = filterDatas.filter(
+        DirectDatas = sortFilterDatas.filter(
           data => data.Outbound.Stops.length === 0,
         );
 
-        ViaDatas = filterDatas.filter(data => data.Outbound.Stops.length !== 0);
+        ViaDatas = sortFilterDatas.filter(
+          data => data.Outbound.Stops.length !== 0,
+        );
       }
 
       return DirectDatas.length
@@ -375,7 +373,7 @@ function* filterLiveSearch({ payload }) {
             DirectDatas: filterOptions.direct
               ? !filterOptions.via
                 ? DirectDatas
-                : filterDatas
+                : sortFilterDatas
               : null,
             directDisable: DirectDatas.length === 0 ? true : false,
             viaDisable: ViaDatas.length === 0 ? true : false,
@@ -398,22 +396,24 @@ function* filterLiveSearch({ payload }) {
 
       if (way === 'round') {
         // 왕복
-        DirectDatas = filterDatas.filter(
+        DirectDatas = sortFilterDatas.filter(
           data =>
             data.Outbound.Stops.length === 0 && data.Inbound.Stops.length === 0,
         );
 
-        ViaDatas = filterDatas.filter(
+        ViaDatas = sortFilterDatas.filter(
           data =>
             data.Outbound.Stops.length !== 0 || data.Inbound.Stops.length !== 0,
         );
       } else {
         // 편도
-        DirectDatas = filterDatas.filter(
+        DirectDatas = sortFilterDatas.filter(
           data => data.Outbound.Stops.length === 0,
         );
 
-        ViaDatas = filterDatas.filter(data => data.Outbound.Stops.length !== 0);
+        ViaDatas = sortFilterDatas.filter(
+          data => data.Outbound.Stops.length !== 0,
+        );
       }
 
       return ViaDatas.length
@@ -421,7 +421,7 @@ function* filterLiveSearch({ payload }) {
             ViaDatas: filterOptions.via
               ? !filterOptions.direct
                 ? ViaDatas
-                : filterDatas
+                : sortFilterDatas
               : null,
             directDisable: !DirectDatas.length,
             viaDisable: !ViaDatas.length,
@@ -446,7 +446,7 @@ function* filterLiveSearch({ payload }) {
           direct: d,
           via: v,
         } = DirectData(way);
-        newFilterData = DirectDatas;
+        newFilterDatas = DirectDatas;
         directDisable = dDisable;
         viaDisable = vDisable;
         direct = d;
@@ -459,7 +459,7 @@ function* filterLiveSearch({ payload }) {
           direct: d,
           via: v,
         } = DirectData(way);
-        newFilterData = DirectDatas;
+        newFilterDatas = DirectDatas;
         directDisable = dDisable;
         viaDisable = vDisable;
         direct = d;
@@ -474,13 +474,13 @@ function* filterLiveSearch({ payload }) {
           direct: d,
           via: v,
         } = ViaData(way);
-        newFilterData = ViaDatas;
+        newFilterDatas = ViaDatas;
         directDisable = dDisable;
         viaDisable = vDisable;
         direct = d;
         via = v;
       } else {
-        newFilterData = [];
+        newFilterDatas = [];
         directDisable = filterOptions.directDisable ? true : false;
         viaDisable = filterOptions.viaDisable ? true : false;
         direct = false;
@@ -490,8 +490,8 @@ function* filterLiveSearch({ payload }) {
 
     const regexr = /^24/;
     if (filterOptions.OutBound) {
-      if (newFilterData) {
-        newFilterData = newFilterData.filter(data => {
+      if (newFilterDatas) {
+        newFilterDatas = newFilterDatas.filter(data => {
           return filterOptions.OutBound.start <=
             moment(data.Outbound.Departure)
               .format('kk:mm')
@@ -508,7 +508,7 @@ function* filterLiveSearch({ payload }) {
             : null;
         });
       } else {
-        newFilterData = filterDatas.filter(data => {
+        newFilterDatas = filterDatas.filter(data => {
           return filterOptions.OutBound.start <=
             moment(data.Outbound.Departure)
               .format('kk:mm')
@@ -528,8 +528,8 @@ function* filterLiveSearch({ payload }) {
     }
 
     if (filterOptions.InBound) {
-      if (newFilterData) {
-        newFilterData = newFilterData.filter(data => {
+      if (newFilterDatas) {
+        newFilterDatas = newFilterDatas.filter(data => {
           return filterOptions.InBound.start <=
             moment(data.Inbound.Departure)
               .format('kk:mm')
@@ -544,7 +544,7 @@ function* filterLiveSearch({ payload }) {
             : null;
         });
       } else {
-        newFilterData = filterDatas.filter(data => {
+        newFilterDatas = filterDatas.filter(data => {
           return filterOptions.InBound.start <=
             moment(data.Inbound.Departure)
               .format('kk:mm')
@@ -562,8 +562,8 @@ function* filterLiveSearch({ payload }) {
     }
 
     if (filterOptions.Duration) {
-      if (newFilterData) {
-        newFilterData = newFilterData.filter(data => {
+      if (newFilterDatas) {
+        newFilterDatas = newFilterDatas.filter(data => {
           return (data.Inbound && data.Inbound.Duration
             ? data.Outbound.Duration + data.Inbound.Duration
             : data.Outbound.Duration) <= filterOptions.Duration
@@ -571,7 +571,7 @@ function* filterLiveSearch({ payload }) {
             : null;
         });
       } else {
-        newFilterData = filterDatas.filter(data => {
+        newFilterDatas = filterDatas.filter(data => {
           return (data.Inbound && data.Inbound.Duration
             ? data.Outbound.Duration + data.Inbound.Duration
             : data.Outbound.Duration) <= filterOptions.Duration
@@ -581,7 +581,7 @@ function* filterLiveSearch({ payload }) {
       }
     }
 
-    const newRenderDatas = newFilterData.slice(
+    const newRenderDatas = newFilterDatas.slice(
       pageIndex * 5,
       (pageIndex + 1) * 5,
     );
@@ -589,7 +589,7 @@ function* filterLiveSearch({ payload }) {
     yield put(
       success({
         pageIndex: pageIndex + 1,
-        filterDatas: newFilterData,
+        filterDatas: newFilterDatas,
         renderDatas: newRenderDatas,
         filterOptions: {
           ...filterOptions,
@@ -612,7 +612,6 @@ export function* flightSaga() {
   yield takeLatest('RENDER_LIVESEARCH_SAGA', renderLiveSearch);
   yield takeLatest('FILTER_LIVESEARCH_SAGA', filterLiveSearch);
   yield takeLatest('SET_FILTER_OPTIONS_SAGA', setFilterOptions);
-  yield takeLatest('SET_SORT_DATAS_SAGA', setSortDatas);
   yield takeLatest('MAIN_LIVESEARCH_SAGA', mainLiveSearch);
 }
 

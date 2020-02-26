@@ -27,69 +27,39 @@ const ListArea = React.memo(
     renderDatas,
     pageIndex,
     loading,
-    setSortDatas,
     renderLiveSearch,
     filterLiveSearch,
     filterUpdate,
+    setFilterOptions,
   }) => {
     const [isActive, setActive] = useState('price');
     const [priceAverage, setPriceAverage] = useState();
     const [durationAverage, setDurationAverage] = useState();
-    const [currentDatas, setCurrentDatas] = useState();
     const originDatas = useSelector(state => state.flight.originDatas);
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
     }, [setFilterModalVisible]);
 
+    useEffect(() => {
+      setFilterOptions({
+        sortBy: isActive,
+      });
+      filterLiveSearch();
+    }, [filterLiveSearch, isActive, setFilterOptions]);
+
     const changeCategory = e => {
       e.stopPropagation();
-
-      if (e.target.parentNode.id === 'price' || e.target.id === 'price') {
-        if (filterDatas) {
-          // setCurrentDatas(
-          //   filterDatas.sort((pre, cur) => pre.price - cur.price),
-          // );
-          const _data = filterDatas.sort((pre, cur) => pre.price - cur.price);
-          setSortDatas(_data);
-          filterLiveSearch();
-        }
-      }
-
-      if (e.target.parentNode.id === 'duration' || e.target.id === 'duration') {
-        if (filterDatas) {
-          // setCurrentDatas(
-          //   filterDatas.sort(
-          //     (pre, cur) =>
-          //       pre.Outbound.Duration +
-          //       (pre.Inbound ? pre.Inbound.Duration : 0) -
-          //       (cur.Outbound.Duration +
-          //         (cur.Inbound ? cur.Inbound.Duration : 0)),
-          //   ),
-          // );
-          const _data = filterDatas.sort(
-            (pre, cur) =>
-              pre.Outbound.Duration +
-              (pre.Inbound ? pre.Inbound.Duration : 0) -
-              (cur.Outbound.Duration +
-                (cur.Inbound ? cur.Inbound.Duration : 0)),
-          );
-          setSortDatas(_data);
-          filterLiveSearch();
-        }
-      }
 
       if (e.target.parentNode.id === 'recommend' || e.target.id === 'recommend')
         return alert('준비중입니다.');
 
+      setFilterOptions({
+        sortBy: e.target.parentNode.id || e.target.id,
+      });
+
       setActive(e.target.parentNode.id || e.target.id);
     };
-
-    console.log(currentDatas);
-
-    useEffect(() => {
-      if (filterDatas) setSortDatas(filterDatas);
-    }, [filterDatas, setSortDatas]);
 
     useEffect(() => {
       const regExp = /\B(?=(\d{3})+(?!\d))/g;
