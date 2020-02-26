@@ -92,19 +92,16 @@ export const FilterButton = styled.button`
 
 // progress
 export const ProgressBox = styled.div`
-  padding-top: 5px;
   .MuiLinearProgress-root,
   .MuiLinearProgress-bar {
     ${props =>
       props.loading
         ? css`
-            opacity: 0;
+            display: none;
           `
         : css`
-            opacity: 1;
+            display: block;
           `}
-
-    transition: opacity 1s ease-out;
   }
 `;
 
@@ -121,10 +118,19 @@ const twincle = keyframes`
 `;
 
 export const ProgressTextBox = styled.div`
+  /* padding-bottom: 5px; */
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin: 0 0 5px;
+
+  ${props =>
+    !props.loading
+      ? css`
+          padding-bottom: 5px;
+        `
+      : css`
+          padding-bottom: 10px;
+        `}
 `;
 
 export const ProgressText = styled.p`
@@ -134,7 +140,6 @@ export const ProgressText = styled.p`
 `;
 
 export const ProgressResult = styled.button`
-  padding: 0 0 0 5px;
   font-size: 1.4rem;
   color: #0288d1;
   font-weight: 400;
@@ -148,6 +153,12 @@ export const ProgressResult = styled.button`
     font-size: 1.6rem;
     font-weight: 700;
   }
+
+  /* ${props =>
+    !props.loading &&
+    css`
+      padding-bottom: 5px;
+    `} */
 `;
 
 export const Progress = withStyles({

@@ -50,7 +50,7 @@ const ListArea = React.memo(
       <S.ListLayout>
         <A11yTitle>항공권 검색 결과</A11yTitle>
         <S.ProgressBox loading={pageIndex}>
-          <S.ProgressTextBox>
+          <S.ProgressTextBox loading={pageIndex}>
             {progress.per === 100 ? (
               <S.ProgressResult onClick={filterReset}>
                 <span>{originDatas && `총 ${originDatas.length}개 중, `}</span>
