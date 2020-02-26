@@ -7,6 +7,7 @@ import * as S from './ListAreaStyled';
 import InfiniteScroller from 'react-infinite-scroller';
 import Loading from './Loading';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Updating from './Updating';
 
 const loaderRender = (() => {
   const loaderGroup = [];
@@ -22,11 +23,37 @@ const ListArea = React.memo(
     progress,
     setFilterModalVisible,
     renderDatas,
+    filterDatas,
     pageIndex,
     loading,
     renderLiveSearch,
   }) => {
+    const compare = key => {
+      return function(a, b) {
+        return a[key] > b[key] ? 1 : a[key] < b[key] ? -1 : 0;
+      };
+    };
+    console.log(
+      filterDatas &&
+        filterDatas.sort(
+          compare(filterDatas.map(filterData => filterData.price)),
+        ),
+    );
+    const minPrice =
+      filterDatas &&
+      Math.min(...filterDatas.map(filterData => filterData.price));
+    const minPriceDatas =
+      filterDatas &&
+      filterDatas.filter(filterData => +filterData.price === minPrice)[0];
+    const minPriceDuration =
+      filterDatas &&
+      minPriceDatas &&
+      minPriceDatas.Outbound &&
+      minPriceDatas.Outbound.Duration +
+        (minPriceDatas.Inbound ? minPriceDatas.Inbound.Duration : 0);
+
     const [isActive, setActive] = useState('price');
+    const regExp = /\B(?=(\d{3})+(?!\d))/g;
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
@@ -60,8 +87,22 @@ const ListArea = React.memo(
               tabindex="0"
             >
               <p>최저가</p>
-              <em>₩ 222,222</em>
-              <small>(평균) 13시간 50분</small>
+              <S.TabPrice isActive={isActive === 'price'}>
+                {filterDatas && minPriceDatas && minPriceDatas.Outbound ? (
+                  `₩ ${minPrice.toString().replace(regExp, ',')}`
+                ) : (
+                  <CircularProgress disableShrink size={20} />
+                )}
+              </S.TabPrice>
+              <small>
+                {filterDatas && minPriceDatas && minPriceDatas.Outbound
+                  ? `${Math.floor(
+                      minPriceDuration / 60,
+                    )}시간 ${minPriceDuration % 60}분 ${
+                      minPriceDatas.Inbound ? '(평균)' : ''
+                    }`
+                  : ''}
+              </small>
             </S.TabItem>
             <S.TabItem
               id="duration"
