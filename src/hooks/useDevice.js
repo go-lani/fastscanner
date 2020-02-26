@@ -6,10 +6,8 @@ import { getDeviceSaga } from '../redux/modules/util';
 const initialState = (() => {
   if (window.innerWidth >= 1025) {
     return 'Desktop';
-  } else if (window.innerWidth <= 1024 && window.innerWidth > 769) {
+  } else if (window.innerWidth <= 1024 && window.innerWidth > 768) {
     return 'Tablet';
-  } else if (window.innerWidth === 769) {
-    return '769';
   } else {
     return 'Mobile';
   }
@@ -24,14 +22,10 @@ export default function useDevice() {
       if (device === 'Desktop') return;
 
       dispatch(getDeviceSaga('Desktop'));
-    } else if (window.innerWidth <= 1024 && window.innerWidth > 769) {
+    } else if (window.innerWidth <= 1024 && window.innerWidth > 768) {
       if (device === 'Tablet') return;
 
       dispatch(getDeviceSaga('Tablet'));
-    } else if (window.innerWidth === 769) {
-      if (device === '769') return;
-
-      dispatch(getDeviceSaga('769'));
     } else {
       if (device === 'Mobile') return;
 

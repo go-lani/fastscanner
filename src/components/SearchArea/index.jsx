@@ -15,6 +15,7 @@ const SearchArea = React.memo(
   ({
     isOpen,
     isHeader,
+    setIsOpen,
     history,
     way,
     originPlace,
@@ -48,6 +49,7 @@ const SearchArea = React.memo(
     }, []);
 
     function searchSubmit() {
+      setIsOpen && setIsOpen(false);
       const originCode = originPlace.slice(0, -4).toLowerCase();
       const destinationCode =
         destinationPlace && destinationPlace.slice(0, -4).toLowerCase();

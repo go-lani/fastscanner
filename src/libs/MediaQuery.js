@@ -9,7 +9,9 @@ const sizes = {
 const sizeCheck = label => {
   if (label === 'desktop') return `all and (min-width: ${sizes[label]}px)`;
   if (label === 'tablet')
-    return `all and (min-width: ${sizes['mobile']}px) and (max-width: ${sizes[label]}px)`;
+    return `all and (min-width: ${+sizes['mobile'] + 1}px) and (max-width: ${
+      sizes[label]
+    }px)`;
   if (label === 'mobile') return `all and (max-width: ${sizes[label]}px)`;
 };
 

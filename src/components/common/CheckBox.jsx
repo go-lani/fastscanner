@@ -54,6 +54,8 @@ const StyledCheckbox = styled.input`
   -o-appearance: none;
   appearance: none;
   outline: none;
+  border: 0;
+  border-radius: 0;
   box-shadow: none;
   background-image: url('/images/checkbox.png');
   background-position-y: center;
