@@ -3,7 +3,7 @@ import ListArea from '../components/FlightArea/ListArea';
 import {
   renderLiveSearchSaga,
   filterLiveSearchSaga,
-  setSortDatasSaga,
+  setFilterOptionsSaga,
 } from '../redux/modules/flight';
 
 export default connect(
@@ -22,8 +22,8 @@ export default connect(
     filterLiveSearch: () => {
       dispatch(filterLiveSearchSaga());
     },
-    setSortDatas: sortData => {
-      dispatch(setSortDatasSaga(sortData));
+    setFilterOptions: status => {
+      dispatch(setFilterOptionsSaga(status));
     },
   }),
 )(ListArea);

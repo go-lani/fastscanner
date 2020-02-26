@@ -27,87 +27,79 @@ const ListArea = React.memo(
     renderDatas,
     pageIndex,
     loading,
-    setSortDatas,
     renderLiveSearch,
     filterLiveSearch,
     filterUpdate,
+    setFilterOptions,
   }) => {
     const [isActive, setActive] = useState('price');
     const [priceAverage, setPriceAverage] = useState();
     const [durationAverage, setDurationAverage] = useState();
-    const [currentDatas, setCurrentDatas] = useState();
     const originDatas = useSelector(state => state.flight.originDatas);
-    const regExp = /\B(?=(\d{3})+(?!\d))/g;
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
     }, [setFilterModalVisible]);
 
+    useEffect(() => {
+      setFilterOptions({
+        sortBy: isActive,
+      });
+      filterLiveSearch();
+    }, [filterLiveSearch, isActive, setFilterOptions]);
+
     const changeCategory = e => {
       e.stopPropagation();
 
-      if (e.target.parentNode.id === 'price' || e.target.id === 'price') {
-        if (filterDatas) {
-          setCurrentDatas(
-            filterDatas.sort((pre, cur) => pre.price - cur.price),
-          );
-        }
-      }
-
-      if (e.target.parentNode.id === 'duration' || e.target.id === 'duration') {
-        if (filterDatas) {
-          setCurrentDatas(
-            filterDatas.sort(
-              (pre, cur) =>
-                pre.Outbound.Duration +
-                pre.Inbound.Duration -
-                (cur.Outbound.Duration + cur.Inbound.Duration),
-            ),
-          );
-        }
-      }
-
       if (e.target.parentNode.id === 'recommend' || e.target.id === 'recommend')
         return alert('준비중입니다.');
+
+      setFilterOptions({
+        sortBy: e.target.parentNode.id || e.target.id,
+      });
 
       setActive(e.target.parentNode.id || e.target.id);
     };
 
     useEffect(() => {
-      if (currentDatas) {
-        setSortDatas(currentDatas);
-        filterLiveSearch();
-      }
-    }, [currentDatas, filterLiveSearch, setSortDatas]);
-
-    useEffect(() => {
       const regExp = /\B(?=(\d{3})+(?!\d))/g;
 
       if (filterDatas) {
-        filterDatas.sort(
-          (pre, cur) =>
-            pre.Outbound.Duration +
-            pre.Inbound.Duration -
-            (cur.Outbound.Duration + cur.Inbound.Duration),
-        );
+        const minDuration =
+          filterDatas &&
+          Math.min(
+            ...filterDatas.map(
+              filterData =>
+                filterData.Outbound.Duration +
+                (filterData.Inbound ? filterData.Inbound.Duration : 0),
+            ),
+          );
 
-        const durationAverage = Math.floor(
-          filterDatas
-            .map(data => (data.Outbound.Duration + data.Inbound.Duration) / 2)
-            .reduce((pre, cur) => {
-              pre = pre + cur;
-              return pre;
-            }, 0) / filterDatas.length,
-        );
+        const minDurationDatas =
+          filterDatas &&
+          filterDatas.filter(
+            filterData =>
+              filterData.Outbound.Duration +
+                (filterData.Inbound ? filterData.Inbound.Duration : 0) ===
+              minDuration,
+          )[0];
+
+        const minDurationAverage =
+          minDurationDatas &&
+          minDurationDatas.Outbound &&
+          (minDurationDatas.Outbound.Duration +
+            (minDurationDatas.Inbound
+              ? minDurationDatas.Inbound.Duration
+              : 0)) /
+            2;
 
         setDurationAverage({
-          time: `${Math.floor(durationAverage / 60)}시간${Math.floor(
-            durationAverage % 60,
+          time: `${Math.floor(minDurationAverage / 60)}시간${Math.floor(
+            minDurationAverage % 60,
           )}분`,
           price:
-            filterDatas &&
-            filterDatas[0] &&
-            filterDatas[0].price.toString().replace(regExp, ','),
+            minDurationDatas &&
+            minDurationDatas.price.toString().replace(regExp, ','),
         });
 
         const minPrice =
@@ -121,8 +113,9 @@ const ListArea = React.memo(
         const minPriceDuration =
           minPriceDatas &&
           minPriceDatas.Outbound &&
-          minPriceDatas.Outbound.Duration +
-            (minPriceDatas.Inbound ? minPriceDatas.Inbound.Duration : 0);
+          (minPriceDatas.Outbound.Duration +
+            (minPriceDatas.Inbound ? minPriceDatas.Inbound.Duration : 0)) /
+            2;
 
         setPriceAverage({
           time: `${Math.floor(minPriceDuration / 60)}시간${Math.floor(
@@ -185,7 +178,7 @@ const ListArea = React.memo(
                 {priceAverage && `₩ ${priceAverage.price}`}
                 {!priceAverage && <CircularProgress disableShrink size={20} />}
               </S.TabPrice>
-              <small>{priceAverage && `${priceAverage.time}`}</small>
+              <small>{priceAverage && `${priceAverage.time}`}(평균)</small>
             </S.TabItem>
             <S.TabItem
               id="duration"
@@ -195,8 +188,15 @@ const ListArea = React.memo(
               tabindex="0"
             >
               <p>최단 여행시간</p>
-              <em>₩ {durationAverage && durationAverage.price}</em>
-              <small>(평균) {durationAverage && durationAverage.time}</small>
+              <S.TabPrice isActive={isActive === 'duration'}>
+                {durationAverage && `₩ ${durationAverage.price}`}
+                {!durationAverage && (
+                  <CircularProgress disableShrink size={20} />
+                )}
+              </S.TabPrice>
+              <small>
+                {durationAverage && `${durationAverage.time}`}(평균)
+              </small>
             </S.TabItem>
             <S.TabItem
               id="recommend"
