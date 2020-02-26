@@ -139,6 +139,23 @@ const FilterArea = React.memo(
       [filterLiveSearch, setFilterOptions],
     );
 
+    // 최저가격
+    const directLowPrice =
+      originDatas &&
+      originDatas.filter(data =>
+        originDatas.Inbound
+          ? data.Outbound.Stops.length === 0 && data.Inbound.Stops.length === 0
+          : data.Outbound.Stops.length === 0,
+      )[0];
+
+    const viaLowPrice =
+      originDatas &&
+      originDatas.filter(data =>
+        originDatas.Inbound
+          ? data.Outbound.Stops.length !== 0 || data.Inbound.Stops.length !== 0
+          : data.Outbound.Stops.length !== 0,
+      )[0];
+
     return (
       <>
         <S.FilterOverlay
@@ -163,6 +180,7 @@ const FilterArea = React.memo(
                   checked={filterOptions.direct}
                   isDisable={directDisable}
                   onChange={setWays}
+                  price={directLowPrice && directLowPrice.price}
                 />
               </S.DropItem>
               <S.DropItem>
@@ -173,6 +191,7 @@ const FilterArea = React.memo(
                   checked={filterOptions.via}
                   isDisable={viaDisable}
                   onChange={setWays}
+                  price={viaLowPrice && viaLowPrice.price}
                 />
               </S.DropItem>
             </DropBox>

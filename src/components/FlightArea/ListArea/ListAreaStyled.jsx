@@ -154,11 +154,11 @@ export const ProgressResult = styled.button`
     font-weight: 700;
   }
 
-  /* ${props =>
-    !props.loading &&
+  ${props =>
+    !props.status &&
     css`
-      padding-bottom: 5px;
-    `} */
+      cursor: default;
+    `}
 `;
 
 export const Progress = withStyles({

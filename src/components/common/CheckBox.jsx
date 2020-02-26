@@ -45,6 +45,17 @@ const StyledLabel = styled.label`
     css`
       color: #666;
     `};
+
+  span + span {
+    margin-top: 5px;
+  }
+
+  span:last-child {
+    display: block;
+    padding-left: 20px;
+    color: #777;
+    font-size: 1.2rem;
+  }
 `;
 
 const StyledCheckbox = styled.input`
@@ -60,6 +71,7 @@ const StyledCheckbox = styled.input`
   background-image: url('/images/checkbox.png');
   background-position-y: center;
   margin-right: 5px;
+
   cursor: pointer;
   :checked {
     background-image: url('/images/checkbox.png');
@@ -73,7 +85,10 @@ const StyledCheckbox = styled.input`
 `;
 
 const CheckBox = React.memo(
-  ({ label, id, size, onChange, checked, isDisable, labelColor }) => {
+  ({ label, id, size, onChange, checked, isDisable, labelColor, price }) => {
+    console.log(typeof price);
+    const regExp = /\B(?=(\d{3})+(?!\d))/g;
+
     return (
       <StyledLabel
         htmlFor={id}
@@ -89,7 +104,8 @@ const CheckBox = React.memo(
           onChange={onChange}
           disabled={isDisable}
         />
-        {label}
+        <span>{label}</span>
+        <span>{price && `₩ ${price.replace(regExp, ',')}`}</span>
       </StyledLabel>
     );
   },

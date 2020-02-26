@@ -42,8 +42,7 @@ const ListArea = React.memo(
     }, []);
 
     const filterReset = () => {
-      console.log('1');
-      filterLiveSearch();
+      // filterLiveSearch();
     };
 
     return (
@@ -52,7 +51,14 @@ const ListArea = React.memo(
         <S.ProgressBox loading={pageIndex}>
           <S.ProgressTextBox loading={pageIndex}>
             {progress.per === 100 ? (
-              <S.ProgressResult onClick={filterReset}>
+              <S.ProgressResult
+                onClick={filterReset}
+                status={
+                  originDatas &&
+                  filterDatas &&
+                  filterDatas.length !== originDatas.length
+                }
+              >
                 <span>{originDatas && `총 ${originDatas.length}개 중, `}</span>
                 <em>{filterDatas && filterDatas.length}개</em>
                 {originDatas &&
