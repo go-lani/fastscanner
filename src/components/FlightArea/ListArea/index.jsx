@@ -47,23 +47,35 @@ const ListArea = React.memo(
 
       if (e.target.parentNode.id === 'price' || e.target.id === 'price') {
         if (filterDatas) {
-          setCurrentDatas(
-            filterDatas.sort((pre, cur) => pre.price - cur.price),
-          );
+          // setCurrentDatas(
+          //   filterDatas.sort((pre, cur) => pre.price - cur.price),
+          // );
+          const _data = filterDatas.sort((pre, cur) => pre.price - cur.price);
+          setSortDatas(_data);
+          filterLiveSearch();
         }
       }
 
       if (e.target.parentNode.id === 'duration' || e.target.id === 'duration') {
         if (filterDatas) {
-          setCurrentDatas(
-            filterDatas.sort(
-              (pre, cur) =>
-                pre.Outbound.Duration +
-                (pre.Inbound ? pre.Inbound.Duration : 0) -
-                (cur.Outbound.Duration +
-                  (cur.Inbound ? cur.Inbound.Duration : 0)),
-            ),
+          // setCurrentDatas(
+          //   filterDatas.sort(
+          //     (pre, cur) =>
+          //       pre.Outbound.Duration +
+          //       (pre.Inbound ? pre.Inbound.Duration : 0) -
+          //       (cur.Outbound.Duration +
+          //         (cur.Inbound ? cur.Inbound.Duration : 0)),
+          //   ),
+          // );
+          const _data = filterDatas.sort(
+            (pre, cur) =>
+              pre.Outbound.Duration +
+              (pre.Inbound ? pre.Inbound.Duration : 0) -
+              (cur.Outbound.Duration +
+                (cur.Inbound ? cur.Inbound.Duration : 0)),
           );
+          setSortDatas(_data);
+          filterLiveSearch();
         }
       }
 
@@ -76,16 +88,13 @@ const ListArea = React.memo(
     console.log(currentDatas);
 
     useEffect(() => {
-      setSortDatas(currentDatas);
-      filterLiveSearch();
-    }, [currentDatas, filterLiveSearch, setSortDatas]);
+      if (filterDatas) setSortDatas(filterDatas);
+    }, [filterDatas, setSortDatas]);
 
     useEffect(() => {
       const regExp = /\B(?=(\d{3})+(?!\d))/g;
 
       if (filterDatas) {
-        // const _copyData = filterDatas.slice();
-
         const minDuration =
           filterDatas &&
           Math.min(
@@ -113,22 +122,6 @@ const ListArea = React.memo(
               ? minDurationDatas.Inbound.Duration
               : 0)) /
             2;
-
-        // _copyData.sort(
-        //   (pre, cur) =>
-        //     pre.Outbound.Duration +
-        //     pre.Inbound.Duration -
-        //     (cur.Outbound.Duration + cur.Inbound.Duration),
-        // );
-
-        // const durationAverage = Math.floor(
-        //   _copyData
-        //     .map(data => (data.Outbound.Duration + data.Inbound.Duration) / 2)
-        //     .reduce((pre, cur) => {
-        //       pre = pre + cur;
-        //       return pre;
-        //     }, 0) / _copyData.length,
-        // );
 
         setDurationAverage({
           time: `${Math.floor(minDurationAverage / 60)}시간${Math.floor(
