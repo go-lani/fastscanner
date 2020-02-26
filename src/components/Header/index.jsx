@@ -49,7 +49,6 @@ const Header = React.memo(props => {
     });
   }, []);
 
-  console.log(status);
   return (
     <>
       <S.Header isView={props.isView}>

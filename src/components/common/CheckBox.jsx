@@ -86,7 +86,6 @@ const StyledCheckbox = styled.input`
 
 const CheckBox = React.memo(
   ({ label, id, size, onChange, checked, isDisable, labelColor, price }) => {
-    console.log(typeof price);
     const regExp = /\B(?=(\d{3})+(?!\d))/g;
 
     return (
@@ -105,7 +104,7 @@ const CheckBox = React.memo(
           disabled={isDisable}
         />
         <span>{label}</span>
-        <span>{price && `₩ ${price.replace(regExp, ',')}`}</span>
+        <span>{price ? `₩ ${price.replace(regExp, ',')}` : `없음`}</span>
       </StyledLabel>
     );
   },
