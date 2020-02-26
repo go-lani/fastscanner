@@ -14,8 +14,8 @@ export default connect(
   }),
 
   dispatch => ({
-    filterLiveSearch: (filterName, content) => {
-      dispatch(filterLiveSearchSaga());
+    filterLiveSearch: content => {
+      dispatch(filterLiveSearchSaga(content));
     },
     setFilterOptions: status => {
       dispatch(setFilterOptionsSaga(status));

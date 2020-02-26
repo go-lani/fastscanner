@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import uuid from 'uuid';
 import FlightItem from './FlightItem';
 import A11yTitle from '../../Common/A11yTitle';
@@ -21,21 +21,82 @@ const ListArea = React.memo(
   ({
     progress,
     setFilterModalVisible,
+    filterDatas,
     renderDatas,
     pageIndex,
     loading,
     renderLiveSearch,
+    filterLiveSearch,
   }) => {
     const [isActive, setActive] = useState('price');
+    const [durationAverage, setDurationAverage] = useState();
+    const [durationData, setDurationData] = useState();
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
     }, [setFilterModalVisible]);
 
-    const changeCategory = useCallback(e => {
-      if (e.target.id === 'recommend') return alert('준비중입니다.');
-      setActive(e.target.id);
-    }, []);
+    const changeCategory = e => {
+      e.stopPropagation();
+
+      if (e.target.parentNode.id === 'recommend' || e.target.id === 'recommend')
+        return alert('준비중입니다.');
+
+      setActive(e.target.parentNode.id || e.target.id);
+
+      if (e.target.parentNode.id === 'duration' || e.target.id === 'duration') {
+        if (filterDatas) {
+          setDurationData(
+            filterDatas.sort(
+              (pre, cur) =>
+                pre.Outbound.Duration +
+                pre.Inbound.Duration -
+                (cur.Outbound.Duration + cur.Inbound.Duration),
+            ),
+          );
+        }
+      }
+    };
+
+    useEffect(() => {
+      if (durationData) {
+        filterLiveSearch(durationData);
+      }
+    }, [filterLiveSearch, durationData]);
+
+    useEffect(() => {
+      const regExp = /\B(?=(\d{3})+(?!\d))/g;
+
+      if (filterDatas) {
+        const _copyFilterDatas = filterDatas.slice();
+
+        _copyFilterDatas.sort(
+          (pre, cur) =>
+            pre.Outbound.Duration +
+            pre.Inbound.Duration -
+            (cur.Outbound.Duration + cur.Inbound.Duration),
+        );
+
+        const durationAverage = Math.floor(
+          filterDatas
+            .map(data => (data.Outbound.Duration + data.Inbound.Duration) / 2)
+            .reduce((pre, cur) => {
+              pre = pre + cur;
+              return pre;
+            }, 0) / filterDatas.length,
+        );
+
+        setDurationAverage({
+          time: `${Math.floor(durationAverage / 60)}시간${Math.floor(
+            durationAverage % 60,
+          )}분`,
+          price:
+            _copyFilterDatas &&
+            _copyFilterDatas[0] &&
+            _copyFilterDatas[0].price.toString().replace(regExp, ','),
+        });
+      }
+    }, [durationData, filterDatas]);
 
     return (
       <S.ListLayout>
@@ -51,7 +112,7 @@ const ListArea = React.memo(
         </S.ProgressBox>
         <S.TabArea>
           <S.FilterButton onClick={openFilterArea}>필터 (조건)</S.FilterButton>
-          <S.CategoryTab>
+          <S.CategoryTab onClick={changeCategory}>
             <S.TabItem
               id="price"
               onClick={changeCategory}
@@ -71,8 +132,8 @@ const ListArea = React.memo(
               tabindex="0"
             >
               <p>최단 여행시간</p>
-              <em>₩ 222,222</em>
-              <small>(평균) 13시간 50분</small>
+              <em>₩ {durationAverage && durationAverage.price}</em>
+              <small>(평균) {durationAverage && durationAverage.time}</small>
             </S.TabItem>
             <S.TabItem
               id="recommend"
@@ -82,8 +143,8 @@ const ListArea = React.memo(
               tabindex="0"
             >
               <p>추천순</p>
-              <em>₩ 222,222</em>
-              <small>(평균) 13시간 50분</small>
+              <em>₩ 0</em>
+              <small>(평균) 00시간 00분</small>
             </S.TabItem>
           </S.CategoryTab>
         </S.TabArea>

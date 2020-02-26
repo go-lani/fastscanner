@@ -307,8 +307,15 @@ function* filterLiveSearch({ payload }) {
   let via = filterOptions.via;
 
   try {
-    yield put(pending({ filterDatas: originDatas }));
+    yield put(
+      pending({
+        filterDatas: originDatas,
+        pageIndex: payload ? 0 : pageIndex,
+      }),
+    );
     const filterDatas = yield select(state => state.flight.filterDatas);
+
+    if (payload) newFilterData = payload;
 
     // 직항 필터링
     const DirectData = way => {
@@ -545,13 +552,16 @@ function* filterLiveSearch({ payload }) {
         });
       }
     }
-    const newRenderDatas = newFilterData.slice(
-      pageIndex * 5,
-      (pageIndex + 1) * 5,
-    );
+
+    let newRenderDatas;
+
+    if (payload) newRenderDatas = newFilterData.slice(0, 5);
+    else
+      newRenderDatas = newFilterData.slice(pageIndex * 5, (pageIndex + 1) * 5);
+
     yield put(
       success({
-        pageIndex: pageIndex + 1,
+        pageIndex: payload ? 1 : pageIndex + 1,
         filterDatas: newFilterData,
         renderDatas: newRenderDatas,
         filterOptions: {
