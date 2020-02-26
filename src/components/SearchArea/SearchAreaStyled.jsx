@@ -122,6 +122,33 @@ export const SearchBottom = styled.div`
 `;
 
 // Option Popup
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+
+  to {
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 1;
+  }
+`;
+
+export const ModalDim = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 11;
+  height: 100vh;
+  width: 100%;
+  padding: 0 20px;
+
+  animation-name: ${fadeIn};
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+`;
 export const Dim = styled.div`
   position: fixed;
   top: 0;
@@ -136,28 +163,35 @@ export const Dim = styled.div`
 `;
 
 export const OptionPopupWrapper = styled.div`
-  display: none;
-  position: absolute;
-  top: 70px;
-  right: 50%;
-  min-width: 320px;
-  width: 100%;
+  display: flex;
+  justify-content: center;
+  min-width: 280px;
+  max-width: 500px;
   z-index: 3;
-  transform: translateX(50%);
+
+  ${media.mobile`
+    max-width: 410px;
+  `}
 
   ${media.desktop`
+    display: none;
+    position: absolute;
+    top: 70px;
+    min-width: 320px;
+    width: 100%;
+    z-index: 3;
+    transform: translateX(50%);
     right: 0;
     width: auto;
     transform: none;
-  `}
 
-  ${props =>
-    props.isOpen &&
-    css`
-      display: block;
-    `}
+    ${props =>
+      props.isOpen &&
+      css`
+        display: block;
+      `}
 
-  &:before {
+    &:before {
     content: '';
     position: absolute;
     top: -14px;
@@ -167,7 +201,8 @@ export const OptionPopupWrapper = styled.div`
     border-right: 15px solid transparent;
     border-bottom: 15px solid #fff;
     border-left: 15px solid transparent;
-  }
+    }
+  `}
 `;
 
 export const StyledOptionPopup = styled.div`

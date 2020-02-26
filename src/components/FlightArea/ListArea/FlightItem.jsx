@@ -1,14 +1,13 @@
 import React from 'react';
+import qs from 'query-string';
 import * as S from './ListAreaStyled';
 import Button from '../../Common/Button';
 import Boundinfo from './Boundinfo';
-import { useSelector } from 'react-redux';
+import { withRouter } from 'react-router';
 
 const FlightItem = React.memo(
-  ({ Outbound, Inbound, price, agentUrl, amount }) => {
-    const adults = useSelector(state => state.search.adults, []);
-    const children = useSelector(state => state.search.children, []);
-
+  ({ Outbound, Inbound, price, agentUrl, amount, location }) => {
+    const { children, adults } = qs.parse(location.search);
     const regExp = /\B(?=(\d{3})+(?!\d))/g;
 
     return (
@@ -22,10 +21,10 @@ const FlightItem = React.memo(
             <p>총 {amount}건 중 최저가</p>
             <em>
               ₩{price.replace(regExp, ',')}
-              {adults + children >= 2 && (
+              {+adults + +children >= 2 && (
                 <small>
                   (1인당 약 ₩
-                  {Math.round(price / 3)
+                  {Math.round(price / (+adults + +children))
                     .toString()
                     .replace(regExp, ',')}
                   )
@@ -49,4 +48,4 @@ const FlightItem = React.memo(
   },
 );
 
-export default FlightItem;
+export default withRouter(FlightItem);
