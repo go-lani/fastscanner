@@ -42,7 +42,6 @@ const OptionPopup = React.memo(
     }, [children, selectChildren]);
 
     const plusInfants = useCallback(() => {
-      // countInfants를 올리는데 countAdults의 수와 같지 않다면 alert을 표시
       if (adults === infants)
         return alert('성인 1명당 유아 1명까지 선택할 수 있습니다.');
       selectInfants(infants + 1);

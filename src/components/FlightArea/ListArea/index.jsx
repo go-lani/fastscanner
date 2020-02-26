@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import uuid from 'uuid';
 import FlightItem from './FlightItem';
 import A11yTitle from '../../Common/A11yTitle';
@@ -26,9 +26,16 @@ const ListArea = React.memo(
     loading,
     renderLiveSearch,
   }) => {
+    const [isActive, setActive] = useState('price');
+
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
     }, [setFilterModalVisible]);
+
+    const changeCategory = useCallback(e => {
+      if (e.target.id === 'recommend') return alert('준비중입니다.');
+      setActive(e.target.id);
+    }, []);
 
     return (
       <S.ListLayout>
@@ -42,20 +49,44 @@ const ListArea = React.memo(
           </S.ProgressTextBox>
           <S.Progress variant="determinate" value={progress.per} />
         </S.ProgressBox>
-        <S.TabUi>
-          <S.CategoryTab>
-            <li>
-              <S.FilterButton>최저가</S.FilterButton>
-            </li>
-            <li>
-              <S.FilterButton>최단 여행시간</S.FilterButton>
-            </li>
-            <li>
-              <S.FilterButton>추천순</S.FilterButton>
-            </li>
-          </S.CategoryTab>
+        <S.TabArea>
           <S.FilterButton onClick={openFilterArea}>필터 (조건)</S.FilterButton>
-        </S.TabUi>
+          <S.CategoryTab>
+            <S.TabItem
+              id="price"
+              onClick={changeCategory}
+              isActive={isActive === 'price'}
+              role="button"
+              tabindex="0"
+            >
+              <p>최저가</p>
+              <em>₩ 222,222</em>
+              <small>(평균) 13시간 50분</small>
+            </S.TabItem>
+            <S.TabItem
+              id="duration"
+              onClick={changeCategory}
+              isActive={isActive === 'duration'}
+              role="button"
+              tabindex="0"
+            >
+              <p>최단 여행시간</p>
+              <em>₩ 222,222</em>
+              <small>(평균) 13시간 50분</small>
+            </S.TabItem>
+            <S.TabItem
+              id="recommend"
+              onClick={changeCategory}
+              isActive={isActive === 'recommend'}
+              role="button"
+              tabindex="0"
+            >
+              <p>추천순</p>
+              <em>₩ 222,222</em>
+              <small>(평균) 13시간 50분</small>
+            </S.TabItem>
+          </S.CategoryTab>
+        </S.TabArea>
         <S.FlightList>
           {loading && !pageIndex && loaderRender}
           <InfiniteScroller

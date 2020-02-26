@@ -110,8 +110,8 @@ const ResearchArea = React.memo(
               <S.DateOpionInfoBox>
                 <S.OptionText>
                   {adults && `성인 ${adults}`}
-                  {children !== 0 && `소아 ${children}`}
-                  {infants !== 0 && `유아 ${infants}`}
+                  {children !== 0 && `, 소아 ${children}`}
+                  {infants !== 0 && `, 유아 ${infants}`}
                 </S.OptionText>
                 <S.OptionText>
                   {cabinClass !== 'economy'
@@ -126,7 +126,11 @@ const ResearchArea = React.memo(
               </S.DateOpionInfoBox>
             </S.OptionArea>
           </S.FlightInfoSection>
-          <SearchAreaContainer isOpen={isOpen} isHeader={true} />
+          <SearchAreaContainer
+            isOpen={isOpen}
+            isHeader={true}
+            setIsOpen={setIsOpen}
+          />
           <S.DownButton type="button" onClick={showSearchForm}>
             <S.ArrowIcon
               src="/images/arrow-white-down.png"
