@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import InfiniteScroller from 'react-infinite-scroller';
+import { useSelector } from 'react-redux';
 import uuid from 'uuid';
 import { cloneDeep } from 'lodash';
 import FlightItem from './FlightItem';
@@ -33,15 +34,28 @@ const ListArea = React.memo(
     const [durationAverage, setDurationAverage] = useState();
     const [recommendAverage, setRecommendAverage] = useState();
     const [defaultFilterOptions, setDefaultFilterOptions] = useState();
+    const [count, setCount] = useState(1);
+    const per = useSelector(state => state.flight.progress.per);
+    const storeLoading = useSelector(state => state.flight.loading);
 
     useEffect(() => {
-      if (filterOptions) {
-        setDefaultFilterOptions(state =>
-          state !== filterOptions ? state : filterOptions,
-        );
+      if (per === 100 && !storeLoading) {
+        if (filterOptions !== undefined) {
+          if (count === 1) {
+            const initialOptions = { ...cloneDeep(filterOptions), init: true };
+            setDefaultFilterOptions(initialOption =>
+              initialOption !== filterOptions ? initialOptions : initialOptions,
+            );
+            setCount(2);
+          }
+        }
       }
-    }, [filterOptions]);
-    console.log(filterOptions);
+    }, [count, filterOptions, per, storeLoading]);
+
+    useEffect(() => {
+      console.log(defaultFilterOptions);
+    }, [defaultFilterOptions]);
+    // console.log(filterOptions);
 
     // useEffect(() => {
     //   setDefaultFilterOptions(cloneDeep(filterOptions));
