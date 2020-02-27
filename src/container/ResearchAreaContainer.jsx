@@ -13,6 +13,7 @@ export default connect(
     children: state.search.children,
     infants: state.search.infants,
     cabinClass: state.search.cabinClass,
+    loading: state.flight.loading,
   }),
   dispatch => ({
     getConfigure: value => {

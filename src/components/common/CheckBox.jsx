@@ -58,6 +58,11 @@ const StyledLabel = styled.label`
         font-size: 1.2rem;
       }
     `}
+  }
+  :hover {
+    em {
+      color: ${({ isDisable }) => (isDisable ? '#777' : '#0288d1')};
+    }
 `;
 
 const StyledCheckbox = styled.input`
