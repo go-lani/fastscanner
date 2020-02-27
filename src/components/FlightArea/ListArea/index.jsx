@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import InfiniteScroller from 'react-infinite-scroller';
-import { useSelector } from 'react-redux';
 import uuid from 'uuid';
 import { cloneDeep } from 'lodash';
 import FlightItem from './FlightItem';
@@ -36,14 +35,17 @@ const ListArea = React.memo(
     const [defaultFilterOptions, setDefaultFilterOptions] = useState();
 
     useEffect(() => {
-      if (
-        originDatas &&
-        !filterOptions.OutBound &&
-        filterOptions.OutBound !== null
-      ) {
-        setDefaultFilterOptions(filterOptions);
+      if (filterOptions) {
+        setDefaultFilterOptions(state =>
+          state !== filterOptions ? state : filterOptions,
+        );
       }
-    }, [originDatas, filterOptions]);
+    }, [filterOptions]);
+    console.log(filterOptions);
+
+    // useEffect(() => {
+    //   setDefaultFilterOptions(cloneDeep(filterOptions));
+    // }, [filterOptions]);
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
@@ -71,7 +73,7 @@ const ListArea = React.memo(
     useEffect(() => {
       const regExp = /\B(?=(\d{3})+(?!\d))/g;
 
-      if (filterDatas) {
+      if (filterDatas && filterDatas.length) {
         const minDuration =
           filterDatas &&
           Math.min(
@@ -94,11 +96,11 @@ const ListArea = React.memo(
         const minDurationAverage =
           minDurationDatas &&
           minDurationDatas.Outbound &&
-          minDurationDatas.Inbound
-            ? (minDurationDatas.Outbound.Duration +
-                minDurationDatas.Inbound.Duration) /
-              2
-            : minDurationDatas.Outbound.Duration;
+          (minDurationDatas.Outbound.Duration +
+            (minDurationDatas.Inbound
+              ? minDurationDatas.Inbound.Duration
+              : 0)) /
+            2;
 
         setDurationAverage({
           time: `${Math.floor(minDurationAverage / 60)}시간 ${Math.floor(
@@ -118,11 +120,11 @@ const ListArea = React.memo(
           filterDatas.filter(filterData => +filterData.price === minPrice)[0];
 
         const minPriceDuration =
-          minPriceDatas && minPriceDatas.Outbound && minPriceDatas.Inbound
-            ? (minPriceDatas.Outbound.Duration +
-                minPriceDatas.Inbound.Duration) /
-              2
-            : minPriceDatas.Outbound.Duration;
+          minPriceDatas &&
+          minPriceDatas.Outbound &&
+          (minPriceDatas.Outbound.Duration +
+            (minPriceDatas.Inbound ? minPriceDatas.Inbound.Duration : 0)) /
+            2;
 
         setPriceAverage({
           time: `${Math.floor(minPriceDuration / 60)}시간 ${Math.floor(
@@ -131,50 +133,48 @@ const ListArea = React.memo(
           price: minPrice.toString().replace(regExp, ','),
         });
 
+        const minRecommend =
+          filterDatas &&
+          Math.min(
+            ...filterDatas.map(
+              data =>
+                (data.Outbound && data.Outbound.Duration) +
+                ((data.Inbound ? data.Inbound.Duration : 0) / 60).toFixed(1) *
+                  4 +
+                (data.Outbound.Stops.length +
+                  (data.Inbound ? data.Inbound.Stops.length : 0)) *
+                  20 +
+                Math.floor(data.price / 10000) * 5,
+            ),
+          );
+
+        if (minRecommend === Infinity) return;
+
         const minRecommendDatas =
-          originDatas &&
-          cloneDeep(originDatas).sort(
-            (pre, cur) =>
-              (
-                pre.Outbound.Duration +
-                (pre.Inbound ? pre.Inbound.Duration : 0) / 60
-              ).toFixed(1) *
-                4 +
-              (pre.Outbound.Stops.length +
-                (pre.Inbound ? pre.Inbound.Stops.length : 0)) *
-                20 +
-              Math.floor(pre.price / 10000) * 5 -
-              (
-                cur.Outbound.Duration +
-                (cur.Inbound ? cur.Inbound.Duration : 0) / 60
-              ).toFixed(1) *
-                4 +
-              (cur.Outbound.Stops.length +
-                (cur.Inbound ? cur.Inbound.Stops.length : 0)) *
-                20 +
-              Math.floor(cur.price / 10000) * 5,
+          filterDatas &&
+          minRecommend &&
+          filterDatas.filter(
+            data =>
+              (data.Outbound && data.Outbound.Duration) +
+                ((data.Inbound ? data.Inbound.Duration : 0) / 60).toFixed(1) *
+                  4 +
+                (data.Outbound.Stops.length +
+                  (data.Inbound ? data.Inbound.Stops.length : 0)) *
+                  20 +
+                Math.floor(data.price / 10000) * 5 ===
+              minRecommend,
           )[0];
 
-        console.log('minr', minRecommendDatas);
-
         const minRecommendDuration =
-          minRecommendDatas &&
-          minRecommendDatas.Outbound &&
-          minRecommendDatas.Inbound
-            ? (minRecommendDatas.Outbound.Duration +
-                minRecommendDatas.Inbound.Duration) /
-              2
-            : minRecommendDatas.Outbound.Duration;
-
-        console.log(minRecommendDuration);
+          filterDatas && minRecommendDatas.Outbound && minRecommendDatas.Inbound
+            ? (minRecommendDatas.Outbound + minRecommendDatas.Inbound) / 2
+            : minRecommendDatas.Outbound;
 
         setRecommendAverage({
           time: `${Math.floor(minRecommendDuration / 60)}시간 ${Math.floor(
             minRecommendDuration % 60,
           )}분`,
-          price:
-            minRecommendDatas &&
-            minRecommendDatas.price.toString().replace(regExp, ','),
+          price: minRecommendDatas.price.toString().replace(regExp, ','),
         });
       }
     }, [filterDatas, originDatas]);
@@ -188,6 +188,7 @@ const ListArea = React.memo(
           InBound: null,
         });
         filterLiveSearch();
+        console.log(defaultFilterOptions);
       },
       [defaultFilterOptions, filterLiveSearch, isActive, setFilterOptions],
     );
@@ -258,7 +259,7 @@ const ListArea = React.memo(
                   )}
                 </>
               )}
-              {filterUpdate && (
+              {(loading || filterUpdate) && (
                 <CircleProgress
                   classtype={isActive === 'price' ? 'active' : ''}
                   disableShrink
@@ -296,7 +297,7 @@ const ListArea = React.memo(
                   )}
                 </>
               )}
-              {filterUpdate && (
+              {(loading || filterUpdate) && (
                 <CircleProgress
                   classtype={isActive === 'duration' ? 'active' : ''}
                   disableShrink
@@ -335,7 +336,7 @@ const ListArea = React.memo(
                   )}
                 </>
               )}
-              {filterUpdate && (
+              {(loading || filterUpdate) && (
                 <CircleProgress
                   classtype={isActive === 'recommend' ? 'active' : ''}
                   disableShrink
