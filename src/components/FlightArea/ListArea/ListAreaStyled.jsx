@@ -135,13 +135,15 @@ export const ProgressBox = styled.div`
   .MuiLinearProgress-root,
   .MuiLinearProgress-bar {
     ${props =>
-      props.loading
+      props.loading === 100
         ? css`
-            display: none;
+            opacity: 0;
           `
         : css`
-            display: block;
+            opacity: 1;
           `}
+
+    transition: opacity 1s ease-out;
   }
 `;
 
@@ -158,19 +160,10 @@ const twincle = keyframes`
 `;
 
 export const ProgressTextBox = styled.div`
-  /* padding-bottom: 5px; */
+  padding-bottom: 5px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-
-  ${props =>
-    !props.loading
-      ? css`
-          padding-bottom: 5px;
-        `
-      : css`
-          padding-bottom: 10px;
-        `}
 `;
 
 export const ProgressText = styled.p`

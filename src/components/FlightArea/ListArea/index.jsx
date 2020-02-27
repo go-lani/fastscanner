@@ -133,7 +133,7 @@ const ListArea = React.memo(
     return (
       <S.ListLayout>
         <A11yTitle>항공권 검색 결과</A11yTitle>
-        <S.ProgressBox loading={pageIndex}>
+        <S.ProgressBox loading={progress.per}>
           <S.ProgressTextBox loading={pageIndex}>
             {progress.per === 100 ? (
               <S.ProgressResult
