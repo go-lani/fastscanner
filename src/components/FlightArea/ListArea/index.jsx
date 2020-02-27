@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import InfiniteScroller from 'react-infinite-scroller';
 import { useSelector } from 'react-redux';
 import uuid from 'uuid';
-import { cloneDeep } from 'lodash';
 import FlightItem from './FlightItem';
 import PendingItem from './PendingItem';
 import A11yTitle from '../../Common/A11yTitle';
@@ -34,6 +33,17 @@ const ListArea = React.memo(
     const [durationAverage, setDurationAverage] = useState();
     const [recommendAverage, setRecommendAverage] = useState();
     const [defaultFilterOptions, setDefaultFilterOptions] = useState();
+
+    useEffect(() => {
+      if (
+        originDatas &&
+        (typeof filterOptions.direct === 'number' ||
+          typeof filterOptions.via === 'number') &&
+        !filterOptions.OutBound &&
+        filterOptions.OutBound !== null
+      )
+        setDefaultFilterOptions(state => (!state ? filterOptions : state));
+    }, [filterDatas, filterOptions, originDatas]);
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
@@ -145,22 +155,20 @@ const ListArea = React.memo(
 
         const minRecommendDatas =
           filterDatas &&
-          filterDatas.filter(data =>
-            (Math.floor(data.price / 10000) * 5 +
-              (
+          filterDatas.filter(
+            data =>
+              Math.floor(data.price / 10000) * 5 +
+                (
+                  (data.Outbound &&
+                    data.Outbound.Duration +
+                      (data.Inbound ? data.Inbound.Duration : 0)) / 60
+                ).toFixed(1) *
+                  4 +
                 (data.Outbound &&
-                  data.Outbound.Duration +
-                    (data.Inbound ? data.Inbound.Duration : 0)) / 60
-              ).toFixed(1) *
-                4 +
-              (data.Outbound &&
-                data.Outbound.Stops.length +
-                  (data.Inbound ? data.Inbound.Stops.length : 0)) *
-                20 ===
-              minRecommend) ===
-            Infinity
-              ? undefined
-              : minRecommend,
+                  data.Outbound.Stops.length +
+                    (data.Inbound ? data.Inbound.Stops.length : 0)) *
+                  20 ===
+              (minRecommend === Infinity ? undefined : minRecommend),
           )[0];
 
         const minRecommendDuration =
@@ -192,7 +200,6 @@ const ListArea = React.memo(
           InBound: null,
         });
         filterLiveSearch();
-        console.log(defaultFilterOptions);
       },
       [defaultFilterOptions, filterLiveSearch, isActive, setFilterOptions],
     );
