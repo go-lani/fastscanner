@@ -49,15 +49,20 @@ const StyledLabel = styled.label`
     `};
 
   ${props =>
-    (props.price || props.isDisable) &&
-    css`
-      em {
-        display: block;
-        margin: 5px 0 0 20px;
-        color: #777;
-        font-size: 1.2rem;
-      }
-    `}
+      (props.price || props.isDisable) &&
+      css`
+        em {
+          display: block;
+          margin: 5px 0 0 20px;
+          color: #777;
+          font-size: 1.2rem;
+        }
+      `}
+    :hover {
+    em {
+      color: #0288d1;
+    }
+  }
 `;
 
 const StyledCheckbox = styled.input`

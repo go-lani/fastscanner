@@ -4,6 +4,8 @@ import styled from 'styled-components';
 const StyledNonResultBox = styled.div`
   padding: 30px 0;
   text-align: center;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
 `;
 
 const StyledText = styled.p`

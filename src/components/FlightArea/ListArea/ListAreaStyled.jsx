@@ -69,6 +69,10 @@ export const TabItem = styled.li`
   & + & {
     margin: 0 0 0 10px;
   }
+
+  :hover {
+    border: 2px solid #0288d1;
+  }
 `;
 
 export const TabPrice = styled.em`
@@ -166,12 +170,7 @@ export const ProgressResult = styled.button`
   font-weight: 400;
   border: transparent;
 
-  span {
-    line-height: 2.1rem;
-  }
-
   em {
-    font-size: 1.6rem;
     font-weight: 700;
   }
 
