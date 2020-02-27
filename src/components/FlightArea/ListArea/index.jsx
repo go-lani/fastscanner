@@ -42,7 +42,7 @@ const ListArea = React.memo(
         filterOptions.OutBound !== null
       )
         setDefaultFilterOptions(state => (!state ? filterOptions : state));
-    }, [filterDatas, filterOptions, originDatas]);
+    }, [filterOptions, originDatas]);
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
@@ -384,7 +384,9 @@ const ListArea = React.memo(
             </S.FlightList>
           </InfiniteScroller>
         )}
-        {renderDatas && !loading && !renderDatas.length && <NonResult />}
+        {renderDatas && !loading && !renderDatas.length && (
+          <NonResult filterReset={filterReset} />
+        )}
       </S.ListLayout>
     );
   },

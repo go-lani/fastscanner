@@ -27,7 +27,7 @@ const StyledAllviewButton = styled.button`
   color: #0288d1;
 `;
 
-const NonResult = () => {
+const NonResult = ({ filterReset }) => {
   return (
     <StyledNonResultBox>
       <img src="/images/non-result.png" alt="" />
@@ -36,7 +36,9 @@ const NonResult = () => {
         <br />
         <em>필터(조건)</em>에 일치하는 항공권이 없습니다.
       </StyledText>
-      <StyledAllviewButton type="button">전체보기</StyledAllviewButton>
+      <StyledAllviewButton type="button" onClick={filterReset}>
+        전체보기
+      </StyledAllviewButton>
     </StyledNonResultBox>
   );
 };

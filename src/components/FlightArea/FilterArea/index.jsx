@@ -56,12 +56,16 @@ const FilterArea = React.memo(
     }, [location]);
 
     useEffect(() => {
-      if (filterOptions.OutBound === null) {
+      if (
+        filterOptions.Duration === null &&
+        filterOptions.OutBound === null &&
+        filterOptions.InBound === null
+      ) {
         setDurationTime(maxDuration);
         setOutboundTime([0, 48]);
         setInboundTime([0, 48]);
       }
-    }, [filterOptions, maxDuration]);
+    }, [filterOptions, maxDuration, originDatas]);
 
     const loading = useSelector(state => state.flight.loading);
 
