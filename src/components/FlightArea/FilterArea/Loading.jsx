@@ -10,19 +10,19 @@ const StyledLoadingImg = styled.img`
   height: auto;
 `;
 
-const StyledLoadingText = styled.p`
-  margin: 10px 0 0;
-  font-weight: 700;
-  font-size: 1.6rem;
-  color: #333;
-  text-align: center;
-`;
+// const StyledLoadingText = styled.p`
+//   margin: 10px 0 0;
+//   font-weight: 500;
+//   font-size: 1.4rem;
+//   color: #333;
+//   text-align: center;
+// `;
 
 const Loading = () => {
   return (
     <StyledLoadingContainer>
-      <StyledLoadingImg src="/images/flight-earth.gif" alt="loading" />
-      <StyledLoadingText>설정 준비중...</StyledLoadingText>
+      <StyledLoadingImg src="/images/grayloading.gif" alt="loading" />
+      {/* <StyledLoadingText>검색중...</StyledLoadingText> */}
     </StyledLoadingContainer>
   );
 };

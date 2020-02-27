@@ -27,7 +27,7 @@ const TopTrigger = styled.button`
   &:hover {
     img {
       position: relative;
-      animation: ${fly} 2s infinite linear both;
+      animation: ${fly} 1.5s infinite linear both;
     }
   }
 
