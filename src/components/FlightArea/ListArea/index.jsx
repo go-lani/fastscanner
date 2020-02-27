@@ -34,26 +34,6 @@ const ListArea = React.memo(
     const [durationAverage, setDurationAverage] = useState();
     const [recommendAverage, setRecommendAverage] = useState();
     const [defaultFilterOptions, setDefaultFilterOptions] = useState();
-    const [count, setCount] = useState(1);
-    const per = useSelector(state => state.flight.progress.per);
-    const storeLoading = useSelector(state => state.flight.loading);
-
-    useEffect(() => {
-      if (per === 100 && !storeLoading) {
-        if (filterOptions !== undefined) {
-          if (count === 1) {
-            const initialOptions = { ...cloneDeep(filterOptions), init: true };
-            setDefaultFilterOptions(initialOption =>
-              initialOption !== filterOptions ? initialOptions : initialOptions,
-            );
-            setCount(2);
-          }
-        }
-      }
-    }, [count, filterOptions, per, storeLoading]);
-
-    console.log('filterOptions', filterOptions);
-    console.log('defaultFilterOptions', defaultFilterOptions);
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
