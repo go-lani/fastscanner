@@ -56,7 +56,7 @@ export const TabItem = styled.li`
   p {
     font-size: 1.4rem;
   }
-
+/*
   ${props =>
     props.id !== 'recommend'
       ? css`
@@ -64,12 +64,11 @@ export const TabItem = styled.li`
         `
       : css`
           color: #ccc;
-          cursor: not-allowed;
 
           & > * {
             color: #ccc !important;
           }
-        `}
+        `} */
 
   ${props =>
     props.isActive

@@ -9,10 +9,12 @@ import {
 export default connect(
   state => ({
     progress: state.flight.progress,
+    originDatas: state.flight.originDatas,
     renderDatas: state.flight.renderDatas,
     filterDatas: state.flight.filterDatas,
     pageIndex: state.flight.pageIndex,
     loading: state.flight.loading,
+    filterOptions: state.flight.filterOptions,
     filterUpdate: state.flight.filterOptions.filterUpdate,
   }),
   dispatch => ({

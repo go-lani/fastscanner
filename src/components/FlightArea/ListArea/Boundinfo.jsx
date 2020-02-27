@@ -39,7 +39,7 @@ const Boundinfo = React.memo(
               {moment(Departure).format('MMM Do')}
             </S.DepartureDate>
             <S.DepartureTime>
-              {moment(Departure).format('a h:mm')}
+              {moment(Departure).format('a hh:mm')}
             </S.DepartureTime>
             <S.DeparturePlace>
               {title === '출국정보' ? departureName : arrivalName}
@@ -77,7 +77,7 @@ const Boundinfo = React.memo(
           </S.FlightTimeInfo>
           <S.ArriveInfo>
             <S.ArriveDate>{moment(Arrival).format('MMM Do')}</S.ArriveDate>
-            <S.ArriveTime>{moment(Arrival).format('a h:mm')}</S.ArriveTime>
+            <S.ArriveTime>{moment(Arrival).format('a hh:mm')}</S.ArriveTime>
             <S.ArrivePlace>
               {title === '출국정보' ? arrivalName : departureName}
             </S.ArrivePlace>

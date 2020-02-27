@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import uuid from 'uuid';
+import { cloneDeep } from 'lodash';
 import FlightItem from './FlightItem';
 import A11yTitle from '../../Common/A11yTitle';
 import Loader from './Loader';
@@ -7,7 +8,6 @@ import * as S from './ListAreaStyled';
 import InfiniteScroller from 'react-infinite-scroller';
 import Loading from './Loading';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { useSelector } from 'react-redux';
 import Updating from './Updating';
 
 const loaderRender = (() => {
@@ -23,19 +23,32 @@ const ListArea = React.memo(
   ({
     progress,
     setFilterModalVisible,
+    originDatas,
     filterDatas,
     renderDatas,
     pageIndex,
     loading,
     renderLiveSearch,
     filterLiveSearch,
+    filterOptions,
     filterUpdate,
     setFilterOptions,
   }) => {
     const [isActive, setActive] = useState('price');
     const [priceAverage, setPriceAverage] = useState();
     const [durationAverage, setDurationAverage] = useState();
-    const originDatas = useSelector(state => state.flight.originDatas);
+    const [recommendAverage, setRecommendAverage] = useState();
+    const [defaultFilterOptions, setDefaultFilterOptions] = useState();
+
+    useEffect(() => {
+      if (
+        originDatas &&
+        !filterOptions.OutBound &&
+        filterOptions.OutBound !== null
+      ) {
+        setDefaultFilterOptions(filterOptions);
+      }
+    }, [originDatas, filterOptions]);
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
@@ -50,9 +63,6 @@ const ListArea = React.memo(
 
     const changeCategory = e => {
       e.stopPropagation();
-
-      if (e.target.parentNode.id === 'recommend' || e.target.id === 'recommend')
-        return alert('준비중입니다.');
 
       setFilterOptions({
         sortBy: e.target.parentNode.id || e.target.id,
@@ -87,11 +97,11 @@ const ListArea = React.memo(
         const minDurationAverage =
           minDurationDatas &&
           minDurationDatas.Outbound &&
-          (minDurationDatas.Outbound.Duration +
-            (minDurationDatas.Inbound
-              ? minDurationDatas.Inbound.Duration
-              : 0)) /
-            2;
+          minDurationDatas.Inbound
+            ? (minDurationDatas.Outbound.Duration +
+                minDurationDatas.Inbound.Duration) /
+              2
+            : minDurationDatas.Outbound.Duration;
 
         setDurationAverage({
           time: `${Math.floor(minDurationAverage / 60)}시간 ${Math.floor(
@@ -111,11 +121,11 @@ const ListArea = React.memo(
           filterDatas.filter(filterData => +filterData.price === minPrice)[0];
 
         const minPriceDuration =
-          minPriceDatas &&
-          minPriceDatas.Outbound &&
-          (minPriceDatas.Outbound.Duration +
-            (minPriceDatas.Inbound ? minPriceDatas.Inbound.Duration : 0)) /
-            2;
+          minPriceDatas && minPriceDatas.Outbound && minPriceDatas.Inbound
+            ? (minPriceDatas.Outbound.Duration +
+                minPriceDatas.Inbound.Duration) /
+              2
+            : minPriceDatas.Outbound.Duration;
 
         setPriceAverage({
           time: `${Math.floor(minPriceDuration / 60)}시간 ${Math.floor(
@@ -123,12 +133,67 @@ const ListArea = React.memo(
           )}분`,
           price: minPrice.toString().replace(regExp, ','),
         });
-      }
-    }, [filterDatas]);
 
-    const filterReset = () => {
-      // filterLiveSearch();
-    };
+        const minRecommendDatas =
+          originDatas &&
+          cloneDeep(originDatas).sort(
+            (pre, cur) =>
+              (
+                pre.Outbound.Duration +
+                (pre.Inbound ? pre.Inbound.Duration : 0) / 60
+              ).toFixed(1) *
+                4 +
+              (pre.Outbound.Stops.length +
+                (pre.Inbound ? pre.Inbound.Stops.length : 0)) *
+                20 +
+              Math.floor(pre.price / 10000) * 5 -
+              (
+                cur.Outbound.Duration +
+                (cur.Inbound ? cur.Inbound.Duration : 0) / 60
+              ).toFixed(1) *
+                4 +
+              (cur.Outbound.Stops.length +
+                (cur.Inbound ? cur.Inbound.Stops.length : 0)) *
+                20 +
+              Math.floor(cur.price / 10000) * 5,
+          )[0];
+
+        console.log('minr', minRecommendDatas);
+
+        const minRecommendDuration =
+          minRecommendDatas &&
+          minRecommendDatas.Outbound &&
+          minRecommendDatas.Inbound
+            ? (minRecommendDatas.Outbound.Duration +
+                minRecommendDatas.Inbound.Duration) /
+              2
+            : minRecommendDatas.Outbound.Duration;
+
+        console.log(minRecommendDuration);
+
+        setRecommendAverage({
+          time: `${Math.floor(minRecommendDuration / 60)}시간 ${Math.floor(
+            minRecommendDuration % 60,
+          )}분`,
+          price:
+            minRecommendDatas &&
+            minRecommendDatas.price.toString().replace(regExp, ','),
+        });
+      }
+    }, [filterDatas, originDatas]);
+
+    const filterReset = useCallback(
+      e => {
+        setFilterOptions({
+          ...defaultFilterOptions,
+          sortBy: isActive,
+          OutBound: null,
+          InBound: null,
+        });
+        filterLiveSearch();
+      },
+      [defaultFilterOptions, filterLiveSearch, isActive, setFilterOptions],
+    );
 
     return (
       <S.ListLayout>
@@ -182,13 +247,16 @@ const ListArea = React.memo(
                         {priceAverage && `₩ ${priceAverage.price}`}
                       </S.TabPrice>
                       <small>
-                        {priceAverage && `${priceAverage.time}`} (평균)
+                        {filterDatas && filterDatas[0].Inbound
+                          ? priceAverage && `${priceAverage.time} (평균)`
+                          : priceAverage && `${priceAverage.time}`}
                       </small>
                     </>
                   ) : (
                     <>
+                      {loading && <CircularProgress disableShrink size={30} />}
                       <S.NonAverage isActive={isActive === 'price'}>
-                        없음
+                        {loading ? '' : '데이터가 존재하지 않습니다'}
                       </S.NonAverage>
                     </>
                   )}
@@ -212,13 +280,16 @@ const ListArea = React.memo(
                         {durationAverage && `₩ ${durationAverage.price}`}
                       </S.TabPrice>
                       <small>
-                        {durationAverage && `${durationAverage.time}`} (평균)
+                        {filterDatas && filterDatas[0].Inbound
+                          ? durationAverage && `${durationAverage.time} (평균)`
+                          : durationAverage && `${durationAverage.time}`}
                       </small>
                     </>
                   ) : (
                     <>
+                      {loading && <CircularProgress disableShrink size={30} />}
                       <S.NonAverage isActive={isActive === 'duration'}>
-                        없음
+                        {loading ? '' : '데이터가 존재하지 않습니다'}
                       </S.NonAverage>
                     </>
                   )}
@@ -236,9 +307,26 @@ const ListArea = React.memo(
               <p>추천순</p>
               {!filterUpdate && (
                 <>
-                  <S.TabPrice isActive={isActive === 'recommend'}>
-                    준비중..
-                  </S.TabPrice>
+                  {renderDatas && renderDatas.length ? (
+                    <>
+                      <S.TabPrice isActive={isActive === 'recommend'}>
+                        {recommendAverage && `₩ ${recommendAverage.price}`}
+                      </S.TabPrice>
+                      <small>
+                        {filterDatas && filterDatas[0].Inbound
+                          ? recommendAverage &&
+                            `${recommendAverage.time} (평균)`
+                          : recommendAverage && `${recommendAverage.time}`}
+                      </small>
+                    </>
+                  ) : (
+                    <>
+                      {loading && <CircularProgress disableShrink size={30} />}
+                      <S.NonAverage isActive={isActive === 'recommend'}>
+                        {loading ? '' : '데이터가 존재하지 않습니다'}
+                      </S.NonAverage>
+                    </>
+                  )}
                 </>
               )}
               {filterUpdate && <CircularProgress disableShrink size={30} />}
