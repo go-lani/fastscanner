@@ -55,6 +55,14 @@ const FilterArea = React.memo(
       setIsOneway(!+rtn);
     }, [location]);
 
+    useEffect(() => {
+      if (filterOptions.OutBound === null) {
+        setDurationTime(maxDuration);
+        setOutboundTime([0, 48]);
+        setInboundTime([0, 48]);
+      }
+    }, [filterOptions, maxDuration]);
+
     const loading = useSelector(state => state.flight.loading);
 
     // 필터조건 탭 닫기

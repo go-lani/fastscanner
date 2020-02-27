@@ -7,7 +7,6 @@ import * as S from './ListAreaStyled';
 import InfiniteScroller from 'react-infinite-scroller';
 import Loading from './Loading';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { useSelector } from 'react-redux';
 import Updating from './Updating';
 
 const loaderRender = (() => {
@@ -23,19 +22,31 @@ const ListArea = React.memo(
   ({
     progress,
     setFilterModalVisible,
+    originDatas,
     filterDatas,
     renderDatas,
     pageIndex,
     loading,
     renderLiveSearch,
     filterLiveSearch,
+    filterOptions,
     filterUpdate,
     setFilterOptions,
   }) => {
     const [isActive, setActive] = useState('price');
     const [priceAverage, setPriceAverage] = useState();
     const [durationAverage, setDurationAverage] = useState();
-    const originDatas = useSelector(state => state.flight.originDatas);
+    const [defaultFilterOptions, setDefaultFilterOptions] = useState();
+
+    useEffect(() => {
+      if (
+        originDatas &&
+        !filterOptions.OutBound &&
+        filterOptions.OutBound !== null
+      ) {
+        setDefaultFilterOptions(filterOptions);
+      }
+    }, [originDatas, filterOptions]);
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
@@ -126,9 +137,18 @@ const ListArea = React.memo(
       }
     }, [filterDatas]);
 
-    const filterReset = () => {
-      // filterLiveSearch();
-    };
+    const filterReset = useCallback(
+      e => {
+        setFilterOptions({
+          ...defaultFilterOptions,
+          sortBy: isActive,
+          OutBound: null,
+          InBound: null,
+        });
+        filterLiveSearch();
+      },
+      [defaultFilterOptions, filterLiveSearch, isActive, setFilterOptions],
+    );
 
     return (
       <S.ListLayout>
@@ -187,8 +207,9 @@ const ListArea = React.memo(
                     </>
                   ) : (
                     <>
+                      {loading && <CircularProgress disableShrink size={30} />}
                       <S.NonAverage isActive={isActive === 'price'}>
-                        없음
+                        {loading ? '' : '데이터가 존재하지 않습니다'}
                       </S.NonAverage>
                     </>
                   )}
@@ -217,8 +238,9 @@ const ListArea = React.memo(
                     </>
                   ) : (
                     <>
+                      {loading && <CircularProgress disableShrink size={30} />}
                       <S.NonAverage isActive={isActive === 'duration'}>
-                        없음
+                        {loading ? '' : '데이터가 존재하지 않습니다'}
                       </S.NonAverage>
                     </>
                   )}

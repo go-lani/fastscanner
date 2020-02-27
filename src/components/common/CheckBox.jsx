@@ -45,6 +45,7 @@ const StyledLabel = styled.label`
     isDisable &&
     css`
       color: #666;
+      cursor: not-allowed;
     `};
 
   ${props =>
