@@ -406,12 +406,10 @@ function* filterLiveSearch({ payload }) {
     if (!filterDatas) return;
 
     if (filterOptions.sortBy === 'price') {
-      console.log('price');
       sortFilterDatas = cloneDeep(filterDatas).sort(
         (pre, cur) => pre.price - cur.price,
       );
     } else if (filterOptions.sortBy === 'duration') {
-      console.log('duration');
       sortFilterDatas = cloneDeep(filterDatas).sort(
         (pre, cur) =>
           pre.Outbound.Duration +
@@ -419,7 +417,6 @@ function* filterLiveSearch({ payload }) {
           (cur.Outbound.Duration + (cur.Inbound ? cur.Inbound.Duration : 0)),
       );
     } else if (filterOptions.sortBy === 'recommend') {
-      console.log('recommend');
       sortFilterDatas = cloneDeep(filterDatas).sort(
         (pre, cur) =>
           (

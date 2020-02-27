@@ -49,7 +49,7 @@ const StyledLabel = styled.label`
     `};
 
   ${props =>
-    props.price &&
+    (props.price || props.isDisable) &&
     css`
       em {
         display: block;
@@ -107,9 +107,8 @@ const CheckBox = React.memo(
           disabled={isDisable}
         />
         <span>{label}</span>
-        {price ? (
-          <em>{price ? `₩ ${price.replace(regExp, ',')}` : `없음`}</em>
-        ) : null}
+        {price && <em>₩ {price.replace(regExp, ',')}</em>}
+        {isDisable && <em>없음</em>}
       </StyledLabel>
     );
   },
