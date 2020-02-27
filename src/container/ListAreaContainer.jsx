@@ -11,6 +11,7 @@ export default connect(
     progress: state.flight.progress,
     renderDatas: state.flight.renderDatas,
     filterDatas: state.flight.filterDatas,
+    pendingDatas: state.flight.pendingDatas,
     pageIndex: state.flight.pageIndex,
     loading: state.flight.loading,
     filterUpdate: state.flight.filterOptions.filterUpdate,

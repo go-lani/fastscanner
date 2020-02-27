@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import qs from 'query-string';
 import { withRouter } from 'react-router-dom';
 import SelectWayTab from './SelectWayTab';
+import { animateScroll as scroll } from 'react-scroll';
+
 import SelectDateContainer from '../../container/SelectDateContainer';
 import SelectAirportContainer from '../../container/SelectAirportContainer';
 import SelectOptionContainer from '../../container/SelectOptionContainer';
@@ -95,6 +97,10 @@ const SearchArea = React.memo(
           `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
         );
         setIsOpen && setIsOpen(false);
+      }
+
+      if (isHeader) {
+        scroll.scrollToTop();
       }
     }
 

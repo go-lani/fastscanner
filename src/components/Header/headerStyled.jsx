@@ -9,6 +9,7 @@ export const Header = styled.header`
   align-items: center;
   align-self: flex-start;
   width: ${({ isView }) => (isView ? 'auto' : '100vw')};
+  min-height: 60px;
   padding: ${({ isView }) => (isView ? '0 20px' : '0')};
   background: ${({ isView }) => (isView ? 'rgba(0,0,0,.6)' : 'transparent')};
 

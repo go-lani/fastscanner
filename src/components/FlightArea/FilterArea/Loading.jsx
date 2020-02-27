@@ -6,20 +6,23 @@ const StyledLoadingContainer = styled.div``;
 const StyledLoadingImg = styled.img`
   display: block;
   margin: 0 auto;
-  width: 100px;
+  width: 200px;
   height: auto;
 `;
 
 const StyledLoadingText = styled.p`
-  text-align: center;
+  margin: 10px 0 0;
+  font-weight: 700;
+  font-size: 1.6rem;
   color: #333;
+  text-align: center;
 `;
 
 const Loading = () => {
   return (
     <StyledLoadingContainer>
       <StyledLoadingImg src="/images/flight-earth.gif" alt="loading" />
-      <StyledLoadingText>지구를 돌고 돌아..</StyledLoadingText>
+      <StyledLoadingText>설정 준비중...</StyledLoadingText>
     </StyledLoadingContainer>
   );
 };

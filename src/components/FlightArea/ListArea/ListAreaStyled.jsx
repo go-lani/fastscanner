@@ -520,6 +520,17 @@ export const FlightPrice = styled.div`
     font-weight: 700;
     font-size: 2.2rem;
 
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      i {
+        display: flex;
+        align-items: center;
+        margin: 0 5px 0 0;
+      }
+    }
+
     small {
       display: block;
       margin: 5px 0 0;

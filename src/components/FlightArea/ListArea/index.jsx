@@ -1,23 +1,16 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import InfiniteScroller from 'react-infinite-scroller';
+import { useSelector } from 'react-redux';
 import uuid from 'uuid';
 import FlightItem from './FlightItem';
+import PendingItem from './PendingItem';
 import A11yTitle from '../../Common/A11yTitle';
 import Loader from './Loader';
-import * as S from './ListAreaStyled';
-import InfiniteScroller from 'react-infinite-scroller';
+import NonResult from './NonResult';
 import Loading from './Loading';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { useSelector } from 'react-redux';
 import Updating from './Updating';
-
-const loaderRender = (() => {
-  const loaderGroup = [];
-  for (let i = 0; i < 5; i++) {
-    loaderGroup.push(<Loader key={uuid.v4()} />);
-  }
-
-  return loaderGroup;
-})();
+import * as S from './ListAreaStyled';
+import CircleProgress from '../../Common/CircleProgress';
 
 const ListArea = React.memo(
   ({
@@ -25,6 +18,7 @@ const ListArea = React.memo(
     setFilterModalVisible,
     filterDatas,
     renderDatas,
+    pendingDatas,
     pageIndex,
     loading,
     renderLiveSearch,
@@ -50,6 +44,8 @@ const ListArea = React.memo(
 
     const changeCategory = e => {
       e.stopPropagation();
+
+      if (loading) return alert('로딩중에 정렬을 변경할 수 없습니다.');
 
       if (e.target.parentNode.id === 'recommend' || e.target.id === 'recommend')
         return alert('준비중입니다.');
@@ -154,7 +150,7 @@ const ListArea = React.memo(
               </S.ProgressResult>
             ) : (
               <>
-                <CircularProgress disableShrink size={20} />
+                <CircleProgress disableShrink size={20} />
                 <S.ProgressText>
                   ({progress.all}개의 항공사중 {progress.complete}개 확인)
                 </S.ProgressText>
@@ -194,7 +190,13 @@ const ListArea = React.memo(
                   )}
                 </>
               )}
-              {filterUpdate && <CircularProgress disableShrink size={30} />}
+              {filterUpdate && (
+                <CircleProgress
+                  classtype={isActive === 'price' ? 'active' : ''}
+                  disableShrink
+                  size={30}
+                />
+              )}
             </S.TabItem>
             <S.TabItem
               id="duration"
@@ -224,7 +226,13 @@ const ListArea = React.memo(
                   )}
                 </>
               )}
-              {filterUpdate && <CircularProgress disableShrink size={30} />}
+              {filterUpdate && (
+                <CircleProgress
+                  classtype={isActive === 'duration' ? 'active' : ''}
+                  disableShrink
+                  size={30}
+                />
+              )}
             </S.TabItem>
             <S.TabItem
               id="recommend"
@@ -241,26 +249,45 @@ const ListArea = React.memo(
                   </S.TabPrice>
                 </>
               )}
-              {filterUpdate && <CircularProgress disableShrink size={30} />}
+              {filterUpdate && (
+                <CircleProgress
+                  classtype={isActive === 'recommend' ? 'active' : ''}
+                  disableShrink
+                  size={30}
+                />
+              )}
             </S.TabItem>
           </S.CategoryTab>
         </S.TabArea>
-        <S.FlightList>
-          {loading && !pageIndex && loaderRender}
-          {filterUpdate && <Updating filterUpdate={filterUpdate} />}
+
+        {loading && !pageIndex && pendingDatas && (
+          <S.FlightList>
+            {pendingDatas.map(data =>
+              data === null ? (
+                <Loader key={uuid.v4()} />
+              ) : (
+                <PendingItem key={uuid.v4()} {...data} />
+              ),
+            )}
+          </S.FlightList>
+        )}
+
+        {!loading && renderDatas && (
           <InfiniteScroller
             loadMore={() => renderLiveSearch()}
             hasMore={!!pageIndex && pageIndex !== 'lastIndex'}
             loader={<Loading key={uuid.v4()} />}
           >
-            {renderDatas &&
-              renderDatas.map(data => <FlightItem key={uuid.v4()} {...data} />)}
-            {renderDatas &&
-              !loading &&
-              !renderDatas.length &&
-              '해당하는 결과가 없습니다.'}
+            <S.FlightList>
+              {filterUpdate && <Updating filterUpdate={filterUpdate} />}
+              {renderDatas &&
+                renderDatas.map(data => (
+                  <FlightItem key={uuid.v4()} {...data} />
+                ))}
+            </S.FlightList>
           </InfiniteScroller>
-        </S.FlightList>
+        )}
+        {renderDatas && !loading && !renderDatas.length && <NonResult />}
       </S.ListLayout>
     );
   },

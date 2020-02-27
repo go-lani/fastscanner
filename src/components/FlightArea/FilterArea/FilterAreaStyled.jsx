@@ -22,8 +22,9 @@ export const FilterOverlay = styled.div`
 `;
 
 export const FilterAreaLayout = styled.section`
+  position: relative;
   flex-basis: 23vw;
-  min-height: 100vh;
+  min-height: calc(100vh - 206px);
   padding: 20px 30px;
   background: #f5f5f5;
 

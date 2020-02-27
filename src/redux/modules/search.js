@@ -1,4 +1,4 @@
-import { put, call, select, takeLatest } from 'redux-saga/effects';
+import { put, call, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import { createAction, createActions, handleActions } from 'redux-actions';
 import SearchService from '../../service/SearchService';
 import moment from 'moment';
@@ -302,9 +302,9 @@ export function* searchSaga() {
   yield takeLatest('SET_OUTDATE_SAGA', selectOutDateSaga);
   yield takeLatest('SET_INDATE_SAGA', selectInDateSaga);
   yield takeLatest('GET_CONFIGURE_SAGA', loadConfigureSaga);
-  yield takeLatest('SET_ORIGIN_SEARCH_SAGA', searchOriginSaga);
+  yield takeEvery('SET_ORIGIN_SEARCH_SAGA', searchOriginSaga);
   yield takeLatest('SET_ORIGIN_SELECT_SAGA', selectOriginSaga);
-  yield takeLatest('SET_DESTINATION_SEARCH_SAGA', searchDestinationSaga);
+  yield takeEvery('SET_DESTINATION_SEARCH_SAGA', searchDestinationSaga);
   yield takeLatest('SET_DESTINATION_SELECT_SAGA', selectDestinationSaga);
   yield takeLatest('CHANGE_PLACE_SAGA', changePlaceSaga);
   yield takeLatest('SET_STOPS_SELECT_SAGA', selectStopsSaga);

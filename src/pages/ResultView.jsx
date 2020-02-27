@@ -7,7 +7,7 @@ import ScrollTop from '../components/Common/ScrollTop';
 
 const SubLayout = styled.div`
   position: relative;
-  background: url('/images/test2.jpg') 0 50% no-repeat fixed;
+  background: url('/images/bg.jpg') 0 50% no-repeat fixed;
   background-size: cover;
 `;
 

@@ -6,9 +6,29 @@ const Footer = props => {
     <S.Footer>
       <S.Copy>&copy; 2020. FastScanner . ALL RIGHTS RESERVED.</S.Copy>
       <S.MemberList>
-        <S.Member>이철환</S.Member>
-        <S.Member>정다희</S.Member>
-        <S.Member>김관식</S.Member>
+        <S.Member>
+          <a href="https://github.com/publizm" rel="noopener noreferrer">
+            <img src="/images/publee.png" alt="publee" />
+          </a>
+        </S.Member>
+        <S.Member>
+          <a
+            href="https://github.com/kwansikdev"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/images/austin.png" alt="austin" />
+          </a>
+        </S.Member>
+        <S.Member>
+          <a
+            href="https://github.com/eternalarchive"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/images/dahee.jpg" alt="dahee" />
+          </a>
+        </S.Member>
       </S.MemberList>
     </S.Footer>
   );
