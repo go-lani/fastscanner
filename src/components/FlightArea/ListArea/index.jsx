@@ -35,17 +35,16 @@ const ListArea = React.memo(
     const [defaultFilterOptions, setDefaultFilterOptions] = useState();
 
     useEffect(() => {
-      if (filterOptions) {
-        setDefaultFilterOptions(state =>
-          state !== filterOptions ? state : filterOptions,
-        );
-      }
-    }, [filterOptions]);
-    console.log(filterOptions);
+      if (
+        originDatas &&
+        !filterOptions.OutBound &&
+        filterOptions.OutBound !== null
+      )
+        setDefaultFilterOptions(state => console.log(state));
+    }, [filterDatas, filterOptions, originDatas]);
 
-    // useEffect(() => {
-    //   setDefaultFilterOptions(cloneDeep(filterOptions));
-    // }, [filterOptions]);
+    console.log('filterOptions', filterOptions);
+    console.log('defaultFilterOptions', defaultFilterOptions);
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
@@ -73,7 +72,8 @@ const ListArea = React.memo(
     useEffect(() => {
       const regExp = /\B(?=(\d{3})+(?!\d))/g;
 
-      if (filterDatas && filterDatas.length) {
+      if (filterDatas) {
+        // 최단시간
         const minDuration =
           filterDatas &&
           Math.min(
@@ -111,6 +111,7 @@ const ListArea = React.memo(
             minDurationDatas.price.toString().replace(regExp, ','),
         });
 
+        // 최저가
         const minPrice =
           filterDatas &&
           Math.min(...filterDatas.map(filterData => filterData.price));
@@ -133,48 +134,62 @@ const ListArea = React.memo(
           price: minPrice.toString().replace(regExp, ','),
         });
 
+        // 추천순
         const minRecommend =
           filterDatas &&
           Math.min(
             ...filterDatas.map(
               data =>
-                (data.Outbound && data.Outbound.Duration) +
-                ((data.Inbound ? data.Inbound.Duration : 0) / 60).toFixed(1) *
+                Math.floor(data.price / 10000) * 5 +
+                (
+                  (data.Outbound &&
+                    data.Outbound.Duration +
+                      (data.Inbound ? data.Inbound.Duration : 0)) / 60
+                ).toFixed(1) *
                   4 +
-                (data.Outbound.Stops.length +
-                  (data.Inbound ? data.Inbound.Stops.length : 0)) *
-                  20 +
-                Math.floor(data.price / 10000) * 5,
+                (data.Outbound &&
+                  data.Outbound.Stops.length +
+                    (data.Inbound ? data.Inbound.Stops.length : 0)) *
+                  20,
             ),
           );
 
-        if (minRecommend === Infinity) return;
-
         const minRecommendDatas =
           filterDatas &&
-          minRecommend &&
-          filterDatas.filter(
-            data =>
-              (data.Outbound && data.Outbound.Duration) +
-                ((data.Inbound ? data.Inbound.Duration : 0) / 60).toFixed(1) *
-                  4 +
-                (data.Outbound.Stops.length +
+          filterDatas.filter(data =>
+            (Math.floor(data.price / 10000) * 5 +
+              (
+                (data.Outbound &&
+                  data.Outbound.Duration +
+                    (data.Inbound ? data.Inbound.Duration : 0)) / 60
+              ).toFixed(1) *
+                4 +
+              (data.Outbound &&
+                data.Outbound.Stops.length +
                   (data.Inbound ? data.Inbound.Stops.length : 0)) *
-                  20 +
-                Math.floor(data.price / 10000) * 5 ===
-              minRecommend,
+                20 ===
+              minRecommend) ===
+            Infinity
+              ? undefined
+              : minRecommend,
           )[0];
 
         const minRecommendDuration =
-          filterDatas && minRecommendDatas.Outbound && minRecommendDatas.Inbound
-            ? (minRecommendDatas.Outbound + minRecommendDatas.Inbound) / 2
-            : minRecommendDatas.Outbound;
+          filterDatas && minRecommendDatas
+            ? minRecommendDatas.Outbound && minRecommendDatas.Inbound
+              ? (minRecommendDatas.Outbound.Duration +
+                  minRecommendDatas.Inbound.Duration) /
+                2
+              : minRecommendDatas.Outbound.Duration
+            : undefined;
 
         setRecommendAverage({
           time: `${Math.floor(minRecommendDuration / 60)}시간 ${Math.floor(
             minRecommendDuration % 60,
           )}분`,
-          price: minRecommendDatas.price.toString().replace(regExp, ','),
+          price: minRecommendDatas
+            ? minRecommendDatas.price.toString().replace(regExp, ',')
+            : undefined,
         });
       }
     }, [filterDatas, originDatas]);

@@ -416,27 +416,28 @@ function* filterLiveSearch({ payload }) {
           (pre.Inbound ? pre.Inbound.Duration : 0) -
           (cur.Outbound.Duration + (cur.Inbound ? cur.Inbound.Duration : 0)),
       );
-    } else if (filterOptions.sortBy === 'recommend') {
+    } else {
       sortFilterDatas = cloneDeep(filterDatas).sort(
         (pre, cur) =>
+          Math.floor(pre.price / 10000) * 5 +
           (
-            pre.Outbound.Duration +
-            (pre.Inbound ? pre.Inbound.Duration : 0) / 60
+            (pre.Outbound.Duration + (pre.Inbound ? pre.Inbound.Duration : 0)) /
+            60
           ).toFixed(1) *
             4 +
           (pre.Outbound.Stops.length +
             (pre.Inbound ? pre.Inbound.Stops.length : 0)) *
-            20 +
-          Math.floor(pre.price / 10000) * 5 -
-          (
-            cur.Outbound.Duration +
-            (cur.Inbound ? cur.Inbound.Duration : 0) / 60
-          ).toFixed(1) *
-            4 +
-          (cur.Outbound.Stops.length +
-            (cur.Inbound ? cur.Inbound.Stops.length : 0)) *
-            20 +
-          Math.floor(cur.price / 10000) * 5,
+            20 -
+          (Math.floor(cur.price / 10000) * 5 +
+            (
+              (cur.Outbound.Duration +
+                (cur.Inbound ? cur.Inbound.Duration : 0)) /
+              60
+            ).toFixed(1) *
+              4 +
+            (cur.Outbound.Stops.length +
+              (cur.Inbound ? cur.Inbound.Stops.length : 0)) *
+              20),
       );
     }
     // 직항 필터링
