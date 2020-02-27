@@ -348,10 +348,6 @@ export const OptionValue = styled.span`
     top: 0;
     right: 0;
   }
-
-  ${media.desktop`
-    width: 200px;
-  `}
 `;
 
 export const Popup = styled.div`

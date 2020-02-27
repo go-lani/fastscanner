@@ -58,20 +58,6 @@ export const TabItem = styled.li`
   }
 
   ${props =>
-    props.id !== 'recommend'
-      ? css`
-          color: #333;
-        `
-      : css`
-          color: #ccc;
-          cursor: not-allowed;
-
-          & > * {
-            color: #ccc !important;
-          }
-        `}
-
-  ${props =>
     props.isActive
       ? css`
           border: 2px solid #042759;
@@ -89,6 +75,7 @@ export const TabPrice = styled.em`
   font-weight: 700;
   font-size: 2rem;
   color: #0288d1;
+  transition: all 0.3s;
   ${props =>
     props.isActive &&
     css`
@@ -99,6 +86,7 @@ export const TabPrice = styled.em`
 export const NonAverage = styled.p`
   font-size: 2.2rem;
   color: #0288d1;
+  transition: all 0.3s;
 
   ${props =>
     props.isActive &&
@@ -512,6 +500,17 @@ export const FlightPrice = styled.div`
     margin: 0 0 10px;
     font-weight: 700;
     font-size: 2.2rem;
+
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      i {
+        display: flex;
+        align-items: center;
+        margin: 0 5px 0 0;
+      }
+    }
 
     small {
       display: block;

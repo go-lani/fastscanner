@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { darken } from 'polished';
 
 const sizes = {
   small: {
@@ -41,6 +42,10 @@ const sizeStyle = css`
 const colorStyle = css`
   ${props => css`
     background: ${colors[props.color].background};
+
+    &:hover {
+      background: ${darken(0.1, colors[props.color].background)};
+    }
   `}
 `;
 
@@ -50,8 +55,8 @@ const StyledButton = styled.button`
   padding: 8px 16px;
   border-radius: 4px;
   border: none;
-
   color: #fff;
+  transition: all .3s;
 
   /* 크기 */
   ${sizeStyle}

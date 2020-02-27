@@ -2,10 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { withRouter } from 'react-router-dom';
 import qs from 'query-string';
 import moment from 'moment';
-import { CircularProgress } from '@material-ui/core';
 import A11yTitle from '../Common/A11yTitle';
 import * as S from './SearchAreaStyled';
 import SearchAreaContainer from '../../container/SearchAreaContainer';
+import CircleProgress from '../Common/CircleProgress';
 
 const ResearchArea = React.memo(
   ({
@@ -103,7 +103,7 @@ const ResearchArea = React.memo(
                 {destinationName ? (
                   destinationName
                 ) : (
-                  <CircularProgress disableShrink size={20} />
+                  <CircleProgress classtype="white" disableShrink size={20} />
                 )}
               </S.AirportName>
             </S.AirportInfoBox>
@@ -117,7 +117,11 @@ const ResearchArea = React.memo(
                       </S.DateText>
                     )
                   : inboundDate !== null && (
-                      <CircularProgress disableShrink size={20} />
+                      <CircleProgress
+                        classtype="white"
+                        disableShrink
+                        size={20}
+                      />
                     )}
               </S.DateOpionInfoBox>
               <S.DateOpionInfoBox>

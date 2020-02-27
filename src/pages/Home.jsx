@@ -12,7 +12,7 @@ const MainLayout = styled.div`
   align-items: center;
   min-height: 100vh;
   padding: 0 20px;
-  background: url('/images/test2.jpg') center center no-repeat;
+  background: url('/images/bg.jpg') center center no-repeat;
   background-size: cover;
 `;
 

@@ -126,6 +126,7 @@ function* getLiveSearch({ payload }) {
 
   try {
     if (!session || pageIndex === 'lastIndex') return yield put(success());
+
     yield put(
       pending({
         progress: {
@@ -133,9 +134,12 @@ function* getLiveSearch({ payload }) {
           all: 0,
           complete: 0,
         },
+        pendingDatas: [null, null, null, null, null],
       }),
     );
     if (!pageIndex) {
+      const allPendingData = [];
+      let pendingDatas = [];
       while (true) {
         const res = yield call(FlightService.getLiveData, {
           session,
@@ -144,9 +148,75 @@ function* getLiveSearch({ payload }) {
         });
 
         const agentLength = res.Agents.length;
+        const completeAgents = res.Agents.filter(
+          agent => agent.Status === 'UpdatesComplete',
+        );
         const completeLength = res.Agents.filter(
           agent => agent.Status === 'UpdatesComplete',
         ).length;
+
+        if (res.Status !== 'UpdatesComplete') {
+          let pendingItineraries = [];
+
+          completeAgents.forEach(agent => {
+            const completeItineraries = res.Itineraries.filter(
+              itinerary => itinerary.PricingOptions[0].Agents[0] === agent.Id,
+            );
+            if (completeItineraries.length)
+              pendingItineraries = completeItineraries;
+          });
+
+          pendingItineraries.forEach(itinerary => {
+            // 출국 정보
+            const outBoundInfo = getInfo(res.Legs, itinerary.OutboundLegId);
+
+            // 출국 경유지 정보
+            const outBoundStops = getStops(res.Places, outBoundInfo);
+
+            // 출국 항공기 정보
+            const outBoundAirlines = getAirLine(res.Carriers, outBoundInfo);
+
+            // 입국 정보
+            const inBoundInfo = itinerary.InboundLegId
+              ? getInfo(res.Legs, itinerary.InboundLegId)
+              : null;
+
+            // 입국 경유지 정보
+            const inBoundStops = itinerary.InboundLegId
+              ? getStops(res.Places, inBoundInfo)
+              : null;
+
+            // 입국 항공기 정보
+            const inBoundAirlines = itinerary.InboundLegId
+              ? getAirLine(res.Carriers, inBoundInfo)
+              : null;
+
+            allPendingData.push({
+              Outbound: {
+                ...outBoundInfo,
+                StopsInfo: outBoundStops,
+                AirlinesInfo: outBoundAirlines,
+              },
+              Inbound: itinerary.InboundLegId
+                ? {
+                    ...inBoundInfo,
+                    StopsInfo: inBoundStops,
+                    AirlinesInfo: inBoundAirlines,
+                  }
+                : null,
+              price: Math.floor(itinerary.PricingOptions[0].Price).toString(),
+              agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
+              amount: itinerary.PricingOptions.length,
+            });
+          });
+        }
+
+        if (allPendingData.length >= 5) {
+          allPendingData.sort((pre, cur) => +pre.price - +cur.price);
+          pendingDatas = allPendingData.slice(0, 5);
+        } else if (allPendingData.length < 5) {
+          pendingDatas.unshift(...allPendingData);
+        }
 
         yield put(
           pending({
@@ -155,6 +225,7 @@ function* getLiveSearch({ payload }) {
               all: agentLength,
               complete: completeLength,
             },
+            pendingDatas,
           }),
         );
 
@@ -215,6 +286,7 @@ function* getLiveSearch({ payload }) {
                 via: !nonStops,
                 Duration: null,
               },
+              pendingDatas: [],
             }),
           );
           return;
@@ -255,7 +327,11 @@ function* renderLiveSearch({ payload }) {
         }),
       );
     } else {
-      if (!originDatas || originDatas.length === renderDatas.length)
+      if (
+        !originDatas ||
+        (originDatas && originDatas.length) ===
+          (renderDatas && renderDatas.length)
+      )
         return yield put(success({ pageIndex: 'lastIndex' }));
 
       const newOriginDatas = originDatas.slice(
@@ -330,15 +406,40 @@ function* filterLiveSearch({ payload }) {
     if (!filterDatas) return;
 
     if (filterOptions.sortBy === 'price') {
+      console.log('price');
       sortFilterDatas = cloneDeep(filterDatas).sort(
         (pre, cur) => pre.price - cur.price,
       );
     } else if (filterOptions.sortBy === 'duration') {
+      console.log('duration');
       sortFilterDatas = cloneDeep(filterDatas).sort(
         (pre, cur) =>
           pre.Outbound.Duration +
           (pre.Inbound ? pre.Inbound.Duration : 0) -
           (cur.Outbound.Duration + (cur.Inbound ? cur.Inbound.Duration : 0)),
+      );
+    } else if (filterOptions.sortBy === 'recommend') {
+      console.log('recommend');
+      sortFilterDatas = cloneDeep(filterDatas).sort(
+        (pre, cur) =>
+          (
+            pre.Outbound.Duration +
+            (pre.Inbound ? pre.Inbound.Duration : 0) / 60
+          ).toFixed(1) *
+            4 +
+          (pre.Outbound.Stops.length +
+            (pre.Inbound ? pre.Inbound.Stops.length : 0)) *
+            20 +
+          Math.floor(pre.price / 10000) * 5 -
+          (
+            cur.Outbound.Duration +
+            (cur.Inbound ? cur.Inbound.Duration : 0) / 60
+          ).toFixed(1) *
+            4 +
+          (cur.Outbound.Stops.length +
+            (cur.Inbound ? cur.Inbound.Stops.length : 0)) *
+            20 +
+          Math.floor(cur.price / 10000) * 5,
       );
     }
     // 직항 필터링

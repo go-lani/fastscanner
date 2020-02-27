@@ -1,6 +1,18 @@
 import React from 'react';
 import { animateScroll as scroll } from 'react-scroll';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const fly = keyframes`
+  0% {
+    top: 0;
+  }
+  50% {
+    top: -10px;
+  }
+  100% {
+    top: 0;
+  }
+`;
 
 const TopTrigger = styled.button`
   position: fixed;
@@ -9,9 +21,15 @@ const TopTrigger = styled.button`
   z-index: 9;
   background: none;
   border: none;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  &:hover {
+    img {
+      position: relative;
+      animation: ${fly} 2s infinite linear both;
+    }
+  }
 
   img {
     width: 100%;
