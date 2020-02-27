@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import InfiniteScroller from 'react-infinite-scroller';
-import { useSelector } from 'react-redux';
 import uuid from 'uuid';
 import FlightItem from './FlightItem';
 import PendingItem from './PendingItem';
@@ -95,11 +94,11 @@ const ListArea = React.memo(
         const minDurationAverage =
           minDurationDatas &&
           minDurationDatas.Outbound &&
-          (minDurationDatas.Outbound.Duration +
-            (minDurationDatas.Inbound
-              ? minDurationDatas.Inbound.Duration
-              : 0)) /
-            2;
+          (minDurationDatas.Inbound
+            ? (minDurationDatas.Outbound.Duration +
+                minDurationDatas.Inbound.Duration) /
+              2
+            : minDurationDatas.Outbound.Duration);
 
         setDurationAverage({
           time: `${Math.floor(minDurationAverage / 60)}시간 ${Math.floor(
@@ -122,9 +121,11 @@ const ListArea = React.memo(
         const minPriceDuration =
           minPriceDatas &&
           minPriceDatas.Outbound &&
-          (minPriceDatas.Outbound.Duration +
-            (minPriceDatas.Inbound ? minPriceDatas.Inbound.Duration : 0)) /
-            2;
+          (minPriceDatas.Inbound
+            ? (minPriceDatas.Outbound.Duration +
+                minPriceDatas.Inbound.Duration) /
+              2
+            : minPriceDatas.Outbound.Duration);
 
         setPriceAverage({
           time: `${Math.floor(minPriceDuration / 60)}시간 ${Math.floor(
