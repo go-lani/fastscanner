@@ -406,15 +406,40 @@ function* filterLiveSearch({ payload }) {
     if (!filterDatas) return;
 
     if (filterOptions.sortBy === 'price') {
+      console.log('price');
       sortFilterDatas = cloneDeep(filterDatas).sort(
         (pre, cur) => pre.price - cur.price,
       );
     } else if (filterOptions.sortBy === 'duration') {
+      console.log('duration');
       sortFilterDatas = cloneDeep(filterDatas).sort(
         (pre, cur) =>
           pre.Outbound.Duration +
           (pre.Inbound ? pre.Inbound.Duration : 0) -
           (cur.Outbound.Duration + (cur.Inbound ? cur.Inbound.Duration : 0)),
+      );
+    } else if (filterOptions.sortBy === 'recommend') {
+      console.log('recommend');
+      sortFilterDatas = cloneDeep(filterDatas).sort(
+        (pre, cur) =>
+          (
+            pre.Outbound.Duration +
+            (pre.Inbound ? pre.Inbound.Duration : 0) / 60
+          ).toFixed(1) *
+            4 +
+          (pre.Outbound.Stops.length +
+            (pre.Inbound ? pre.Inbound.Stops.length : 0)) *
+            20 +
+          Math.floor(pre.price / 10000) * 5 -
+          (
+            cur.Outbound.Duration +
+            (cur.Inbound ? cur.Inbound.Duration : 0) / 60
+          ).toFixed(1) *
+            4 +
+          (cur.Outbound.Stops.length +
+            (cur.Inbound ? cur.Inbound.Stops.length : 0)) *
+            20 +
+          Math.floor(cur.price / 10000) * 5,
       );
     }
     // 직항 필터링
