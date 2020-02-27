@@ -21,6 +21,7 @@ const ResearchArea = React.memo(
     children,
     infants,
     cabinClass,
+    loading,
   }) => {
     const [isOpen, setIsOpen] = useState(false);
     useEffect(() => {
@@ -116,7 +117,8 @@ const ResearchArea = React.memo(
                         {moment(inboundDate).format('LL')}
                       </S.DateText>
                     )
-                  : inboundDate !== null && (
+                  : inboundDate !== null &&
+                    loading && (
                       <CircleProgress
                         classtype="white"
                         disableShrink

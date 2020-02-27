@@ -27,7 +27,7 @@ export const CategoryTab = styled.ul`
   overflow-y: hidden;
 
   ${media.desktop`
-    flex-basis: 78%;
+    flex-basis: 100%;
   `}
 `;
 

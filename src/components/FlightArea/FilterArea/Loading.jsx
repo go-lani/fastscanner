@@ -10,13 +10,13 @@ const StyledLoadingImg = styled.img`
   height: auto;
 `;
 
-const StyledLoadingText = styled.p`
-  margin: 10px 0 0;
-  font-weight: 500;
-  font-size: 1.4rem;
-  color: #333;
-  text-align: center;
-`;
+// const StyledLoadingText = styled.p`
+//   margin: 10px 0 0;
+//   font-weight: 500;
+//   font-size: 1.4rem;
+//   color: #333;
+//   text-align: center;
+// `;
 
 const Loading = () => {
   return (
