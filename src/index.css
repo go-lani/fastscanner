@@ -80,7 +80,7 @@ p {
 }
 
 table {
-	width: 100%;
+	max-width: 100%;
 	border-spacing: 0;
 	table-layout: fixed;
 }
@@ -116,15 +116,22 @@ select::-ms-expand {
 	color: #777777;
 }
 
+input[type=text] {
+	border-radius: 0;
+}
+
 button,
 input[type=file],
 input[type=image],
 input[type=reset],
 input[type=button],
 input[type=submit] {
+	border: 1px solid #eee;
+	background: #fff;
 	cursor: pointer;
 	-webkit-appearance: none;
 	appearance: none;
+	border-radius: none;
 }
 
 label {
@@ -162,4 +169,10 @@ a:active {
 a:focus {
 	text-decoration: none;
 	color: inherit;
+}
+
+@media all and (max-width: 768px) {
+	html {
+		font-size: 8px;
+	}
 }
