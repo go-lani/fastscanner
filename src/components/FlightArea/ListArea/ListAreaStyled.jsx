@@ -432,6 +432,7 @@ export const StopsDetail = styled.div`
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 0 10px 5px #eee;
+    z-index: 1;
 
     li {
       padding: 0 0 0 25px;

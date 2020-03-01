@@ -79,7 +79,7 @@ function* getLiveSearch({ payload }) {
     sortType: 'price',
     sortOrder: 'asc',
     pageIndex: `${pageIndex}`,
-    pageSize: '200',
+    pageSize: '999',
   };
 
   function getInfo(legs, id) {

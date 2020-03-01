@@ -31,18 +31,6 @@ const ListArea = React.memo(
     const [priceAverage, setPriceAverage] = useState();
     const [durationAverage, setDurationAverage] = useState();
     const [recommendAverage, setRecommendAverage] = useState();
-    const [defaultFilterOptions, setDefaultFilterOptions] = useState();
-
-    useEffect(() => {
-      if (
-        originDatas &&
-        (typeof filterOptions.direct === 'number' ||
-          typeof filterOptions.via === 'number') &&
-        !filterOptions.OutBound &&
-        filterOptions.OutBound !== null
-      )
-        setDefaultFilterOptions(state => (!state ? filterOptions : state));
-    }, [filterOptions, originDatas]);
 
     const openFilterArea = useCallback(() => {
       setFilterModalVisible(true);
@@ -195,14 +183,18 @@ const ListArea = React.memo(
     const filterReset = useCallback(
       e => {
         setFilterOptions({
-          ...defaultFilterOptions,
+          direct: true,
+          via: true,
+          directDisable: false,
+          viaDisable: false,
           sortBy: isActive,
+          Duration: null,
           OutBound: null,
           InBound: null,
         });
         filterLiveSearch();
       },
-      [defaultFilterOptions, filterLiveSearch, isActive, setFilterOptions],
+      [filterLiveSearch, isActive, setFilterOptions],
     );
 
     return (
