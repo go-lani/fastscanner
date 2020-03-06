@@ -10,7 +10,6 @@ import SelectOptionContainer from '../../container/SelectOptionContainer';
 
 import CheckBox from '../Common/CheckBox';
 import Button from '../Common/Button';
-import SearchAreaPopup from './SearchAreaPopup';
 import * as S from './SearchAreaStyled';
 
 const SearchArea = React.memo(
@@ -147,7 +146,6 @@ const SearchArea = React.memo(
             />
           </S.SearchBottom>
         </S.SearchForm>
-        <SearchAreaPopup />
       </S.SearchWrapper>
     );
   },
