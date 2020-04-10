@@ -43,8 +43,8 @@ const SelectAirport = ({
         도착지
       </A11yTitle>
       <AirportPlaceBox
-        title="도착지를 선택해주세요"
         id="airport-arrived"
+        title="도착지를 선택해주세요"
         placeholder="도착지 선택"
         searchList={destinationSearchList}
         searchPlace={searchDestination}
