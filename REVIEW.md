@@ -278,7 +278,7 @@ const destinationInputCheck = useCallback(value => {
    export default SelectAirport;
    ```
 
-   1. AirportPlaceBox의 props
+    AirportPlaceBox의 props<br />
       - `id` : 해당 컴포넌트의 id 값
       - `title` : 컴포넌트 내에서 모바일 환경에서 사용할 title 문구
       - `placeholder` : input에 대한 placeholder 값
@@ -311,10 +311,6 @@ const destinationInputCheck = useCallback(value => {
        const originInput = useRef();
 
        useEffect(() => {
-           originInput.current.value = placeName;
-       }, [originInput, placeName]);
-
-       useEffect(() => {
            if (searchList.length) setVisible(true);
            else setVisible(false);
        }, [searchList]);
@@ -323,29 +319,6 @@ const destinationInputCheck = useCallback(value => {
            const value = e.target.value.trim();
            searchPlace(value);
            placeInputCheck(value);
-       }
-
-       function handledClick(PlaceId, PlaceName) {
-           if (placeName === `${PlaceName}(${PlaceId})`) {
-               originInput.current.value = placeName;
-               setVisible(false);
-               return;
-           }
-           selectPlace({ PlaceName, PlaceId });
-           setVisible(false);
-       }
-
-       function hide() {
-           const { PlaceName, PlaceId } = searchList[0];
-
-           if (placeName === `${PlaceName}(${PlaceId})`) {
-               originInput.current.value = placeName;
-               setVisible(false);
-               return;
-           }
-
-           selectPlace({ PlaceName, PlaceId });
-           setVisible(false);
        }
 
        return (
