@@ -12,8 +12,8 @@
    - 출발지/도착지 선택 후 Response 데이터를 가공하여 상태 저장
    - 출발지/도착지 교차 변경
 3. 메인 페이지
+   - URL 파라미터와 쿼리를 통해 Session 발급 및 해당 Session키로 데이터 재가공
    - URL 파라미터와 쿼리를 통해 재검색 영역 데이터 바인딩
-   - URL 파라미터와 쿼리를 통한 Session 발급 및 해당 Session키로 데이터 재가공
    - 최저가에 대한 소팅 및 해당 필터의 평균 시간 및 가격 렌더링
    - 가는날/오는날 출발시간 기준 필터링하여 UI 노출
    - ProgressBar 구현
@@ -32,10 +32,10 @@
 <br />
 
 ### 1-2. Container
+
 container를 만들어 컴포넌트와 Store 사이에서 데이터 가공 및 처리를 위한 로직을 작성하였습니다.
 
 ![1586502917724](https://user-images.githubusercontent.com/28818698/79063580-889f9d80-7cdd-11ea-83c4-e8c241c93e87.png)
-
 
 <br />
 
@@ -46,6 +46,7 @@ container를 만들어 컴포넌트와 Store 사이에서 데이터 가공 및 �
 <br />
 
 ### 1-4. libs
+
 media 쿼리를 styled-components와 함께 사용하기 위한 라이브러리 등을 모아놓기 위한 폴더
 
 ![1586503251077](https://user-images.githubusercontent.com/28818698/79063589-92290580-7cdd-11ea-9648-fcc8d79660e6.png)
@@ -85,14 +86,15 @@ export default media;
 <br />
 
 ### 1-5. pages
+
 페이지는 Home(검색 화면), NotFound, ResultView(검색 결과 화면)
 
 ![1586503281777](https://user-images.githubusercontent.com/28818698/79063590-98b77d00-7cdd-11ea-9bae-735a31ef0176.png)
 
-
 <br />
 
 ### 1-6.redux
+
 리덕스의 경우 ducks 패턴을 활용하여 액션 타입과, 액션, 리듀서를 나누지 않고 관심사 별로 하나의 파일로 관리하였습니다.
 
 ![1586503314358](https://user-images.githubusercontent.com/28818698/79063594-9d7c3100-7cdd-11ea-994a-fbfe2291922c.png)
@@ -120,16 +122,16 @@ export default reducer;
 <br />
 
 ### 1-7. service
+
 API 호출에 대한 로직을 관심사 별로 나누어 관리하였습니다.
 
 ![1586503344288](https://user-images.githubusercontent.com/28818698/79063598-a3721200-7cdd-11ea-8214-3299ba9ebdfb.png)
-
 
 <br />
 
 ## 2. 검색 페이지
 
-### 2-1.출발지/도착지 검색시 API 호출하여 출발지/도착지에 대한 데이터를 실시간 노출
+### 2-1. 출발지/도착지 검색시 API 호출하여 출발지/도착지에 대한 데이터를 실시간 노출
 
 ![fastscanner-source03](https://user-images.githubusercontent.com/28818698/79063606-ab31b680-7cdd-11ea-80e2-a901baba3dbd.png)
 
@@ -279,14 +281,15 @@ const destinationInputCheck = useCallback(value => {
    ```
 
     AirportPlaceBox의 props<br />
-      - `id` : 해당 컴포넌트의 id 값
-      - `title` : 컴포넌트 내에서 모바일 환경에서 사용할 title 문구
-      - `placeholder` : input에 대한 placeholder 값
-      - `searchList` : 검색 결과에 대한 리스트를 저장한 상태
-      - `searchPlace` : input 값을 받아 검색하는 로직을 가진 함수
-      - `selectPlace` : 선택 결과를 store에 저장하는 함수
-      - `placeName` :  현재 선택된 출발지/목적지에 대한 store에 담겨있는 상태
-      - `placeInputCheck` : value에 대한 상태를 저장하기 위한 함수(이 상태는 최종 검색시 유효성 검사에 사용하기 위함)
+
+   - `id` : 해당 컴포넌트의 id 값
+   - `title` : 컴포넌트 내에서 모바일 환경에서 사용할 title 문구
+   - `placeholder` : input에 대한 placeholder 값
+   - `searchList` : 검색 결과에 대한 리스트를 저장한 상태
+   - `searchPlace` : input 값을 받아 검색하는 로직을 가진 함수
+   - `selectPlace` : 선택 결과를 store에 저장하는 함수
+   - `placeName` :  현재 선택된 출발지/목적지에 대한 store에 담겨있는 상태
+   - `placeInputCheck` : value에 대한 상태를 저장하기 위한 함수(이 상태는 최종 검색시 유효성 검사에 사용하기 위함)
 
 4. 출발지/도착지에 대한 입력시 로직
 
@@ -893,6 +896,192 @@ const SelectAirport = ({
    1. redux-saga/effects에 있는 `select` 사용하여 현재 스토어의 출발지에 대한 상태와 목적지에 대한 상태를 가져와서 변경해줍니다.
    2. 이렇게하면 스토어의 상태를 활용하고 있는 컴포넌트는 리렌더링되면서 ui를 최신상태로 유지합니다.
 
+<br />
 
+## 3. 메인 페이지
 
-작성중..
+### 3-1. URL 파라미터와 쿼리를 통해 Session 발급 및 해당 Session키로 데이터 재가공
+
+항공권 검색 버튼을 누르면 다음과 같은 로직이 동작합니다
+
+검색시 store에 저장된 상태 값
+
+![1586759357338](https://user-images.githubusercontent.com/28818698/79099346-df20e080-7d9e-11ea-9dc7-948259b0a4d8.png)
+
+- `country` : 현재 사용중인 국가(KR - 고정)
+- `currency` : 노출 화폐 표시(KRW - 원화 고정)
+- `locale` : 언어(ko-KR - 한국어 고정)
+- `originPlace` : 출발지
+- `destinationPlace` : 도착지
+- `outbounbDate` : 출국시간
+- `inboundDate` : 입국 시간
+- `adults` : 성인수
+- `cabinClass` : 좌석등급(economy / premiumeconomy / business / first)
+- `children` : 소아(만 16세 미만)수
+- `infants` : 유아(만 24개월 미만)수
+- `nonStops` : 직항 여부(true - 직항, false - 경유)
+- `way` : 왕복/편도(round, way)
+- `originSearch` : 출발지 검색어 입력시 노출되는 리스트 배열
+- `originName` : 현재 선택된 출발지
+- `destinationSearch` : 출발지 검색어 입력시 노출되는 리스트 배열
+- `destinationName` : 현재 선택된 도착지
+- `momentOutdate` : 출국날짜에 대한 moment format 저장(가공을 위한 용도)
+- `momentIndate` : 입국날짜에 대한 moment format 저장(가공을 위한 용도)
+- `loading`
+- `error`
+
+/src/components/SearchArea/index.jsx
+
+```jsx
+...
+function searchSubmit() {
+    const originCode = originPlace.slice(0, -4).toLowerCase();
+    const destinationCode = destinationPlace && destinationPlace.slice(0, -4).toLowerCase();
+
+    if (originCode === destinationCode)
+        return alert('출발지와 도착지가 같으면 검색이 불가능합니다.');
+
+    const outboundCode = outboundDate.split('-').join('').slice(-6);
+
+    const inboundCode = inboundDate && inboundDate.split('-').join('').slice(-6);
+
+    const params = qs.stringify({
+        adults: adults,
+        children: children,
+        cabinclass: cabinClass,
+        infants: infants,
+        rtn: way === 'round' ? 1 : 0,
+        preferdirects: nonStops,
+    });
+
+    if (way === 'round') {
+        if (!originInputValue) return alert('출발지를 선택해주세요.');
+        if (!destinationInputValue) return alert('도착지를 선택해주세요.');
+        if (!inboundDate) return alert('입국날짜를 선택해주세요.');
+
+        history.push(            `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/${inboundCode}/?${params}`,
+        );
+
+        setIsOpen && setIsOpen(false);
+    } else {
+        if (!originInputValue) return alert('출발지를 선택해주세요.');
+        if (!destinationInputValue) return alert('도착지를 선택해주세요.');
+
+        history.push(            `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
+        );
+        setIsOpen && setIsOpen(false);
+    }
+
+    if (isHeader) {
+        scroll.scrollToTop();
+    }
+}
+
+return (
+    <S.SearchWrapper isOpen={isOpen} isHeader={isHeader}>
+        <S.Greeting isHeader={isHeader}>어디로 떠나볼까요?</S.Greeting>
+        <S.SearchForm isHeader={isHeader} isOpen={isOpen}>
+            ...
+            <S.SearchBottom>
+                ...
+                <Button
+                    type="button"
+                    text="항공권 검색"
+                    size="medium"
+                    color="blue"
+                    image="plane"
+                    onClick={searchSubmit}
+                    />
+            </S.SearchBottom>
+        </S.SearchForm>
+    </S.SearchWrapper>
+);
+...
+```
+<br />
+
+#### 3-1-1. store에 담겨있는 출발지/목적지 가공
+
+/src/components/SearchArea/index.jsx
+
+```jsx
+const originCode = originPlace.slice(0, -4).toLowerCase();
+const destinationCode = destinationPlace && destinationPlace.slice(0, -4).toLowerCase();
+```
+
+store의 originPlace는 `공항-sky` 형식으로 저장이 되어있으나 url 파라미터에는 출발지공항 명칭만 노출시키기위해 `-sky`부분을 잘라 가공했습니다.
+
+<br />
+
+#### 3-1-2. 출국일자와 입국일자 가공
+
+출국일자와 입국일자는 srore에 다음과 같이 저장되어 있습니다.
+
+![1586759939396](https://user-images.githubusercontent.com/28818698/79099355-e34cfe00-7d9e-11ea-9244-7095c3dfa560.png)
+
+url 파라미터로 `.../200513/200525/...` 형식으로 활용하기 위해 다음과 같이 가공했습니다.
+
+/src/components/SearchArea/index.jsx
+
+```jsx
+const outboundCode = outboundDate.split('-').join('').slice(-6);
+const inboundCode = inboundDate && inboundDate.split('-').join('').slice(-6);
+```
+
+1. split으로 - 를 걷어내었고, join으로 합쳐서 20200513로 변환하였습니다.
+2. 걷어낸 date를 slice로 하여 -6, 즉 맨앞 2자리를 제외하여 잘라내었습니다.
+
+이렇게 slice로 걷어낸 이유는 `outboundDate`와 `inboundDate`가 2020-XX-XX 형식으로 들어온다느 보장이 있었기 때문입니다.
+
+<br />
+
+#### 3-1-3. store에 담겨있는 정보를 query-string으로 변환
+
+/src/components/SearchArea/index.jsx
+
+```jsx
+const params = qs.stringify({
+    adults: adults,
+    children: children,
+    cabinclass: cabinClass,
+    infants: infants,
+    rtn: way === 'round' ? 1 : 0,
+    preferdirects: nonStops,
+});
+```
+
+나머지 정보들은 query-string으로 변환하였습니다. rtn은 API에서 경유,편도를 1 또는 0으로 요청을 보내야됬기 때문에 삼항연산자를 활용하여 할당해주었습니다.
+
+#### 3-1-4. history push
+
+/src/components/SearchArea/index.jsx
+
+```jsx
+function searchSubmit() {
+    ...
+    if (way === 'round') {
+        if (!originInputValue) return alert('출발지를 선택해주세요.');
+        if (!destinationInputValue) return alert('도착지를 선택해주세요.');
+        if (!inboundDate) return alert('입국날짜를 선택해주세요.');
+
+        history.push(            `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/${inboundCode}/?${params}`,
+        );
+
+        setIsOpen && setIsOpen(false);
+    } else {
+        if (!originInputValue) return alert('출발지를 선택해주세요.');
+        if (!destinationInputValue) return alert('도착지를 선택해주세요.');
+
+        history.push(            `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
+        );
+        setIsOpen && setIsOpen(false);
+    }
+    ...
+}
+```
+
+왕복/편도에 따라 분기 처리하여 history push를 했습니다.
+
+<br />
+
+작성중...
