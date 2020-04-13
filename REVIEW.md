@@ -14,6 +14,7 @@
 3. 메인 페이지
    - URL 파라미터와 쿼리를 통해 Session 발급 및 해당 Session키로 데이터 재가공
    - URL 파라미터와 쿼리를 통해 재검색 영역 데이터 바인딩
+   - LiveSearch Data 가공 및 UI 노출
    - 최저가에 대한 소팅 및 해당 필터의 평균 시간 및 가격 렌더링
    - 가는날/오는날 출발시간 기준 필터링하여 UI 노출
    - ProgressBar 구현
@@ -959,18 +960,17 @@ function searchSubmit() {
         if (!destinationInputValue) return alert('도착지를 선택해주세요.');
         if (!inboundDate) return alert('입국날짜를 선택해주세요.');
 
-        history.push(            `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/${inboundCode}/?${params}`,
+        history.push(`/transport/flights/${originCode}/${destinationCode}/${outboundCode}/${inboundCode}/?${params}`,
         );
-
-        setIsOpen && setIsOpen(false);
     } else {
         if (!originInputValue) return alert('출발지를 선택해주세요.');
         if (!destinationInputValue) return alert('도착지를 선택해주세요.');
 
-        history.push(            `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
+        history.push(`/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
         );
-        setIsOpen && setIsOpen(false);
     }
+
+    setIsOpen && setIsOpen(false);
 
     if (isHeader) {
         scroll.scrollToTop();
@@ -1032,7 +1032,7 @@ const inboundCode = inboundDate && inboundDate.split('-').join('').slice(-6);
 1. split으로 - 를 걷어내었고, join으로 합쳐서 20200513로 변환하였습니다.
 2. 걷어낸 date를 slice로 하여 -6, 즉 맨앞 2자리를 제외하여 잘라내었습니다.
 
-이렇게 slice로 걷어낸 이유는 `outboundDate`와 `inboundDate`가 2020-XX-XX 형식으로 들어온다느 보장이 있었기 때문입니다.
+이렇게 slice로 걷어낸 이유는 `outboundDate`와 `inboundDate`가 2020-XX-XX 형식으로 들어온다는 보장이 있었기 때문입니다.
 
 <br />
 
