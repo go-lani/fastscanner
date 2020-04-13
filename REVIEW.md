@@ -998,6 +998,7 @@ return (
 );
 ...
 ```
+
 <br />
 
 #### 3-1-1. store에 담겨있는 출발지/목적지 가공
@@ -1052,6 +1053,8 @@ const params = qs.stringify({
 
 나머지 정보들은 query-string으로 변환하였습니다. rtn은 API에서 경유,편도를 1 또는 0으로 요청을 보내야됬기 때문에 삼항연산자를 활용하여 할당해주었습니다.
 
+<br />
+
 #### 3-1-4. history push
 
 /src/components/SearchArea/index.jsx
@@ -1081,6 +1084,248 @@ function searchSubmit() {
 ```
 
 왕복/편도에 따라 분기 처리하여 history push를 했습니다.
+
+<br />
+
+#### 3-1-5. 메인 페이지로 라우팅된 후 url을 통한 session 발급
+
+/src/components/FlightArea/index.jsx
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import qs from 'query-string';
+import { withRouter } from 'react-router-dom';
+import styled from 'styled-components';
+import moment from 'moment';
+import media from '../../libs/MediaQuery';
+import ListAreaContainer from '../../container/ListAreaContainer';
+import FilterAreaContainer from '../../container/FilterAreaContainer';
+
+const FlightArea = React.memo(
+  ({ location, session, createSession, mainLiveSearch }) => {
+    ...
+    useEffect(() => {
+      const path = location.pathname
+        .slice(1, -1)
+        .split('/')
+        .slice(2);
+
+      const query = qs.parse(location.search);
+      const { cabinclass: cabinClass, children, infants, adults } = query;
+
+      const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
+      const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
+      const inBound = moment(`20${inboundDate}`).format('YYYY-MM-DD');
+
+      const requestBody = {
+        cabinClass: cabinClass,
+        children: +children,
+        infants: +infants,
+        country: 'KR',
+        currency: 'KRW',
+        locale: 'ko-KR',
+        originPlace: `${originPlace}-sky`,
+        destinationPlace: `${destinationPlace}-sky`,
+        outboundDate: outBound,
+        adults: +adults,
+        inboundDate: `${+query.rtn ? inBound : ''}`,
+        groupPricing: +adults + +children + +infants > 1 ? true : false,
+      };
+
+      createSession(requestBody);
+    }, [createSession, location.pathname, location.search]);
+
+    useEffect(() => {
+      if (session) {
+        mainLiveSearch();
+      }
+    }, [mainLiveSearch, session]);
+	...
+    return (
+      <FlightLayout>
+        <FilterAreaContainer
+          filterModalVisible={filterModalVisible}
+          setFilterModalVisible={setFilterModalVisible}
+        />
+        <ListAreaContainer setFilterModalVisible={setFilterModalVisible} />
+      </FlightLayout>
+    );
+  },
+);
+
+export default withRouter(FlightArea);
+```
+
+1. 메인 페이지로 접근하였을때 session 발급 요청에 필요한 requestBody를 작성하기 위해  react-router-dom의 withRouter Hoc를 활용하여 location.pathname과 location.search를 받아와서 가공했습니다.
+
+   ![1586761812570](https://user-images.githubusercontent.com/28818698/79104000-9ec66000-7da8-11ea-93df-0f681504ca44.png)
+
+   1. slice로 맨 앞과 뒤의 '/' 을 삭제했습니다.
+
+      /src/components/FlightArea/index.jsx
+
+      ```jsx
+      location.pathname.slice(1, -1); // transport/flights/icn/nrt/200513/200525
+      ```
+
+   2. 세부내용을 구조분해하기 위해 '/' 기준으로 짤라 배열로 반환했습니다.
+
+      /src/components/FlightArea/index.jsx
+
+      ```jsx
+      location.pathname.slice(1, -1).split('/'); // ["transport", "flights", "icn", "nrt", "200513", "200525"]
+      ```
+
+   3. 'transport'와 flights는 사용하지 않으므로 slice를 활용하여 제거했습니다.
+
+      /src/components/FlightArea/index.jsx
+
+      ```jsx
+      location.pathname.slice(1, -1).split('/').slice(2) // ["icn", "nrt", "200513", "200525"]
+      ```
+
+   4. slice 메소드는 새로운 배열을 반환하므로 path라는 변수에 담고, 그 변수를 구조분해 할당을 활용하여 인덱스에 맞게 네이밍하여 변수에 담았습니다.
+
+      /src/components/FlightArea/index.jsx
+
+      ```jsx
+      const path = location.pathname.slice(1, -1).split('/').slice(2);
+      const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
+      ```
+
+      이때, `outboundDate`와 `inboundDate`는 요청시 필요한 포멧과 다르므로 moment 라이브러리를 활용하여 포멧에 맞게 가공했습니다.
+
+      /src/components/FlightArea/index.jsx
+
+      ```jsx
+      const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
+      const inBound = moment(`20${inboundDate}`).format('YYYY-MM-DD');
+      ```
+
+   5. query-string도 location.search로 받아온 후 query-string 라이브러리를 활용하여 parse 해주어 객체로 변환하여 session 발급에 필요한 부분만 구조분해 할당을 했습니다.
+
+      /src/components/FlightArea/index.jsx
+
+      ```jsx
+      const query = qs.parse(location.search); // {adults: "1", cabinclass: "economy", children: "0", infants: "0", preferdirects: "false", rtn: "1"}
+      const { cabinclass: cabinClass, children, infants, adults } = query;
+      ```
+
+
+
+2. 위와 같이 가공한 데이터를 requestBody에 담아 createSession 함수의 파라미터로 전달하여 호출했습니다.
+
+   /src/components/FlightArea/index.jsx
+
+   ```jsx
+   const requestBody = {
+       cabinClass: cabinClass,
+       children: +children,
+       infants: +infants,
+       country: 'KR',
+       currency: 'KRW',
+       locale: 'ko-KR',
+       originPlace: `${originPlace}-sky`,
+       destinationPlace: `${destinationPlace}-sky`,
+       outboundDate: outBound,
+       adults: +adults,
+       inboundDate: `${+query.rtn ? inBound : ''}`,
+       groupPricing: +adults + +children + +infants > 1 ? true : false,
+   };
+
+   createSession(requestBody);
+   ```
+
+   `children, infants, adults`의 경우 파싱한 데이터가 문자열로 들어와 + 단항 연산자를 활용하여 암묵적 타입 변환을 했습니다.
+
+3. createSession 함수
+
+   src\redux\modules\flight.js
+
+   ```javascript
+   function* createSession({ payload }) {
+       const prevSessionId = yield select(state => state.flight.session);
+       try {
+           yield put(
+               pending({
+                   progress: {
+                       per: 0,
+                       all: 0,
+                       complete: 0,
+                   },
+               }),
+           );
+           const res = yield call(FlightService.createSession, payload);
+           const sessionId = res.headers.location.split('/').pop();
+
+           if (prevSessionId !== sessionId) {
+               yield put(
+                   success({
+                       originDatas: [],
+                       renderDatas: null,
+                       pageIndex: 0,
+                       filterDatas: null,
+                   }),
+               );
+           }
+           yield put(success({ session: sessionId }));
+       } catch (error) {
+           yield put(fail(error));
+       }
+   }
+   ```
+
+   1. createSession 함수를 호출하면 redux-saga의 select 이펙트를 통해서 현재 스토어에 담기 session의 키를 받아옵니다. 이 키는 나중에 발급받을 세션키와 중복 체크를 할때 사용합니다.
+
+   2. 세션의 변화를 감지하면 data를 렌더링하는 로직에서 progress가 작동하기 때문에 pending 상태일때 progress 바를 초기화했습니다.
+
+   3. `payload(=== requestBody)`와 함께 FlightService.createSession을 호출했습니다.
+
+      /src/service/FlightService.js
+
+      ```javascript
+      import axios from 'axios';
+      import qs from 'query-string';
+
+      export default class FlightService {
+        static createSession = async requestBody => {
+          return await axios.post(
+            'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/pricing/v1.0',
+            qs.stringify(requestBody),
+            {
+              headers: {
+                'x-rapidapi-host':
+                  'skyscanner-skyscanner-flight-search-v1.p.rapidapi.com',
+                'x-rapidapi-key': process.env.REACT_APP_SKYSCANNER_API_KEY,
+              },
+            },
+          );
+        };
+        ...
+      }
+
+      ```
+
+      requestBody를 전달하며, headers에 발급받은 host키를 넣어 호출했습니다.
+
+   4. 응답받은 response 결과
+
+      ![73818156-123f7480-4830-11ea-8a5c-52e6a9b3026c](https://user-images.githubusercontent.com/28818698/79103947-848c8200-7da8-11ea-8079-b0f02cf21ea4.png)
+
+      세션키는 response.header의 location의 뒤에 붙어서 발급되어 다음과 같이 뒷부분만 잘라서 변수에 할당했습니다.
+
+      ```jsx
+      const res = yield call(FlightService.createSession, payload);
+      const sessionId = res.headers.location.split('/').pop();
+      ```
+
+      할당된 변수는 다음과 같이 사가함수를 끝내며 스토어의 상태에 담았습니다.
+
+      ```javascript
+      yield put(success({ session: sessionId }));
+      ```
+
+4. useEffect의 의존성 배열을 활용하여 location.pathname과 location.search가 변화를 감지할때마다 session을 재발급 받게 했습니다.
 
 <br />
 
