@@ -1691,4 +1691,285 @@ export default withRouter(ResearchArea);
 
 <br />
 
-작성중
+### 3-3. LiveSearch Data 가공 및 UI 노출
+
+FlightArea에 대한 컨테이너를 만들어 상태와 dispatch를 전달했습니다.
+
+/src/container/FlightAreaContainer.jsx
+
+```jsx
+import { connect } from 'react-redux';
+import FlightArea from '../components/FlightArea';
+import { createSessionSaga, mainLiveSearchSaga } from '../redux/modules/flight';
+
+export default connect(
+  state => ({
+    session: state.flight.session,
+  }),
+
+  dispatch => ({
+    createSession: requestBody => {
+      dispatch(createSessionSaga(requestBody));
+    },
+    mainLiveSearch: () => {
+      dispatch(mainLiveSearchSaga());
+    },
+  }),
+)(FlightArea);
+```
+
+`mainLiveSearch` 함수는 `mainLiveSearchSaga` 함수를 dispatch 해줍니다.
+
+/src/redux/modules/flight.js
+
+```javascript
+...
+export const mainLiveSearchSaga = createAction('MAIN_LIVESEARCH_SAGA');
+
+function* fetchLiveSearch() {
+  yield call(getLiveSearch, 'payload');
+  yield call(filterLiveSearch, 'payload');
+}
+
+function* mainLiveSearch() {
+  yield call(fetchLiveSearch);
+}
+
+// 데이터 요청
+function* getLiveSearch({ payload }) {
+  const nonStops = yield select(state => state.search.nonStops);
+  const session = yield select(state => state.flight.session);
+  const pageIndex = yield select(state => state.flight.pageIndex);
+  const filterOptions = yield select(state => state.flight.filterOptions);
+
+  const headers = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'x-rapidapi-key': process.env.REACT_APP_SKYSCANNER_API_KEY,
+  };
+
+  const params = {
+    sortType: 'price', // 데이터를 불러올때 sort type 지정
+    sortOrder: 'asc', // 해당 sorting type에 대한 오름차순, 내림차순 지정
+    pageIndex: `${pageIndex}`, // pageIndex
+    pageSize: '999', // 불러올 데이터의 개수 지정
+  };
+
+  function getInfo(legs, id) {
+    return legs.filter(leg => leg.Id === id)[0];
+  }
+
+  function getStops(places, info) {
+    return info.Stops.map(stop => {
+      const stopInfo = {};
+
+      const { Name: name, ParentId: cityId } = places.find(
+        place => place.Id === stop,
+      );
+
+      const { ParentId: countryId } = places.find(place => place.Id === cityId);
+      const { Name: countryName } = places.find(
+        place => place.Id === countryId,
+      );
+
+      stopInfo.name = name;
+      stopInfo.countryName = countryName;
+
+      return stopInfo;
+    });
+  }
+
+  function getAirLine(carriers, info) {
+    return info.Carriers.map(carrierId => {
+      const airline = {
+        name: null,
+        imgUrl: null,
+      };
+
+      const { Name, ImageUrl } = carriers.find(
+        carrier => carrier.Id === carrierId,
+      );
+
+      airline.name = Name;
+      airline.imgUrl = ImageUrl;
+
+      return airline;
+    });
+  }
+
+  try {
+    if (!session || pageIndex === 'lastIndex') return yield put(success());
+
+    yield put(
+      pending({
+        progress: {
+          per: 0,
+          all: 0,
+          complete: 0,
+        },
+        pendingDatas: [null, null, null, null, null],
+      }),
+    );
+    if (!pageIndex) {
+      ...
+      while (true) {
+        const res = yield call(FlightService.getLiveData, {
+          session,
+          headers,
+          params,
+        });
+
+        if (res.Status === 'UpdatesComplete') {
+          const ListItem = [];
+
+          res.Itineraries.forEach(itinerary => {
+            // 출국 정보
+            const outBoundInfo = getInfo(res.Legs, itinerary.OutboundLegId);
+
+            // 출국 경유지 정보
+            const outBoundStops = getStops(res.Places, outBoundInfo);
+
+            // 출국 항공기 정보
+            const outBoundAirlines = getAirLine(res.Carriers, outBoundInfo);
+
+            // 입국 정보
+            const inBoundInfo = itinerary.InboundLegId
+              ? getInfo(res.Legs, itinerary.InboundLegId)
+              : null;
+
+            // 입국 경유지 정보
+            const inBoundStops = itinerary.InboundLegId
+              ? getStops(res.Places, inBoundInfo)
+              : null;
+
+            // 입국 항공기 정보
+            const inBoundAirlines = itinerary.InboundLegId
+              ? getAirLine(res.Carriers, inBoundInfo)
+              : null;
+
+            ListItem.push({
+              Outbound: {
+                ...outBoundInfo,
+                StopsInfo: outBoundStops,
+                AirlinesInfo: outBoundAirlines,
+              },
+              Inbound: itinerary.InboundLegId
+                ? {
+                    ...inBoundInfo,
+                    StopsInfo: inBoundStops,
+                    AirlinesInfo: inBoundAirlines,
+                  }
+                : null,
+              price: Math.floor(itinerary.PricingOptions[0].Price).toString(),
+              agentUrl: itinerary.PricingOptions[0].DeeplinkUrl,
+              amount: itinerary.PricingOptions.length,
+            });
+          });
+
+          yield put(
+            success({
+              originDatas: ListItem,
+              renderDatas: ListItem.slice(0, 5),
+              filterOptions: {
+                ...filterOptions,
+                direct: true,
+                via: !nonStops,
+                Duration: null,
+              },
+              pendingDatas: [],
+            }),
+          );
+          return;
+        }
+      }
+    }
+  } catch (error) {
+    yield put(fail(error));
+    console.log(error);
+  }
+}
+...
+export function* flightSaga() {
+  ...
+  yield takeLatest('MAIN_LIVESEARCH_SAGA', mainLiveSearch);
+}
+```
+
+`mainLiveSearch`는 내부에서 `fetchLiveSearch` 제너레이터 함수를 호출하며 해당 함수내에는 `데이터를 불러오는 함수`와 `데이터를 필터링하는 함수`를 호출했습니다.
+
+`getLiveSearch`에서 session을 가지고 API 요청을 보내게되면 다음과 같은 데이터를 전달해줍니다.
+
+![73818169-208d9080-4830-11ea-95db-6dbccd96b9c7](https://user-images.githubusercontent.com/28818698/79113617-3e411e00-7dbc-11ea-8799-c4858ce65ec7.png)
+
+| 필드        | 타입   | 설명                                                         |
+| ----------- | ------ | ------------------------------------------------------------ |
+| SessionKey  | string | 실시간 여행 검색에 사용된 세션 키                            |
+| Query       | object | 실시간 여행 검색에 사용된 쿼리                               |
+| Status      | string | 세션의 상태. 'UpdatesPending' 혹은 'UpdatesComplete'. **UpdatesComplete이 될때까지 POLL** |
+| Itineraries | array  | 여행 일정 목록                                               |
+| Legs        | array  | 각 여행 일정에 대한 모든 leg 목록. 각 leg는 공항, 출발 시간, 비행 시간, 경유지, 항공사 정보 등을 포함 |
+| Segments    | array  | 각 leg의 대한 segment(segment가 모여 하나의 leg가 된다) . segment는 항공사(혹은 광고사), 운행사에 대한 정보 등 |
+| Agents      | array  | 티켓 판매사(항공사 혹은 여행사) 목록                         |
+| Places      | array  | 여행 일정에 나타나는 모든 장소                               |
+| Currencies  | array  | response에 나타난 화폐 단위 목록 (A list of the currencies shown in the response) |
+
+하나의 list에 대한 정보를 하나의 객체 덩어리로 전달해주는 것이 아니라 관심사별로 분류되어 각각의 데이터 내에 id 값으로 서로 연결되어 있는 구조입니다.
+
+이러한 구조로 데이터를 가공하는데 있어서 중복되는 코드가 발생하여 별도의 함수를 만들어 활용했습니다.
+
+```javascript
+...
+// 여행 일정에 대한 정보를 가져오는 로직
+function getInfo(legs, id) {
+    return legs.filter(leg => leg.Id === id)[0];
+}
+
+// 경유지 정보를 가져오는 로직
+function getStops(places, info) {
+    return info.Stops.map(stop => {
+        const stopInfo = {};
+
+        const { Name: name, ParentId: cityId } = places.find(
+            place => place.Id === stop,
+        );
+
+        const { ParentId: countryId } = places.find(place => place.Id === cityId);
+        const { Name: countryName } = places.find(
+            place => place.Id === countryId,
+        );
+
+        stopInfo.name = name;
+        stopInfo.countryName = countryName;
+
+        return stopInfo;
+    });
+}
+
+// 항공사정보를 가져오는 로직
+function getAirLine(carriers, info) {
+    return info.Carriers.map(carrierId => {
+        const airline = {
+            name: null,
+            imgUrl: null,
+        };
+
+        const { Name, ImageUrl } = carriers.find(
+            carrier => carrier.Id === carrierId,
+        );
+
+        airline.name = Name;
+        airline.imgUrl = ImageUrl;
+
+        return airline;
+    });
+}
+...
+```
+
+- response data 중 Status의 값이 'UpdatesComplete'가 될때까지 while 문을 순환하였습니다.
+- Itineraries(여행 일정 목록) 항목을 forEach로 순환하며 해당 데이터를 가공하여 `listItem`에 push 했습니다.
+- 최종적으로 originDatas(원본 데이터)에는 `listItem`을 할당했고, renderDatas(UI 노출)에는 5개씩 노출하기위해 slice 메소드를 활용하여 할당했습니다.
+- 위의 getLiveSearch는 최초 렌더링시에 활용하였고, infinity에 대한 내용은 아래에서 설명하도록 하겠습니다.
+
+<br />
+
+작성중...
