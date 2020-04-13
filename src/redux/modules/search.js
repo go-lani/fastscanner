@@ -55,15 +55,17 @@ function* loadConfigureSaga({
       SearchService.destinationSearch,
       destination,
     );
-
     const {
       PlaceId: originPlaceId,
       PlaceName: originPlaceName,
-    } = originData[0];
+    } = originData.find(data => data.PlaceId === origin.toUpperCase());
+
     const {
       PlaceId: destinationPlaceId,
       PlaceName: destinationPlaceName,
-    } = destinationData[0];
+    } = destinationData.find(
+      data => data.PlaceId === destination.toUpperCase(),
+    );
 
     yield put(
       success({

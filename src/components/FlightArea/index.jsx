@@ -27,9 +27,7 @@ const FlightArea = React.memo(
         .split('/')
         .slice(2);
 
-      console.log('location.search', location.search);
       const query = qs.parse(location.search);
-      console.log(query);
       const { cabinclass: cabinClass, children, infants, adults } = query;
 
       const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
