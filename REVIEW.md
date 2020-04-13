@@ -966,10 +966,9 @@ function searchSubmit() {
         if (!originInputValue) return alert('출발지를 선택해주세요.');
         if (!destinationInputValue) return alert('도착지를 선택해주세요.');
 
-        history.push(`/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
+        history.push( `/transport/flights/${originCode}/${destinationCode}/${outboundCode}/?${params}`,
         );
     }
-
     setIsOpen && setIsOpen(false);
 
     if (isHeader) {
@@ -1303,7 +1302,6 @@ export default withRouter(FlightArea);
         };
         ...
       }
-
       ```
 
       requestBody를 전달하며, headers에 발급받은 host키를 넣어 호출했습니다.
@@ -1329,4 +1327,368 @@ export default withRouter(FlightArea);
 
 <br />
 
-작성중...
+### 3-2. URL 파라미터와 쿼리를 통해 재검색 영역 데이터 바인딩
+
+![fastscanner-source05](https://user-images.githubusercontent.com/28818698/79109118-b276c400-7db2-11ea-8917-c43b1c2d3216.png)
+
+```jsx
+import React, { useState, useEffect, useCallback } from 'react';
+import { withRouter } from 'react-router-dom';
+import qs from 'query-string';
+import moment from 'moment';
+import A11yTitle from '../Common/A11yTitle';
+import * as S from './SearchAreaStyled';
+import SearchAreaContainer from '../../container/SearchAreaContainer';
+import CircleProgress from '../Common/CircleProgress';
+
+const ResearchArea = React.memo(
+  ({
+    way,
+    location,
+    originName,
+    destinationName,
+    getConfigure,
+    selectStops,
+    outboundDate,
+    inboundDate,
+    adults,
+    children,
+    infants,
+    cabinClass,
+    loading,
+  }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    useEffect(() => {
+      const path = location.pathname
+        .slice(1, -1)
+        .split('/')
+        .slice(2);
+
+      const query = qs.parse(location.search);
+      const {
+        cabinclass: $cabinclass,
+        adults: $adults,
+        children: $children,
+        infants: $infants,
+        preferdirects,
+        rtn,
+      } = query;
+
+      // 직항 & 경유 초기세팅
+      if (preferdirects === 'true') selectStops(true);
+      else selectStops(false);
+
+      if (+rtn) {
+        const [originPlace, destinationPlace, outboundDate, inboundDate] = path;
+        const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
+        const momentOutBound = moment(moment(`20${outboundDate}`));
+        const inBound = moment(`20${inboundDate}`).format('YYYY-MM-DD');
+        const momentInBound = moment(moment(`20${inboundDate}`));
+
+        // 초기세팅
+        getConfigure({
+          way: 'round',
+          originPlace,
+          destinationPlace,
+          outboundDate: outBound,
+          momentOutDate: momentOutBound,
+          inboundDate: inBound,
+          momentInDate: momentInBound,
+          adults: +$adults,
+          children: +$children,
+          infants: +$infants,
+          cabinclass: $cabinclass,
+        });
+      } else {
+        const [originPlace, destinationPlace, outboundDate] = path;
+        const outBound = moment(`20${outboundDate}`).format('YYYY-MM-DD');
+        const momentOutBound = moment(moment(`20${outboundDate}`));
+
+        // 초기세팅
+        getConfigure({
+          way: 'oneway',
+          originPlace,
+          destinationPlace,
+          outboundDate: outBound,
+          momentOutDate: momentOutBound,
+          adults: +$adults,
+          children: +$children,
+          infants: +$infants,
+          cabinclass: $cabinclass,
+        });
+      }
+    }, [getConfigure, location.pathname, location.search, selectStops]);
+
+    const showSearchForm = useCallback(() => {
+      setIsOpen(!isOpen);
+    }, [isOpen]);
+
+    return (
+      <>
+        <S.ResearchArea>
+          <S.FlightInfoSection onClick={showSearchForm}>
+            <A11yTitle>항공권 입력 정보</A11yTitle>
+            <S.AirportInfoBox>
+              <S.AirportName>{originName}</S.AirportName>
+              <S.FlightIcon
+                src="/images/flight-white.png"
+                alt="출발지에서 도착지로 이동"
+              />
+              <S.AirportName>
+                {destinationName ? (
+                  destinationName
+                ) : (
+                  <CircleProgress classtype="white" disableShrink size={20} />
+                )}
+              </S.AirportName>
+            </S.AirportInfoBox>
+            <S.OptionArea isOpen={isOpen}>
+              <S.DateOpionInfoBox>
+                <S.DateText>{moment(outboundDate).format('LL')}</S.DateText>
+                {inboundDate
+                  ? inboundDate !== null && (
+                      <S.DateText>
+                        {moment(inboundDate).format('LL')}
+                      </S.DateText>
+                    )
+                  : inboundDate !== null &&
+                    loading && (
+                      <CircleProgress
+                        classtype="white"
+                        disableShrink
+                        size={20}
+                      />
+                    )}
+              </S.DateOpionInfoBox>
+              <S.DateOpionInfoBox>
+                <S.OptionText>
+                  {adults && `성인 ${adults}`}
+                  {children !== 0 && `, 소아 ${children}`}
+                  {infants !== 0 && `, 유아 ${infants}`}
+                </S.OptionText>
+                <S.OptionText>
+                  {cabinClass !== 'economy'
+                    ? cabinClass !== 'premiumeconomy'
+                      ? cabinClass !== 'business'
+                        ? '일등석'
+                        : '비즈니스석'
+                      : '프리미엄 일반석'
+                    : '일반석'}
+                </S.OptionText>
+                <S.OptionText>{way === 'round' ? '왕복' : '편도'}</S.OptionText>
+              </S.DateOpionInfoBox>
+            </S.OptionArea>
+          </S.FlightInfoSection>
+          <SearchAreaContainer
+            isOpen={isOpen}
+            isHeader={true}
+            setIsOpen={setIsOpen}
+          />
+          <S.DownButton type="button" onClick={showSearchForm}>
+            <S.ArrowIcon
+              src="/images/arrow-white-down.png"
+              alt="항공권 정보 재입력하기"
+              isOpen={isOpen}
+            />
+          </S.DownButton>
+        </S.ResearchArea>
+      </>
+    );
+  },
+);
+
+export default withRouter(ResearchArea);
+```
+
+- location.path와 location.search를 가공하여 ui에 노출했으며, spinner를 활용하여 불러오기시 loading을 표현했습니다.
+
+- 최초 보여지는 부분은 출발지/도착지, 출국일자/입국일자, 성인/유아/소아에 대한 정보만 노출되며 해당 영역 클릭시 기존 SearchArea를 재활용하여 펼쳐져 재검색을 할 수 있는 ui로 구현하였습니다.
+
+- 가공된 데이터를 `getConfigure` 함수를 호출하며 파라미터로 전달했습니다.
+
+  /src/container/ResearchAreaContainer.jsx
+
+  ```jsx
+  import { connect } from 'react-redux';
+  import ResearchArea from '../components/SearchArea/ResearchArea';
+  import { setStopsSelectSaga, getConfigureSaga } from '../redux/modules/search';
+
+  export default connect(
+      state => ({
+          way: state.search.way,
+          originName: state.search.originName,
+          destinationName: state.search.destinationName,
+          outboundDate: state.search.outboundDate,
+          inboundDate: state.search.inboundDate,
+          adults: state.search.adults,
+          children: state.search.children,
+          infants: state.search.infants,
+          cabinClass: state.search.cabinClass,
+          loading: state.flight.loading,
+      }),
+      dispatch => ({
+          getConfigure: value => {
+              dispatch(getConfigureSaga(value));
+          },
+          selectStops: value => {
+              dispatch(setStopsSelectSaga(value));
+          },
+      }),
+  )(ResearchArea);
+  ```
+
+  /src/redux/modules/search.js
+
+  ```javascript
+  ...
+  export const getConfigureSaga = createAction('GET_CONFIGURE_SAGA');
+
+  function* loadConfigureSaga({
+      payload: {
+          way,
+          originPlace: origin,
+          destinationPlace: destination,
+          outboundDate,
+          momentOutDate,
+          inboundDate,
+          momentInDate,
+          adults,
+          children,
+          infants,
+          cabinclass,
+      },
+  }) {
+      try {
+          yield put(pending());
+          const { data: originData } = yield call(SearchService.originSearch, origin);
+          const { data: destinationData } = yield call(
+              SearchService.destinationSearch,
+              destination,
+          );
+
+          const {
+              PlaceId: originPlaceId,
+              PlaceName: originPlaceName,
+          } = originData[0];
+          const {
+              PlaceId: destinationPlaceId,
+              PlaceName: destinationPlaceName,
+          } = destinationData[0];
+
+          yield put(
+              success({
+                  way,
+                  originPlace: `${originPlaceId}-sky`,
+                  originName: `${originPlaceName}(${originPlaceId})`,
+                  destinationPlace: `${destinationPlaceId}-sky`,
+                  destinationName: `${destinationPlaceName}(${destinationPlaceId})`,
+                  outboundDate,
+                  momentOutDate,
+                  inboundDate,
+                  momentInDate,
+                  adults,
+                  children,
+                  infants,
+                  cabinClass: cabinclass,
+              }),
+          );
+      } catch (error) {
+          yield put(fail(error));
+      }
+  }
+  ...
+
+  export function* searchSaga() {
+    ...
+    yield takeLatest('GET_CONFIGURE_SAGA', loadConfigureSaga);
+  }
+  ```
+
+  - `getConfigureSaga`를 사용한 이유는 검색 페이지부터 검색하여 접근했을때는 상태에 올바르게 저장되지만, url로 접근하였을때 렌더링은 되지만 상태에는 올바르게 저장이 되어있지 않기 때문에 저장의 필요성이 있어 사용했습니다.
+
+  - `getConfigureSaga`를 호출하며 전달해준 파라미터의 `originPlace`와 `destinationPlace`는 각각 **공항코드**로 표기되어있으므로 path를 받아 ui에 노출할때 사용자가 이용시 불편함을 겪을 수 있다고 판단하여 가공을 해서 UI를 표현했습니다.
+
+    /src/redux/modules/search.js
+
+    ```jsx
+    const { data: originData } = yield call(SearchService.originSearch, origin); // 인천국제공항일 경우 origin = icn
+    const { data: destinationData } = yield call(
+        SearchService.destinationSearch,
+        destination,
+    );
+    ```
+
+    /src/service/SearchService.js
+
+    ```jsx
+    import axios from 'axios';
+
+    export default class SearchService {
+        static originSearch = async value => {
+            return await axios.get(
+                `https://www.skyscanner.co.kr/g/autosuggest-flights/KR/ko-KR/${value}`,
+                {
+                    headers: {
+                        isDestination: false,
+                        enable_general_search_v2: true,
+                    },
+                },
+            );
+        };
+        static destinationSearch = async value => {
+            return await axios.get(
+                `https://www.skyscanner.co.kr/g/autosuggest-flights/KR/ko-KR/${value}`,
+                {
+                    headers: {
+                        isDestination: true,
+                        enable_general_search_v2: true,
+                    },
+                },
+            );
+        };
+    }
+    ```
+
+    예를들어 인천국제공항의 공항 코드는 icn입니다. icn이라는 value값을 api요청과 함께 보내면 다음과 같은 Response Data가 전달됩니다.
+
+    ![1586768101662](https://user-images.githubusercontent.com/28818698/79109131-b73b7800-7db2-11ea-9717-08ed6bc15095.png)
+
+    위와 같이 전달받은 배열 형태의 데이터를 Array.prototype 메소드의 find를 활용하여 일치하는 항목만 빼서 구조분해 할당을 했습니다.
+
+    ```jsx
+    const {
+        PlaceId: originPlaceId,
+        PlaceName: originPlaceName,
+    } = originData.find(data => data.PlaceId === origin.toUpperCase());
+
+    const {
+        PlaceId: destinationPlaceId,
+        PlaceName: destinationPlaceName,
+    } = destinationData.find(
+        data => data.PlaceId === destination.toUpperCase(),
+    );
+
+    yield put(
+        success({
+            way,
+            originPlace: `${originPlaceId}-sky`,
+            originName: `${originPlaceName}(${originPlaceId})`,
+            destinationPlace: `${destinationPlaceId}-sky`,
+            destinationName: `${destinationPlaceName}(${destinationPlaceId})`,
+            outboundDate,
+            momentOutDate,
+            inboundDate,
+            momentInDate,
+            adults,
+            children,
+            infants,
+            cabinClass: cabinclass,
+        }),
+    );
+    ```
+
+    PlaceId와 PlaceName을 원하는 포멧으로 가공하여 store에 저장하여 활용했습니다.
+
+<br />
+
+작성중
